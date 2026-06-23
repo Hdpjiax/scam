@@ -2,7 +2,7 @@ import { createClient } from "../../../lib/supabase/server";
 import ProductPageClient from "./ProductPageClient";
 import { products as seed } from "../../../data/products";
 
-export const revalidate = 60; // revalidar cada 60s
+export const dynamic = "force-dynamic";
 
 export default async function Page({ params }: { params: { id: string } }) {
   const productId = Number(params.id);
@@ -30,6 +30,7 @@ export default async function Page({ params }: { params: { id: string } }) {
     // Normalizar tipos
     product = {
       ...product,
+      image: product.image || product.images?.[0] || "",
       stock: product.stock ?? 12,
       sku: product.sku ?? `NOM-${String(product.id).padStart(4, "0")}`,
       rating: Number(product.rating ?? 4.8),

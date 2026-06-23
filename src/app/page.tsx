@@ -2,7 +2,7 @@ import { createClient } from "../lib/supabase/server";
 import ShopClient from "./page.client";
 import { products as seed } from "../data/products";
 
-export const revalidate = 60; // Revalidar la página cada minuto para mantener stock actualizado
+export const dynamic = "force-dynamic";
 
 export default async function Page() {
   let dbProducts: any[] = [];
@@ -13,7 +13,10 @@ export default async function Page() {
       .select("*")
       .order("id", { ascending: true });
     
-    dbProducts = data || [];
+    dbProducts = (data || []).map((p: any) => ({
+      ...p,
+      image: p.images?.[0] || "",
+    }));
   } catch (e) {
     console.error("Fallo al obtener productos de Supabase, usando seed local.", e);
   }

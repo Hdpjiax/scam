@@ -105,12 +105,13 @@ export default function AdminClient({
       return;
     }
 
+    const imageUrl = p.image || "https://images.unsplash.com/photo-1602928321679-560bb453f190?auto=format&fit=crop&w=900&q=85";
     const next = {
       name: p.name,
       category: p.category,
       price: Math.max(0, p.price),
       old_price: p.old_price ? Math.max(0, p.old_price) : null,
-      image: p.image || "https://images.unsplash.com/photo-1602928321679-560bb453f190?auto=format&fit=crop&w=900&q=85",
+      images: [imageUrl],
       description: p.description,
       colors: p.colors,
       stock: Math.max(0, p.stock || 0),
@@ -123,7 +124,11 @@ export default function AdminClient({
       // Editar
       const { error } = await supabase.from("products").update(next).eq("id", p.id);
       if (!error) {
-        setProducts(products.map((x) => (x.id === p.id ? { ...x, ...next } : x)));
+        setProducts(
+          products.map((x) =>
+            x.id === p.id ? { ...x, ...next, image: imageUrl } : x
+          )
+        );
         notify("Producto actualizado.");
       } else {
         notify("Error al actualizar producto.");
@@ -132,7 +137,7 @@ export default function AdminClient({
       // Crear
       const { data, error } = await supabase.from("products").insert(next).select().single();
       if (!error && data) {
-        setProducts([...products, data]);
+        setProducts([...products, { ...data, image: data.images?.[0] || "" }]);
         notify("Producto publicado.");
       } else {
         notify("Error al publicar producto.");
@@ -158,7 +163,7 @@ export default function AdminClient({
           category: remove.category,
           price: remove.price,
           old_price: remove.old_price || null,
-          image: remove.image,
+          images: [remove.image || ""],
           description: remove.description,
           colors: remove.colors,
           stock: remove.stock,

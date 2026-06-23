@@ -36,7 +36,13 @@ export default function LoginPage() {
         });
 
         if (signUpError) {
-          setError(signUpError.message);
+          if (signUpError.message.toLowerCase().includes("rate limit") || signUpError.message.toLowerCase().includes("rate_limit")) {
+            setError(
+              "Límite de correos de Supabase excedido. Puedes usar la cuenta de Demo Admin (admin@noma.mx / admin123) para iniciar sesión, o desactivar la opción 'Confirm email' en tu consola de Supabase (Auth -> Email -> Confirm email)."
+            );
+          } else {
+            setError(signUpError.message);
+          }
           setLoading(false);
           return;
         }

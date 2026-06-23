@@ -24,9 +24,14 @@ export default async function Page() {
     .select("*")
     .order("created_at", { ascending: false });
 
+  const mappedProducts = (products || []).map((p: any) => ({
+    ...p,
+    image: p.images?.[0] || "",
+  }));
+
   return (
     <AdminClient
-      initialProducts={products || []}
+      initialProducts={mappedProducts}
       initialOrders={orders || []}
       initialProfiles={profiles || []}
     />
