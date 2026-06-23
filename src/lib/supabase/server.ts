@@ -9,14 +9,19 @@ export const createClient = async () => {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        getAll() {
-          return cookieStore.getAll();
+        get(name: string) {
+          return cookieStore.get(name)?.value;
         },
-        setAll(cookiesToSet: any[]) {
+        set(name: string, value: string, options: any) {
           try {
-            cookiesToSet.forEach(({ name, value, options }) => {
-              cookieStore.set(name, value, options);
-            });
+            cookieStore.set({ name, value, ...options });
+          } catch (error) {
+            // Se ignora si es llamado desde un Server Component que no puede modificar cookies
+          }
+        },
+        remove(name: string, options: any) {
+          try {
+            cookieStore.set({ name, value: "", ...options, maxAge: 0 });
           } catch (error) {
             // Se ignora si es llamado desde un Server Component que no puede modificar cookies
           }

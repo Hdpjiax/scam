@@ -2,6 +2,13 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
+  console.log("Middleware request path:", request.nextUrl.pathname);
+  console.log("Middleware URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
+  console.log("Middleware ANON_KEY exists:", !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+  const authTokenCookie = request.cookies.get("sb-jfyqcttmdwhllvryntcc-auth-token");
+  console.log("Middleware auth-token cookie value:", authTokenCookie ? authTokenCookie.value.slice(0, 50) + "..." : "not found");
+  console.log("Middleware cookies names:", request.cookies.getAll().map(c => c.name));
+
   let supabaseResponse = NextResponse.next({
     request,
   });
@@ -11,19 +18,40 @@ export async function middleware(request: NextRequest) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        getAll() {
-          return request.cookies.getAll();
+        get(name: string) {
+          return request.cookies.get(name)?.value;
         },
-        setAll(cookiesToSet: any[]) {
-          cookiesToSet.forEach(({ name, value }) =>
-            request.cookies.set(name, value)
-          );
+        set(name: string, value: string, options: any) {
+          request.cookies.set({
+            name,
+            value,
+            ...options,
+          });
           supabaseResponse = NextResponse.next({
             request,
           });
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
-          );
+          supabaseResponse.cookies.set({
+            name,
+            value,
+            ...options,
+          });
+        },
+        remove(name: string, options: any) {
+          request.cookies.set({
+            name,
+            value: "",
+            ...options,
+            maxAge: 0,
+          });
+          supabaseResponse = NextResponse.next({
+            request,
+          });
+          supabaseResponse.cookies.set({
+            name,
+            value: "",
+            ...options,
+            maxAge: 0,
+          });
         },
       },
     }
@@ -31,26 +59,41 @@ export async function middleware(request: NextRequest) {
 
   const {
     data: { user },
+    error: authError,
   } = await supabase.auth.getUser();
+
+  console.log("Middleware getUser result:", { hasUser: !!user, authError: authError?.message || null });
+
+  // Helper to construct redirects and copy cookies
+  const redirectWithCookies = (toPath: string) => {
+    const url = request.nextUrl.clone();
+    url.pathname = toPath;
+    const redirectResponse = NextResponse.redirect(url);
+    supabaseResponse.cookies.getAll().forEach((c) => {
+      const { name, value, ...options } = c;
+      redirectResponse.cookies.set(name, value, options);
+    });
+    return redirectResponse;
+  };
 
   // Redirigir a usuarios no autenticados o que no son administradores fuera de /admin
   if (request.nextUrl.pathname.startsWith("/admin")) {
     if (!user) {
-      const url = request.nextUrl.clone();
-      url.pathname = "/login";
-      return NextResponse.redirect(url);
+      console.log("Middleware: Redirecting to /login because user is null");
+      return redirectWithCookies("/login");
     }
 
-    const { data: profile } = await supabase
+    const { data: profile, error: profileError } = await supabase
       .from("profiles")
       .select("role")
       .eq("id", user.id)
       .single();
 
+    console.log("Middleware check:", { userId: user.id, profile, profileError });
+
     if (!profile || profile.role !== "admin") {
-      const url = request.nextUrl.clone();
-      url.pathname = "/";
-      return NextResponse.redirect(url);
+      console.log("Middleware: Redirecting to / because profile is null or role is not admin");
+      return redirectWithCookies("/");
     }
   }
 
@@ -63,13 +106,11 @@ export async function middleware(request: NextRequest) {
       .eq("id", user.id)
       .single();
 
-    const url = request.nextUrl.clone();
     if (profile?.role === "admin") {
-      url.pathname = "/admin";
+      return redirectWithCookies("/admin");
     } else {
-      url.pathname = "/";
+      return redirectWithCookies("/");
     }
-    return NextResponse.redirect(url);
   }
 
   return supabaseResponse;

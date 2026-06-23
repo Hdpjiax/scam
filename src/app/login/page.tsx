@@ -68,11 +68,13 @@ export default function LoginPage() {
         }
 
         // Obtener rol del perfil
-        const { data: profile } = await supabase
+        const { data: profile, error: profileError } = await supabase
           .from("profiles")
           .select("role")
           .eq("id", data.user?.id)
           .single();
+
+        console.log("Login check:", { userId: data.user?.id, profile, profileError });
 
         if (profile?.role === "admin") {
           window.location.href = "/admin";
