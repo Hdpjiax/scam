@@ -24,12 +24,12 @@ typography:
     lineHeight: 1
     letterSpacing: "-0.03em"
   body:
-    fontFamily: "DM Sans, Arial, sans-serif"
+    fontFamily: "Manrope, Arial, sans-serif"
     fontSize: "1rem"
     fontWeight: 400
     lineHeight: 1.7
   label:
-    fontFamily: "DM Sans, Arial, sans-serif"
+    fontFamily: "Manrope, Arial, sans-serif"
     fontSize: "0.6875rem"
     fontWeight: 600
     lineHeight: 1.2
@@ -118,9 +118,9 @@ La paleta parte de la oscuridad arquitectónica y reserva el papel cálido para 
 ## 3. Typography
 
 **Display Font:** Gloock (Georgia como respaldo)  
-**Body Font:** DM Sans (Arial como respaldo)
+**Body Font:** Manrope (Arial como respaldo)
 
-**Character:** Gloock aporta tensión escultórica a titulares breves; DM Sans convierte precios, filtros, formularios y datos operativos en información silenciosa y directa. La pareja actual se conserva como identidad existente, aunque una futura sustitución debe evaluarse contra el principio de lujo oscuro, no contra tendencias editoriales.
+**Character:** Gloock aporta tensión escultórica a titulares breves; Manrope convierte precios, filtros, formularios y datos operativos en información silenciosa y directa. La pareja actual se conserva como identidad existente, aunque una futura sustitución debe evaluarse contra el principio de lujo oscuro, no contra tendencias editoriales.
 
 ### Hierarchy
 

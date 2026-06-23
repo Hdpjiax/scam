@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState, CSSProperties } from "react";
+import { CSSProperties, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import {
   ArrowDown,
   ArrowRight,
@@ -15,31 +16,7 @@ import ProductCard from "../components/ProductCard";
 import { Cart } from "../components/Drawers";
 import { useStore } from "../providers/StoreProvider";
 import { Product } from "../data/products";
-import Link from "next/link";
-
-const worlds = [
-  {
-    name: "Casa inteligente",
-    title: "Tecnología que desaparece",
-    copy: "Control, bienestar y seguridad sin convertir tu casa en un laboratorio.",
-    image:
-      "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=1500&q=88",
-  },
-  {
-    name: "Mobiliario",
-    title: "Formas para bajar el ritmo",
-    copy: "Piezas honestas, táctiles y hechas para acompañar la vida real.",
-    image:
-      "https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&w=1500&q=88",
-  },
-  {
-    name: "Iluminación",
-    title: "La arquitectura de la luz",
-    copy: "Atmósferas precisas para leer, conversar, descansar y celebrar.",
-    image:
-      "https://images.unsplash.com/photo-1540932239986-30128078f3c5?auto=format&fit=crop&w=1500&q=88",
-  },
-];
+import { categories, categorySlug } from "../lib/catalog";
 
 export default function ShopClient({
   initialProducts,
@@ -50,9 +27,10 @@ export default function ShopClient({
   const [drawer, setDrawer] = useState(false);
   const [q, setQ] = useState("");
   const [cat, setCat] = useState("Todos");
-  const [sort, setSort] = useState("Curaduría Nōma");
+  const [sort, setSort] = useState("Curaduría NŌMA");
   const [limit, setLimit] = useState(8);
   const [light, setLight] = useState({ x: 50, y: 40 });
+  const [toast, setToast] = useState("");
 
   const cats = useMemo(() => {
     return ["Todos", ...Array.from(new Set(initialProducts.map((p) => p.category)))];
@@ -67,22 +45,23 @@ export default function ShopClient({
           (cat === "Todos" || p.category === cat) &&
           (p.name + " " + p.category + " " + p.description)
             .toLowerCase()
-            .includes(q.toLowerCase())
+            .includes(q.toLowerCase()),
       )
       .sort((a, b) =>
         sort === "Precio ascendente"
           ? a.price - b.price
           : sort === "Precio descendente"
             ? b.price - a.price
-            : Number(b.featured ?? 0) - Number(a.featured ?? 0)
+            : sort === "Disponibilidad"
+              ? (b.stock ?? 0) - (a.stock ?? 0)
+              : Number(b.featured ?? 0) - Number(a.featured ?? 0),
       );
   }, [initialProducts, q, cat, sort]);
 
-  const pick = (x: string) => {
-    setCat(x);
-    setTimeout(() => {
-      document.querySelector("#catalogo")?.scrollIntoView({ behavior: "smooth" });
-    }, 50);
+  const add = (product: Product) => {
+    addToCart(product, 1);
+    setToast(`${product.name} agregado al carrito.`);
+    window.setTimeout(() => setToast(""), 2200);
   };
 
   const heroStyle = {
@@ -92,11 +71,7 @@ export default function ShopClient({
 
   return (
     <>
-      <Header
-        onCart={() => setDrawer(true)}
-        onSearch={setQ}
-        onCategory={pick}
-      />
+      <Header onCart={() => setDrawer(true)} onSearch={setQ} />
       <main>
         <section
           className="hero"
@@ -121,12 +96,12 @@ export default function ShopClient({
               Objetos con presencia. Tecnología sin ruido. Una casa que responde
               a ti sin pedir protagonismo.
             </p>
-            <a href="#mundos">
+            <a href="#atmósferas">
               Entrar en la colección <ArrowDown />
             </a>
           </div>
           <div className="hero-note">
-            <span>CDMX · 2026</span>
+            <span>CDMX / 2026</span>
             <p>
               Diseño sereno.
               <br />
@@ -135,7 +110,7 @@ export default function ShopClient({
           </div>
         </section>
 
-        <section className="world-intro" id="mundos">
+        <section className="world-intro" id="atmósferas">
           <p>No vendemos objetos aislados.</p>
           <h2>
             Creamos <em>atmósferas</em>
@@ -144,24 +119,26 @@ export default function ShopClient({
           </h2>
         </section>
 
-        <section className="worlds" aria-label="Colecciones curadas">
-          {worlds.map((w, i) => (
-            <article
-              className="world"
-              key={w.name}
-              style={{ "--world-image": `url(${w.image})` } as CSSProperties}
+        <section className="category-stories" aria-label="Comprar por atmósfera">
+          {categories.slice(0, 5).map((category, index) => (
+            <Link
+              className="category-story"
+              href={`/categoria/${category.slug}`}
+              key={category.slug}
+              style={
+                {
+                  "--category-image": `url(${category.image})`,
+                  "--category-accent": category.accent,
+                } as CSSProperties
+              }
             >
-              <div className="world-copy">
-                <span>
-                  {String(i + 1).padStart(2, "0")} / {w.name}
-                </span>
-                <h2>{w.title}</h2>
-                <p>{w.copy}</p>
-                <button onClick={() => pick(w.name)}>
-                  Explorar selección <ArrowRight />
-                </button>
-              </div>
-            </article>
+              <span>{String(index + 1).padStart(2, "0")} / {category.name}</span>
+              <h2>{category.title}</h2>
+              <p>{category.copy}</p>
+              <b>
+                Ver colección <ArrowRight />
+              </b>
+            </Link>
           ))}
         </section>
 
@@ -204,9 +181,10 @@ export default function ShopClient({
                 value={sort}
                 onChange={(e) => setSort(e.target.value)}
               >
-                <option>Curaduría Nōma</option>
+                <option>Curaduría NŌMA</option>
                 <option>Precio ascendente</option>
                 <option>Precio descendente</option>
+                <option>Disponibilidad</option>
               </select>
             </label>
           </div>
@@ -229,13 +207,9 @@ export default function ShopClient({
               </button>
             </div>
           ) : (
-            <div className="grid">
+            <div className="grid editorial-grid">
               {list.slice(0, limit).map((p) => (
-                <ProductCard
-                  key={p.id}
-                  p={p}
-                  onAdd={() => addToCart(p, 1)}
-                />
+                <ProductCard key={p.id} p={p} onAdd={() => add(p)} />
               ))}
             </div>
           )}
@@ -260,9 +234,9 @@ export default function ShopClient({
               La tecnología debe desaparecer en la experiencia. Cada objeto
               merece un lugar, una función y una historia.
             </p>
-            <a href="#principios">
-              Conoce Nōma <ArrowRight />
-            </a>
+            <Link href={`/categoria/${categorySlug("Casa inteligente")}`}>
+              Conoce NŌMA <ArrowRight />
+            </Link>
           </div>
         </section>
 
@@ -317,10 +291,10 @@ export default function ShopClient({
         </Link>
         <nav aria-label="Explorar">
           <b>Explora</b>
-          {cats.slice(1, 5).map((x) => (
-            <a href="#catalogo" onClick={() => pick(x)} key={x}>
-              {x}
-            </a>
+          {categories.slice(0, 4).map((category) => (
+            <Link href={`/categoria/${category.slug}`} key={category.slug}>
+              {category.name}
+            </Link>
           ))}
         </nav>
         <nav aria-label="Ayuda">
@@ -334,9 +308,13 @@ export default function ShopClient({
           <Link href="/admin">Panel de gestión</Link>
           <Link href="/login">Acceso y registro</Link>
         </nav>
-        <small>© 2026 Nōma Casa Viva · Ciudad de México</small>
+        <small>© 2026 NŌMA Casa Viva / Ciudad de México</small>
       </footer>
 
+      <div className={`cart-toast ${toast ? "show" : ""}`} role="status">
+        {toast}
+        <button onClick={() => setDrawer(true)}>Ver bolsa</button>
+      </div>
       <Cart open={drawer} onClose={() => setDrawer(false)} />
     </>
   );

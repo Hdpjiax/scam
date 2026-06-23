@@ -3,38 +3,38 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
+  ArrowUpRight,
+  Heart,
   Menu,
   Search,
-  Heart,
   ShoppingBag,
   UserRound,
   X,
-  ArrowUpRight,
 } from "lucide-react";
 import { useStore } from "../providers/StoreProvider";
-
-const links = [
-  "Casa inteligente",
-  "Iluminación",
-  "Mobiliario",
-  "Decoración",
-  "Cocina",
-];
+import { categories } from "../lib/catalog";
 
 export default function Header({
   onCart,
   onSearch,
-  onCategory,
 }: {
   onCart: () => void;
-  onSearch: (v: string) => void;
-  onCategory: (v: string) => void;
+  onSearch?: (value: string) => void;
 }) {
-  const { cart, profile } = useStore();
+  const { cart, profile, cartPulse } = useStore();
   const [menu, setMenu] = useState(false);
   const [search, setSearch] = useState(false);
+  const [pulse, setPulse] = useState(false);
 
   const cartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
+  const navCategories = categories.slice(0, 5);
+
+  useEffect(() => {
+    if (!cartPulse) return;
+    setPulse(true);
+    const timer = window.setTimeout(() => setPulse(false), 520);
+    return () => window.clearTimeout(timer);
+  }, [cartPulse]);
 
   useEffect(() => {
     document.body.style.overflow = menu ? "hidden" : "";
@@ -57,7 +57,7 @@ export default function Header({
         Saltar al catálogo
       </a>
       <div className="announcement">
-        Envío gratuito desde $1,999 <span aria-hidden="true">—</span>{" "}
+        Envío gratuito desde $1,999 <span aria-hidden="true">/</span>{" "}
         Devoluciones durante 30 días
       </div>
       <header className="site-header">
@@ -69,14 +69,14 @@ export default function Header({
         >
           <Menu />
         </button>
-        <Link className="brand" href="/" aria-label="Nōma, inicio">
+        <Link className="brand" href="/" aria-label="NŌMA, inicio">
           NŌMA<span>casa viva</span>
         </Link>
         <nav aria-label="Navegación principal">
-          {links.map((x) => (
-            <a key={x} href="#catalogo" onClick={() => onCategory(x)}>
-              {x}
-            </a>
+          {navCategories.map((category) => (
+            <Link key={category.slug} href={`/categoria/${category.slug}`}>
+              {category.name}
+            </Link>
           ))}
         </nav>
         <div className="actions">
@@ -89,7 +89,7 @@ export default function Header({
           </button>
           <Link
             className="icon user-link"
-            href={profile ? (profile.role === "admin" ? "/admin" : "/login") : "/login"}
+            href={profile?.role === "admin" ? "/admin" : "/login"}
             aria-label={profile ? `Cuenta de ${profile.name}` : "Iniciar sesión"}
           >
             <UserRound />
@@ -99,7 +99,7 @@ export default function Header({
             <Heart />
           </button>
           <button
-            className="icon cart"
+            className={`icon cart ${pulse ? "pulse" : ""}`}
             onClick={onCart}
             aria-label={`Abrir carrito, ${cartCount} productos`}
           >
@@ -110,12 +110,12 @@ export default function Header({
         {search && (
           <form className="header-search" onSubmit={(e) => e.preventDefault()}>
             <Search />
-            <label htmlFor="global-search">Buscar en Nōma</label>
+            <label htmlFor="global-search">Buscar en NŌMA</label>
             <input
               id="global-search"
               autoFocus
-              placeholder="Lámparas, textiles, muebles…"
-              onChange={(e) => onSearch(e.target.value)}
+              placeholder="Lámparas, textiles, muebles..."
+              onChange={(e) => onSearch?.(e.target.value)}
             />
             <button
               type="button"
@@ -139,19 +139,16 @@ export default function Header({
         </div>
         <p>Encuentra tu próxima pieza</p>
         <nav aria-label="Menú móvil">
-          {links.map((x, i) => (
-            <a
-              href="#catalogo"
-              onClick={() => {
-                onCategory(x);
-                setMenu(false);
-              }}
-              key={x}
+          {navCategories.map((category, index) => (
+            <Link
+              href={`/categoria/${category.slug}`}
+              onClick={() => setMenu(false)}
+              key={category.slug}
             >
-              <span>0{i + 1}</span>
-              {x}
+              <span>0{index + 1}</span>
+              {category.name}
               <ArrowUpRight />
-            </a>
+            </Link>
           ))}
         </nav>
         <div className="mobile-menu-foot">

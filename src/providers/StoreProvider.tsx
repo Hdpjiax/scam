@@ -31,6 +31,8 @@ type StoreContextType = {
   user: any | null;
   profile: Profile | null;
   loading: boolean;
+  lastAdded: Product | null;
+  cartPulse: number;
   signOut: () => Promise<void>;
 };
 
@@ -42,6 +44,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<any | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [lastAdded, setLastAdded] = useState<Product | null>(null);
+  const [cartPulse, setCartPulse] = useState(0);
 
   // Cargar carrito inicial desde localStorage en el cliente
   useEffect(() => {
@@ -112,17 +116,21 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   }, [supabase]);
 
   const addToCart = (product: Product, quantity = 1) => {
+    const stock = product.stock ?? Number.MAX_SAFE_INTEGER;
+    const safeQuantity = Math.max(1, Math.min(quantity, stock));
     setCart((prev) => {
       const existing = prev.find((item) => item.product.id === product.id);
       if (existing) {
         return prev.map((item) =>
           item.product.id === product.id
-            ? { ...item, quantity: item.quantity + quantity }
+            ? { ...item, quantity: Math.min(stock, item.quantity + safeQuantity) }
             : item
         );
       }
-      return [...prev, { product, quantity }];
+      return [...prev, { product, quantity: safeQuantity }];
     });
+    setLastAdded(product);
+    setCartPulse((value) => value + 1);
   };
 
   const removeFromCart = (productId: number) => {
@@ -136,7 +144,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     }
     setCart((prev) =>
       prev.map((item) =>
-        item.product.id === productId ? { ...item, quantity } : item
+        item.product.id === productId
+          ? {
+              ...item,
+              quantity: Math.min(quantity, item.product.stock ?? quantity),
+            }
+          : item
       )
     );
   };
@@ -163,6 +176,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         user,
         profile,
         loading,
+        lastAdded,
+        cartPulse,
         signOut,
       }}
     >

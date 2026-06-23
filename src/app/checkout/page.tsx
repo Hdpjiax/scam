@@ -2,32 +2,47 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, ChevronRight, CreditCard, Landmark, LockKeyhole } from "lucide-react";
+import {
+  ArrowLeft,
+  ChevronRight,
+  CreditCard,
+  Landmark,
+  LockKeyhole,
+  WalletCards,
+} from "lucide-react";
 import { useStore } from "../../providers/StoreProvider";
 import { money } from "../../lib/utils";
+import type { PaymentMethod } from "../../lib/payments/payment-provider";
 
 export default function CheckoutPage() {
   const { cart, profile } = useStore();
   const [step, setStep] = useState(1);
-  const [method, setMethod] = useState<"Tarjeta" | "Transferencia">("Tarjeta");
+  const [method, setMethod] = useState<PaymentMethod>("Stripe");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [guest, setGuest] = useState({ name: "", email: "", phone: "" });
-  const [address, setAddress] = useState({ street: "", postal_code: "", city: "", state: "Ciudad de México" });
+  const [address, setAddress] = useState({
+    street: "",
+    postal_code: "",
+    city: "",
+    state: "Ciudad de México",
+  });
 
   const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
-  const subtotal = cart.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
+  const subtotal = cart.reduce(
+    (acc, item) => acc + item.product.price * item.quantity,
+    0,
+  );
   const shippingRate = subtotal >= 1999 ? 0 : 199;
   const total = subtotal + shippingRate;
 
-  const handleNextStep = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleNextStep = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     if (step < 3) {
       setStep(step + 1);
       return;
     }
 
-    // Procesar la orden
     processOrder();
   };
 
@@ -58,12 +73,11 @@ export default function CheckoutPage() {
         throw new Error(data.error || "Ocurrió un error al procesar el checkout");
       }
 
-      // Redirigir al link de pago o de éxito
       if (data.url) {
         window.location.href = data.url;
       }
     } catch (e: any) {
-      setError(e.message || "Fallo en la conexión. Intente de nuevo.");
+      setError(e.message || "Fallo en la conexión. Intenta de nuevo.");
       setLoading(false);
     }
   };
@@ -211,15 +225,24 @@ export default function CheckoutPage() {
               <div className="checkout-block">
                 <small>Paso 3 de 3</small>
                 <h1>Elige cómo pagar</h1>
-                <div className="payment-methods">
+                <div className="payment-methods three">
                   <button
                     type="button"
-                    className={method === "Tarjeta" ? "on" : ""}
-                    onClick={() => setMethod("Tarjeta")}
+                    className={method === "Stripe" ? "on" : ""}
+                    onClick={() => setMethod("Stripe")}
                   >
                     <CreditCard />
                     <b>Tarjeta</b>
-                    <span>Confirmación inmediata (Stripe Sandbox)</span>
+                    <span>Stripe Checkout</span>
+                  </button>
+                  <button
+                    type="button"
+                    className={method === "MercadoPago" ? "on" : ""}
+                    onClick={() => setMethod("MercadoPago")}
+                  >
+                    <WalletCards />
+                    <b>Mercado Pago</b>
+                    <span>Tarjeta, wallet y métodos locales</span>
                   </button>
                   <button
                     type="button"
@@ -232,20 +255,22 @@ export default function CheckoutPage() {
                   </button>
                 </div>
 
-                {method === "Tarjeta" ? (
+                {method === "Transferencia" ? (
+                  <div className="bank-data">
+                    <b>Transferencia SPEI</b>
+                    <p>Banco: STP / CLABE: 646 180 0000000000</p>
+                    <small>
+                      El pedido llegará al panel como pendiente hasta verificar la
+                      transferencia.
+                    </small>
+                  </div>
+                ) : (
                   <div className="safe-card">
                     <b>Procesamiento bancario seguro</b>
                     <p>
-                      Serás redirigido de forma segura a la pasarela de Stripe/Mercado Pago para ingresar tu tarjeta. Nōma nunca almacena datos bancarios.
+                      Te llevaremos a la pasarela elegida. NŌMA nunca almacena
+                      datos bancarios y el pedido solo se confirma por webhook.
                     </p>
-                  </div>
-                ) : (
-                  <div className="bank-data">
-                    <b>Transferencia SPEI</b>
-                    <p>Banco: STP · CLABE: 646 180 0000000000</p>
-                    <small>
-                      El pedido llegará al panel administrativo como pendiente hasta verificar la transferencia bancaria.
-                    </small>
                   </div>
                 )}
               </div>
@@ -254,20 +279,26 @@ export default function CheckoutPage() {
             {error && <p className="form-error">{error}</p>}
 
             <button className="continue" type="submit" disabled={loading}>
-              {loading ? "Procesando..." : step === 3 ? `Confirmar y Pagar · ${money(total)}` : "Continuar"}
+              {loading
+                ? "Procesando..."
+                : step === 3
+                  ? `Confirmar y pagar / ${money(total)}`
+                  : "Continuar"}
               <ChevronRight />
             </button>
           </form>
         </section>
 
         <aside className="order-summary">
-          <small>Tu selección · {totalItems} piezas</small>
+          <small>Tu selección / {totalItems} piezas</small>
           {cart.map((item, i) => (
             <div className="summary-line" key={i}>
               <img src={item.product.image} alt={item.product.name} />
               <span>
                 <b>{item.product.name}</b>
-                <small>{item.product.category} (x{item.quantity})</small>
+                <small>
+                  {item.product.category} / x{item.quantity}
+                </small>
               </span>
               <strong>{money(item.product.price * item.quantity)}</strong>
             </div>

@@ -1,6 +1,6 @@
 import { createClient } from "../../../lib/supabase/server";
 import ProductPageClient from "./ProductPageClient";
-import { products as seed } from "../../../data/products";
+import { normalizeProduct, seedProducts } from "../../../lib/catalog";
 
 export const dynamic = "force-dynamic";
 
@@ -24,18 +24,11 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
   // Fallback a semilla si no se encontró en base de datos
   if (!product) {
-    product = seed.find((x) => x.id === productId) || null;
+    product = seedProducts().find((x) => x.id === productId) || null;
   }
 
   if (product) {
-    // Normalizar tipos
-    product = {
-      ...product,
-      image: product.image || product.images?.[0] || "",
-      stock: product.stock ?? 12,
-      sku: product.sku ?? `NOM-${String(product.id).padStart(4, "0")}`,
-      rating: Number(product.rating ?? 4.8),
-    };
+    product = normalizeProduct(product, productId - 1);
   }
 
   return <ProductPageClient initialProduct={product} />;

@@ -1,6 +1,6 @@
 import { createClient } from "../lib/supabase/server";
 import ShopClient from "./page.client";
-import { products as seed } from "../data/products";
+import { normalizeProduct, seedProducts } from "../lib/catalog";
 
 export const dynamic = "force-dynamic";
 
@@ -13,21 +13,15 @@ export default async function Page() {
       .select("*")
       .order("id", { ascending: true });
     
-    dbProducts = (data || []).map((p: any) => ({
-      ...p,
-      image: p.images?.[0] || "",
-    }));
+    dbProducts = (data || []).map((product: any, index: number) =>
+      normalizeProduct(product, index),
+    );
   } catch (e) {
     console.error("Fallo al obtener productos de Supabase, usando seed local.", e);
   }
 
   // Si no hay productos en la base de datos, usamos la semilla local
-  const products = dbProducts.length > 0 ? dbProducts : seed.map((p, i) => ({
-    ...p,
-    stock: p.stock ?? 12,
-    sku: p.sku ?? `NOM-${String(i + 1).padStart(4, "0")}`,
-    rating: Number(p.rating ?? 4.8),
-  }));
+  const products = dbProducts.length > 0 ? dbProducts : seedProducts();
 
   return <ShopClient initialProducts={products} />;
 }

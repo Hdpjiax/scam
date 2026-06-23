@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS public.orders (
     email TEXT NOT NULL,
     phone TEXT NOT NULL,
     status TEXT NOT NULL DEFAULT 'pending_payment' CHECK (status IN ('draft', 'pending_payment', 'paid', 'processing', 'shipped', 'delivered', 'cancelled', 'refunded')),
-    payment_method TEXT NOT NULL CHECK (payment_method IN ('Tarjeta', 'Transferencia')),
+    payment_method TEXT NOT NULL CHECK (payment_method IN ('Stripe', 'MercadoPago', 'Transferencia')),
     shipping_rate INT NOT NULL DEFAULT 0 CHECK (shipping_rate >= 0),
     total INT NOT NULL CHECK (total >= 0),
     notes TEXT,

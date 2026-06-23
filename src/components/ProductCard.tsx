@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Heart, Plus, Star } from "lucide-react";
 import { Product } from "../data/products";
 import { money } from "../lib/utils";
+import { categorySlug } from "../lib/catalog";
 
 export default function ProductCard({
   p,
@@ -12,7 +13,14 @@ export default function ProductCard({
   onAdd: () => void;
 }) {
   const [fav, setFav] = useState(false);
+  const [added, setAdded] = useState(false);
   const productUrl = `/producto/${p.id}`;
+
+  const handleAdd = () => {
+    onAdd();
+    setAdded(true);
+    window.setTimeout(() => setAdded(false), 1300);
+  };
 
   return (
     <article className="product">
@@ -40,12 +48,12 @@ export default function ProductCard({
         >
           <img loading="lazy" src={p.image} alt={p.name} />
         </Link>
-        <button className="quick" onClick={onAdd}>
-          <Plus /> Añadir rápido
+        <button className={`quick ${added ? "added" : ""}`} onClick={handleAdd}>
+          <Plus /> {added ? "Agregado" : "Añadir rápido"}
         </button>
       </div>
       <div className="product-info">
-        <Link href={productUrl} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
+        <Link href={productUrl}>
           <small>{p.category}</small>
           <h3>{p.name}</h3>
         </Link>
@@ -56,6 +64,9 @@ export default function ProductCard({
             <Star /> {p.rating}
           </span>
         </div>
+        <Link className="category-thread" href={`/categoria/${categorySlug(p.category)}`}>
+          Ver atmósfera
+        </Link>
       </div>
     </article>
   );
