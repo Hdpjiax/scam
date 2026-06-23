@@ -8,16 +8,36 @@ import { categorySlug } from "../lib/catalog";
 export default function ProductCard({
   p,
   onAdd,
+  loading = false,
 }: {
-  p: Product;
-  onAdd: () => void;
+  p?: Product;
+  onAdd?: () => void;
+  loading?: boolean;
 }) {
   const [fav, setFav] = useState(false);
   const [added, setAdded] = useState(false);
+
+  if (loading || !p) {
+    return (
+      <article className="product skeleton-card" aria-hidden="true">
+        <div className="photo skeleton" style={{ width: "100%", aspectRatio: 0.78, borderRadius: 0 }} />
+        <div className="product-info">
+          <div className="skeleton skeleton-text" style={{ width: "30%", height: "10px", marginTop: "8px", display: "block" }} />
+          <div className="skeleton skeleton-text" style={{ width: "80%", height: "20px", margin: "8px 0", display: "block" }} />
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div className="skeleton skeleton-text" style={{ width: "25%", height: "12px", display: "block" }} />
+            <div className="skeleton skeleton-text" style={{ width: "15%", height: "12px", display: "block" }} />
+          </div>
+          <div className="skeleton skeleton-text" style={{ width: "40%", height: "10px", marginTop: "12px", display: "block" }} />
+        </div>
+      </article>
+    );
+  }
+
   const productUrl = `/producto/${p.id}`;
 
   const handleAdd = () => {
-    onAdd();
+    onAdd?.();
     setAdded(true);
     window.setTimeout(() => setAdded(false), 1300);
   };

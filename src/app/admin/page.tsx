@@ -15,7 +15,7 @@ export default async function Page() {
   // Obtener pedidos
   const { data: orders } = await supabase
     .from("orders")
-    .select("*, order_items(*)")
+    .select("*, order_items(*), shipping_addresses(*)")
     .order("created_at", { ascending: false });
 
   // Obtener perfiles de clientes

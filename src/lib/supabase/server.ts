@@ -27,6 +27,23 @@ export const createClient = async () => {
           }
         },
       },
+      supabaseOptions: {
+        global: {
+          fetch: (url: URL | RequestInfo, init?: RequestInit) => {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 3000);
+            return fetch(url, { ...init, signal: controller.signal })
+              .then((res) => {
+                clearTimeout(timeoutId);
+                return res;
+              })
+              .catch((err) => {
+                clearTimeout(timeoutId);
+                throw err;
+              });
+          },
+        },
+      },
     }
   );
 };

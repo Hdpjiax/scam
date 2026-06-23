@@ -23,12 +23,33 @@ export async function proxy(request: NextRequest) {
           supabaseResponse.cookies.set({ name, value: "", ...options, maxAge: 0 });
         },
       },
+      supabaseOptions: {
+        global: {
+          fetch: (url: URL | RequestInfo, init?: RequestInit) => {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 3000);
+            return fetch(url, { ...init, signal: controller.signal })
+              .then((res) => {
+                clearTimeout(timeoutId);
+                return res;
+              })
+              .catch((err) => {
+                clearTimeout(timeoutId);
+                throw err;
+              });
+          },
+        },
+      },
     },
   );
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  let user: any = null;
+  try {
+    const { data } = await supabase.auth.getUser();
+    user = data?.user || null;
+  } catch (error) {
+    console.error("Middleware auth check timed out or failed:", error);
+  }
 
   const redirectWithCookies = (toPath: string) => {
     const url = request.nextUrl.clone();
@@ -44,23 +65,35 @@ export async function proxy(request: NextRequest) {
   if (request.nextUrl.pathname.startsWith("/admin")) {
     if (!user) return redirectWithCookies("/login");
 
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("id", user.id)
-      .single();
+    let role = "customer";
+    try {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .single();
+      role = profile?.role || "customer";
+    } catch (error) {
+      console.error("Middleware profile role check timed out or failed:", error);
+    }
 
-    if (profile?.role !== "admin") return redirectWithCookies("/");
+    if (role !== "admin") return redirectWithCookies("/");
   }
 
   if (request.nextUrl.pathname.startsWith("/login") && user) {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("id", user.id)
-      .single();
+    let role = "customer";
+    try {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .single();
+      role = profile?.role || "customer";
+    } catch (error) {
+      console.error("Middleware login check timed out or failed:", error);
+    }
 
-    return redirectWithCookies(profile?.role === "admin" ? "/admin" : "/");
+    return redirectWithCookies(role === "admin" ? "/admin" : "/");
   }
 
   return supabaseResponse;

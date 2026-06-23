@@ -26,37 +26,22 @@ export default function ShopClient({
   const { addToCart } = useStore();
   const [drawer, setDrawer] = useState(false);
   const [q, setQ] = useState("");
-  const [cat, setCat] = useState("Todos");
-  const [sort, setSort] = useState("Curaduría NŌMA");
   const [limit, setLimit] = useState(8);
   const [light, setLight] = useState({ x: 50, y: 40 });
   const [toast, setToast] = useState("");
 
-  const cats = useMemo(() => {
-    return ["Todos", ...Array.from(new Set(initialProducts.map((p) => p.category)))];
-  }, [initialProducts]);
-
-  useEffect(() => setLimit(8), [q, cat, sort]);
+  useEffect(() => setLimit(8), [q]);
 
   const list = useMemo(() => {
     return initialProducts
       .filter(
         (p) =>
-          (cat === "Todos" || p.category === cat) &&
+          p.featured &&
           (p.name + " " + p.category + " " + p.description)
             .toLowerCase()
             .includes(q.toLowerCase()),
-      )
-      .sort((a, b) =>
-        sort === "Precio ascendente"
-          ? a.price - b.price
-          : sort === "Precio descendente"
-            ? b.price - a.price
-            : sort === "Disponibilidad"
-              ? (b.stock ?? 0) - (a.stock ?? 0)
-              : Number(b.featured ?? 0) - Number(a.featured ?? 0),
       );
-  }, [initialProducts, q, cat, sort]);
+  }, [initialProducts, q]);
 
   const add = (product: Product) => {
     addToCart(product, 1);
@@ -145,65 +130,33 @@ export default function ShopClient({
         <section className="catalog" id="catalogo">
           <div className="section-top">
             <div>
-              <p>Objetos para quedarse</p>
+              <p>Objetos seleccionados</p>
               <h2>
-                La colección
+                Curaduría
                 <br />
-                <em>completa.</em>
+                <em>destacada.</em>
               </h2>
             </div>
             <p>
-              Una selección viva de tecnología, luz, materia y bienestar. Menos
-              opciones irrelevantes; mejores decisiones.
+              Una curaduría seleccionada de tecnología, luz, materia y bienestar.
+              Las piezas más excepcionales para tu hogar.
             </p>
           </div>
 
-          <div className="catalog-tools">
-            <button className="filter-toggle" aria-label="Filtros">
-              <SlidersHorizontal />
-              Filtrar
-            </button>
-            <div className="filters" aria-label="Categorías">
-              {cats.map((x) => (
-                <button
-                  className={cat === x ? "active" : ""}
-                  onClick={() => setCat(x)}
-                  key={x}
-                >
-                  {x}
-                </button>
-              ))}
-            </div>
-            <label>
-              Ordenar
-              <select
-                aria-label="Ordenar productos"
-                value={sort}
-                onChange={(e) => setSort(e.target.value)}
-              >
-                <option>Curaduría NŌMA</option>
-                <option>Precio ascendente</option>
-                <option>Precio descendente</option>
-                <option>Disponibilidad</option>
-              </select>
-            </label>
-          </div>
-
           <div className="catalog-count" aria-live="polite">
-            Mostrando {Math.min(limit, list.length)} de {list.length} piezas
+            Mostrando {Math.min(limit, list.length)} de {list.length} piezas destacadas
           </div>
 
           {!list.length ? (
             <div className="no-results">
               <h3>No encontramos esa pieza.</h3>
-              <p>Prueba otra palabra o vuelve a la colección completa.</p>
+              <p>Prueba otra palabra o vuelve a la selección completa.</p>
               <button
                 onClick={() => {
                   setQ("");
-                  setCat("Todos");
                 }}
               >
-                Ver todo
+                Ver todas
               </button>
             </div>
           ) : (

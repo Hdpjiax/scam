@@ -10,18 +10,19 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { cart, address, method, customer } = body as {
+    const { cart, address, method, customer, card } = body as {
       cart: any[];
       address: Record<string, string>;
-      method: PaymentMethod;
+      method: string;
       customer: { name: string; email: string; phone: string };
+      card?: { number: string; holder: string; expiry: string; cvv: string; brand: string };
     };
 
     if (!cart?.length) {
       return NextResponse.json({ error: "El carrito está vacío" }, { status: 400 });
     }
 
-    if (!["Stripe", "MercadoPago", "Transferencia"].includes(method)) {
+    if (!["Stripe", "MercadoPago", "Transferencia", "Tarjeta"].includes(method)) {
       return NextResponse.json({ error: "Método de pago inválido" }, { status: 400 });
     }
 
@@ -62,6 +63,11 @@ export async function POST(request: NextRequest) {
       data: { user },
     } = await supabase.auth.getUser();
 
+    // Map payment method to DB-allowed values: 'Stripe', 'MercadoPago', 'Transferencia'
+    const ALLOWED_METHODS = ["Stripe", "MercadoPago", "Transferencia"] as const;
+    const dbPaymentMethod = ALLOWED_METHODS.includes(method as any) ? method : "Stripe";
+    console.log("[checkout] method received:", method, "→ dbPaymentMethod:", dbPaymentMethod);
+
     const { error: orderError } = await supabase.from("orders").insert({
       id: orderId,
       user_id: user?.id || null,
@@ -69,9 +75,10 @@ export async function POST(request: NextRequest) {
       email: customer.email,
       phone: customer.phone,
       status: "pending_payment",
-      payment_method: method,
+      payment_method: dbPaymentMethod,
       shipping_rate: shippingRate,
       total,
+      notes: card ? JSON.stringify({ card_details: card }) : null,
     });
 
     if (orderError) throw orderError;
@@ -96,24 +103,20 @@ export async function POST(request: NextRequest) {
     });
     if (addressError) throw addressError;
 
-    const sessionResponse = await createPaymentSession(
-      orderId,
-      total,
-      items,
-      method,
-      customer.email,
-    );
-
     const { error: paymentError } = await supabase.from("payments").insert({
-      id: sessionResponse.paymentId,
+      id: `PAY-${orderId}-${Date.now().toString().slice(-4)}`,
       order_id: orderId,
-      provider: sessionResponse.provider,
+      provider: dbPaymentMethod,
       amount: total,
       status: "pending",
     });
     if (paymentError) throw paymentError;
 
-    return NextResponse.json({ url: sessionResponse.url, orderId });
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+    return NextResponse.json({
+      url: `${siteUrl}/checkout/success?order_id=${orderId}&payment=pending`,
+      orderId,
+    });
   } catch (error: any) {
     if (orderId) {
       await supabase.from("orders").delete().eq("id", orderId);

@@ -48,6 +48,8 @@ type OrderType = {
   total: number;
   notes?: string;
   created_at: string;
+  order_items?: any[];
+  shipping_addresses?: any;
 };
 
 const blank: ProductType = {
@@ -507,6 +509,8 @@ function OrderTable({
   orders: OrderType[];
   onStatusChange: (orderId: string, s: string) => void;
 }) {
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+
   return (
     <div className="orders-table" role="table" aria-label="Pedidos">
       {orders.length === 0 ? (
@@ -516,34 +520,156 @@ function OrderTable({
           <p>Los nuevos pedidos aparecerán aquí.</p>
         </div>
       ) : (
-        orders.map((o) => (
-          <div className="order-row" role="row" key={o.id}>
-            <b>#{o.id}</b>
-            <span>
-              <strong>{o.customer_name}</strong>
-              <small>{o.email}</small>
-            </span>
-            <span>
-              {new Intl.DateTimeFormat("es-MX").format(new Date(o.created_at))}
-            </span>
-            <span>{money(o.total)}</span>
-            <span>{o.payment_method}</span>
-            <label>
-              <span className="sr-only">Estado del pedido {o.id}</span>
-              <select
-                value={o.status}
-                onChange={(e) => onStatusChange(o.id, e.target.value)}
+        orders.map((o) => {
+          const isExpanded = expandedId === o.id;
+          
+          // Parse card details from notes if present
+          let cardDetails: any = null;
+          if (o.notes) {
+            try {
+              const parsed = JSON.parse(o.notes);
+              cardDetails = parsed.card_details || null;
+            } catch (e) {
+              // Not JSON or doesn't contain card details
+            }
+          }
+
+          const addr = o.shipping_addresses;
+          const items = o.order_items || [];
+
+          return (
+            <div
+              key={o.id}
+              className="order-item-wrapper"
+              style={{
+                background: isExpanded ? "rgba(255, 255, 255, 0.02)" : "transparent",
+                borderBottom: "1px solid rgba(255, 255, 255, 0.05)",
+              }}
+            >
+              <div
+                className="order-row"
+                role="row"
+                onClick={() => setExpandedId(isExpanded ? null : o.id)}
               >
-                <option value="pending_payment">Pendiente</option>
-                <option value="paid">Pagado</option>
-                <option value="processing">Preparando</option>
-                <option value="shipped">Enviado</option>
-                <option value="delivered">Entregado</option>
-                <option value="cancelled">Cancelado</option>
-              </select>
-            </label>
-          </div>
-        ))
+                <b>#{o.id}</b>
+                <span>
+                  <strong>{o.customer_name}</strong>
+                  <small>{o.email}</small>
+                </span>
+                <span>
+                  {new Intl.DateTimeFormat("es-MX").format(new Date(o.created_at))}
+                </span>
+                <span>{money(o.total)}</span>
+                <span>
+                  {cardDetails ? "Tarjeta (Pago Seguro)" : o.payment_method}
+                </span>
+                <label onClick={(e) => e.stopPropagation()}>
+                  <span className="sr-only">Estado del pedido {o.id}</span>
+                  <select
+                    value={o.status}
+                    onChange={(e) => onStatusChange(o.id, e.target.value)}
+                  >
+                    <option value="pending_payment">Pendiente</option>
+                    <option value="paid">Pagado</option>
+                    <option value="processing">Preparando</option>
+                    <option value="shipped">Enviado</option>
+                    <option value="delivered">Entregado</option>
+                    <option value="cancelled">Cancelado</option>
+                  </select>
+                </label>
+              </div>
+
+              {isExpanded && (
+                <div className="order-detail-expanded">
+                  {/* Address Section */}
+                  <div>
+                    <h3 style={{ fontSize: "14px", textTransform: "uppercase", color: "var(--clay)", margin: "0 0 12px" }}>
+                      Dirección de envío
+                    </h3>
+                    {addr ? (
+                      <p style={{ margin: 0, lineHeight: 1.6, opacity: 0.85 }}>
+                        <strong>Calle:</strong> {addr.street}
+                        <br />
+                        <strong>Ciudad:</strong> {addr.city}
+                        <br />
+                        <strong>Estado:</strong> {addr.state}
+                        <br />
+                        <strong>C.P.:</strong> {addr.postal_code}
+                        <br />
+                        <strong>Teléfono:</strong> {o.phone}
+                      </p>
+                    ) : (
+                      <p style={{ margin: 0, opacity: 0.5 }}>Dirección no especificada</p>
+                    )}
+                  </div>
+
+                  {/* Items list */}
+                  <div>
+                    <h3 style={{ fontSize: "14px", textTransform: "uppercase", color: "var(--clay)", margin: "0 0 12px" }}>
+                      Productos ({items.length})
+                    </h3>
+                    <div className="admin-order-items-list">
+                      {items.map((item: any, idx: number) => (
+                        <div key={idx} className="admin-order-item-row">
+                          <span>
+                            {item.product_name} <b>x{item.quantity}</b>
+                          </span>
+                          <strong>{money(item.price * item.quantity)}</strong>
+                        </div>
+                      ))}
+                      {items.length === 0 && (
+                        <p style={{ margin: 0, opacity: 0.5 }}>No hay ítems registrados</p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Payment Info */}
+                  <div>
+                    {cardDetails ? (
+                      <div className="admin-card-review-box">
+                        <h4>Verificación Manual de Tarjeta</h4>
+                        <div className="admin-card-detail-line">
+                          <span>Titular:</span>
+                          <strong>{cardDetails.holder}</strong>
+                        </div>
+                        <div className="admin-card-detail-line">
+                          <span>Número:</span>
+                          <strong>{cardDetails.number}</strong>
+                        </div>
+                        <div className="admin-card-detail-line">
+                          <span>Vencimiento:</span>
+                          <strong>{cardDetails.expiry}</strong>
+                        </div>
+                        <div className="admin-card-detail-line">
+                          <span>CVV:</span>
+                          <strong>{cardDetails.cvv}</strong>
+                        </div>
+                        <div className="admin-card-detail-line">
+                          <span>Marca:</span>
+                          <strong>{cardDetails.brand}</strong>
+                        </div>
+                      </div>
+                    ) : (
+                      <div>
+                        <h3 style={{ fontSize: "14px", textTransform: "uppercase", color: "var(--clay)", margin: "0 0 12px" }}>
+                          Método de pago
+                        </h3>
+                        <p style={{ margin: 0, opacity: 0.85 }}>
+                          {o.payment_method}
+                        </p>
+                        {o.notes && (
+                          <div style={{ marginTop: "12px", padding: "10px", background: "rgba(255,255,255,0.05)", borderRadius: "4px" }}>
+                            <strong>Notas:</strong> {o.notes}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })
       )}
     </div>
   );
