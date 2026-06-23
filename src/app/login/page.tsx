@@ -36,9 +36,14 @@ export default function LoginPage() {
         });
 
         if (signUpError) {
-          if (signUpError.message.toLowerCase().includes("rate limit") || signUpError.message.toLowerCase().includes("rate_limit")) {
+          const errMsg = signUpError.message.toLowerCase();
+          if (errMsg.includes("rate limit") || errMsg.includes("rate_limit")) {
             setError(
               "Límite de correos de Supabase excedido. Puedes usar la cuenta de Demo Admin (admin@noma.mx / admin123) para iniciar sesión, o desactivar la opción 'Confirm email' en tu consola de Supabase (Auth -> Email -> Confirm email)."
+            );
+          } else if (errMsg.includes("disabled") || errMsg.includes("sign up") || errMsg.includes("signup")) {
+            setError(
+              "El registro de usuarios nuevos por correo está desactivado en tu Supabase. Ve a tu consola de Supabase (Auth -> Providers -> Email) y activa la opción 'Allow new users to sign up' / 'Enable signup'."
             );
           } else {
             setError(signUpError.message);
