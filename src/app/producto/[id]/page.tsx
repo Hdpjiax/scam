@@ -4,8 +4,9 @@ import { products as seed } from "../../../data/products";
 
 export const dynamic = "force-dynamic";
 
-export default async function Page({ params }: { params: { id: string } }) {
-  const productId = Number(params.id);
+export default async function Page({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const productId = Number(id);
   let product: any = null;
 
   try {
