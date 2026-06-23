@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-06-23T00:00:00-06:00",
+  "title": "Design System: NŌMA Casa Viva",
+  "extensions": {
+    "colorMeta": {
+      "nocturne-ink": {"role":"primary","displayName":"Nocturne Ink","canonical":"#1c1d19","tonalRamp":["#0f100e","#1c1d19","#343630"]},
+      "fired-clay": {"role":"primary","displayName":"Fired Clay","canonical":"#9d5037","tonalRamp":["#6e3425","#9d5037","#c87858"]},
+      "gallery-paper": {"role":"neutral","displayName":"Gallery Paper","canonical":"#f4f1e9","tonalRamp":["#d5d0c5","#eae4d8","#f4f1e9"]}
+    },
+    "typographyMeta": {
+      "display":{"displayName":"Sculptural Display","purpose":"Una idea dominante por viewport."},
+      "body":{"displayName":"Quiet Utility","purpose":"Compra, lectura y operación."}
+    },
+    "shadows": [
+      {"name":"drawer-depth","value":"0 12px 32px rgba(0,0,0,.24)","purpose":"Drawers y modales."},
+      {"name":"interactive-lift","value":"0 4px 8px rgba(0,0,0,.16)","purpose":"Respuesta de hover táctil."}
+    ],
+    "motion": [
+      {"name":"ease-premium","value":"cubic-bezier(.16,1,.3,1)","purpose":"Entradas, drawers y máscaras."},
+      {"name":"duration-state","value":"220ms","purpose":"Cambios pequeños de estado."},
+      {"name":"duration-scene","value":"800ms","purpose":"Transiciones editoriales puntuales."}
+    ],
+    "breakpoints": [
+      {"name":"mobile","value":"650px"},
+      {"name":"compact","value":"900px"},
+      {"name":"wide","value":"1280px"}
+    ]
+  },
+  "components": [
+    {"name":"Primary Button","kind":"button","refersTo":"button-primary","description":"Acción táctil de máximo énfasis.","html":"<button class=\"ds-primary\">Añadir a la bolsa</button>","css":".ds-primary{background:#1c1d19;color:#fff;border:0;padding:16px 22px;font:600 11px DM Sans,sans-serif;transition:transform 220ms cubic-bezier(.16,1,.3,1),background 220ms}.ds-primary:hover{background:#343630;transform:translateY(-2px)}.ds-primary:focus-visible{outline:2px solid #9d5037;outline-offset:3px}"},
+    {"name":"Quiet Input","kind":"input","refersTo":"input-quiet","description":"Campo lineal para tienda y panel.","html":"<input class=\"ds-input\" placeholder=\"Buscar productos\">","css":".ds-input{background:#f4f1e9;color:#1c1d19;border:0;border-bottom:1px solid #5d5d56;padding:13px 0;font:400 16px DM Sans,sans-serif}.ds-input:focus-visible{outline:2px solid #9d5037;outline-offset:3px}"},
+    {"name":"Filter Chip","kind":"chip","refersTo":"chip-filter","description":"Selección compacta de categorías.","html":"<button class=\"ds-chip\">Iluminación</button>","css":".ds-chip{background:#f4f1e9;color:#1c1d19;border:1px solid #5d5d56;border-radius:999px;padding:10px 17px;font:600 11px DM Sans,sans-serif}.ds-chip:hover,.ds-chip:focus-visible{background:#1c1d19;color:#fff}.ds-chip:focus-visible{outline:2px solid #9d5037;outline-offset:2px}"}
+  ],
+  "narrative": {
+    "northStar":"Lujo Silencioso Digital",
+    "overview":"Una galería doméstica nocturna: arquitectura negra, producto iluminado y controles táctiles. La tienda crea deseo; el panel traduce la misma marca a precisión operativa.",
+    "keyCharacteristics":["Negro mineral dominante","Arcilla como señal excepcional","Imagen como fuente de color","Movimiento cinematográfico accesible","Una identidad para tienda y panel"],
+    "rules":[
+      {"name":"Fired-Clay Signal","body":"La arcilla ocupa menos del 10% de la pantalla.","section":"colors"},
+      {"name":"One Sculptural Voice","body":"Un solo titular escultórico por pantalla.","section":"typography"},
+      {"name":"Flat at Rest","body":"Las sombras solo expresan elevación real o interacción.","section":"elevation"}
+    ],
+    "dos":["Do cumplir WCAG 2.2 AAA.","Do conservar toda la información con movimiento reducido.","Do usar producto e imagen para aportar color."],
+    "donts":["Don't parecer una plantilla genérica.","Don't usar beige editorial como fondo dominante.","Don't usar glassmorphism o tarjetas idénticas interminables."]
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "name": "noma-casa-viva",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "lucide-react": "latest",
+    "@supabase/supabase-js": "^2.43.2",
+    "@supabase/ssr": "^0.3.0",
+    "stripe": "^15.7.0",
+    "@stripe/stripe-js": "^3.4.1",
+    "mercadopago": "^2.0.8"
+  },
+  "devDependencies": {
+    "typescript": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "@types/node": "latest"
+  }
+}
