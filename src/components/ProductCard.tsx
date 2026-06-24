@@ -92,8 +92,8 @@ export default function ProductCard({
             className={"wish " + (fav ? "active" : "")}
             aria-label={
               fav
-                ? `Quitar ${p.name} de favoritos`
-                : `Añadir ${p.name} a favoritos`
+                ? `Remove ${p.name} of favorite`
+                : `Add ${p.name} of favorite`
             }
             aria-pressed={fav}
             onClick={() => setFav(!fav)}
@@ -129,7 +129,7 @@ export default function ProductCard({
             className={`quick ${added ? "added" : ""}`}
             onClick={handleAdd}
           >
-            <Plus /> {added ? "Agregado" : "Añadir rápido"}
+            <Plus /> {added ? "Added" : "Add to cart"}
           </button>
         )}
       </div>

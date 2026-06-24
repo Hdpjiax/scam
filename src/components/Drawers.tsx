@@ -82,17 +82,22 @@ export function Cart({ open, onClose }: { open: boolean; onClose: () => void }) 
                     "cart-line " +
                     (lastAdded?.id === item.product.id ? "recent" : "")
                   }
-                  key={`${item.product.id}-${i}`}
+                  key={`${item.product.id}-${item.selectedColor || "none"}-${i}`}
                 >
                   <img src={item.product.image} alt={item.product.name} />
                   <div>
                     <small>{item.product.category}</small>
                     <h4>{item.product.name}</h4>
+                    {item.selectedColor && (
+                      <span className="cart-item-color" style={{ fontSize: "11px", opacity: 0.8, display: "block", marginBottom: "4px", textTransform: "uppercase", letterSpacing: "0.03em" }}>
+                        Color: <span style={{ color: "#d1b894", fontWeight: "600" }}>{item.selectedColor}</span>
+                      </span>
+                    )}
                     <span>{money(item.product.price)}</span>
                     <div className="qty" aria-label="Quantity">
                       <button
                         aria-label="Reduce quantity"
-                        onClick={() => updateQty(item.product.id, item.quantity - 1)}
+                        onClick={() => updateQty(item.product.id, item.quantity - 1, item.selectedColor)}
                       >
                         <Minus />
                       </button>
@@ -100,7 +105,7 @@ export function Cart({ open, onClose }: { open: boolean; onClose: () => void }) 
                       <button
                         aria-label="Increase quantity"
                         disabled={item.quantity >= (item.product.stock ?? item.quantity)}
-                        onClick={() => updateQty(item.product.id, item.quantity + 1)}
+                        onClick={() => updateQty(item.product.id, item.quantity + 1, item.selectedColor)}
                       >
                         <Plus />
                       </button>
@@ -108,7 +113,7 @@ export function Cart({ open, onClose }: { open: boolean; onClose: () => void }) 
                   </div>
                   <button
                     aria-label={`Remove ${item.product.name}`}
-                    onClick={() => removeFromCart(item.product.id)}
+                    onClick={() => removeFromCart(item.product.id, item.selectedColor)}
                   >
                     <Trash2 />
                   </button>

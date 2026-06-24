@@ -130,24 +130,40 @@ h3 {
 
 .brand {
   font:
-    29px/0.72 Gloock,
+    40px Gloock,
     serif;
   letter-spacing: 0.12em;
 }
 
+@media (max-width: 768px) {
+  .brand {
+    font-size: 20px;
+  }
+}
+
 .brand span {
   display: block;
-  font: 7px "Manrope";
+  font: 15px "Manrope";
   letter-spacing: 0.32em;
   text-transform: uppercase;
   margin-top: 8px;
+}
+
+@media screen {
+  .brand span {
+    display: block;
+    font: 7px "Manrope";
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    margin-top: 8px;
+  }
 }
 
 .site-header>nav {
   display: flex;
   gap: clamp(15px, 2.2vw, 34px);
   margin: auto;
-  font-size: 11px;
+  font-size: 20px;
 }
 
 .site-header nav a {
@@ -1328,19 +1344,48 @@ footer small {
 
 .pdp-colors {
   margin: 25px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .pdp-colors label {
   display: block;
-  font-size: 10px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.pdp-colors label b {
+  color: #d1b894;
+  margin-left: 4px;
+  font-weight: 600;
+}
+
+.pdp-colors-list {
+  display: flex;
+  gap: 16px;
+  align-items: center;
 }
 
 .pdp-colors button {
-  width: 44px;
-  height: 44px;
+  width: 36px;
+  height: 36px;
   border-radius: 999px;
   border: 3px solid var(--ink);
-  box-shadow: 0 0 0 1px var(--paper);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+  cursor: pointer;
+}
+
+.pdp-colors button:hover {
+  transform: scale(1.12);
+  box-shadow: 0 0 0 2px var(--paper);
+}
+
+.pdp-colors button.active {
+  transform: scale(1.22);
+  box-shadow: 0 0 0 2px #d1b894;
 }
 
 .stock {
@@ -1718,15 +1763,16 @@ footer small {
   min-height: 100vh;
   background: var(--ink);
   display: grid;
-  grid-template-columns: 260px 1fr;
+  grid-template-columns: 280px 1fr;
+  font-size: 15px;
 }
 
 .admin-nav {
   background: var(--mineral);
-  padding: 30px 16px;
+  padding: 30px 20px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
   position: sticky;
   top: 0;
   height: 100vh;
@@ -1734,12 +1780,12 @@ footer small {
 }
 
 .admin-logo {
-  font: 26px Gloock;
+  font: 30px Gloock;
   padding: 0 14px 32px;
 }
 
 .admin-logo span {
-  font: 8px "Manrope";
+  font: 10px "Manrope";
   letter-spacing: 0.15em;
 }
 
@@ -1748,13 +1794,13 @@ footer small {
   border: 0;
   background: none;
   color: color-mix(in srgb, var(--paper) 68%, var(--mineral));
-  min-height: 50px;
-  padding: 12px 16px;
+  min-height: 56px;
+  padding: 14px 20px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   text-align: left;
-  font-size: 13px;
+  font-size: 15px;
   border-radius: 8px;
 }
 
@@ -1768,9 +1814,9 @@ footer small {
   margin-left: auto;
   background: color-mix(in srgb, var(--clay) 20%, transparent);
   color: var(--clay);
-  padding: 2px 10px;
+  padding: 3px 12px;
   border-radius: 999px;
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .back-shop {
@@ -1778,7 +1824,7 @@ footer small {
 }
 
 .admin-main {
-  padding: 30px clamp(20px, 3vw, 50px);
+  padding: 40px clamp(30px, 4vw, 60px);
   min-width: 0;
 }
 
@@ -1786,29 +1832,29 @@ footer small {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 32px;
+  margin-bottom: 40px;
 }
 
 .admin-head p {
-  font-size: 12px;
+  font-size: 14px;
   color: color-mix(in srgb, var(--paper) 60%, var(--ink));
   letter-spacing: 0.08em;
 }
 
 .admin-head h1 {
-  font: 42px Gloock;
-  margin: 4px 0;
+  font: 48px Gloock;
+  margin: 6px 0;
   letter-spacing: -0.02em;
 }
 
 .admin-avatar {
-  width: 48px;
-  height: 48px;
+  width: 56px;
+  height: 56px;
   border-radius: 999px;
   background: var(--clay);
   display: grid;
   place-items: center;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
 }
 
@@ -1821,60 +1867,60 @@ footer small {
   border: 1px solid color-mix(in srgb, var(--paper) 12%, var(--ink));
   border-radius: 12px;
   overflow: hidden;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .metrics article {
   background: var(--mineral);
-  padding: 28px 24px;
-  min-height: 165px;
+  padding: 32px 28px;
+  min-height: 180px;
   display: flex;
   flex-direction: column;
   position: relative;
 }
 
 .metrics article>span {
-  font-size: 12px;
+  font-size: 13px;
   color: color-mix(in srgb, var(--paper) 62%, var(--mineral));
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
 
 .metrics small {
-  font-size: 11px;
+  font-size: 12px;
   color: color-mix(in srgb, var(--paper) 50%, var(--mineral));
 }
 
 .metrics strong {
-  font: 34px Gloock;
-  margin: 16px 0 6px;
+  font: 40px Gloock;
+  margin: 18px 0 8px;
   letter-spacing: -0.02em;
 }
 
 .metrics svg {
   position: absolute;
-  right: 20px;
-  bottom: 20px;
-  width: 24px;
-  height: 24px;
+  right: 24px;
+  bottom: 24px;
+  width: 28px;
+  height: 28px;
   color: var(--clay);
 }
 
 .admin-panels {
   display: grid;
   grid-template-columns: 1.5fr 0.5fr;
-  gap: 16px;
+  gap: 20px;
 }
 
 .admin-panels>section {
   background: var(--mineral);
-  padding: 28px;
+  padding: 32px;
   border-radius: 12px;
 }
 
 .order-section {
   background: var(--mineral);
-  padding: 28px;
+  padding: 32px;
   border-radius: 12px;
 }
 
@@ -1882,11 +1928,11 @@ footer small {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 .panel-title h2 {
-  font: 24px Gloock;
+  font: 28px Gloock;
   margin: 0;
 }
 
@@ -1894,7 +1940,7 @@ footer small {
   border: 0;
   background: none;
   color: var(--clay);
-  font-size: 12px;
+  font-size: 14px;
   cursor: pointer;
   transition: opacity var(--fast);
 }
@@ -1906,15 +1952,15 @@ footer small {
 /* Stock list - larger */
 .stock-list>div:not(.panel-title) {
   display: flex;
-  gap: 14px;
-  padding: 14px 0;
+  gap: 16px;
+  padding: 16px 0;
   border-top: 1px solid color-mix(in srgb, var(--paper) 12%, var(--mineral));
   align-items: center;
 }
 
 .stock-list img {
-  width: 52px;
-  height: 60px;
+  width: 60px;
+  height: 70px;
   object-fit: cover;
   border-radius: 6px;
 }
@@ -1926,17 +1972,17 @@ footer small {
 }
 
 .stock-list span b {
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .stock-list small {
-  font-size: 11px;
+  font-size: 13px;
   color: color-mix(in srgb, var(--paper) 50%, var(--mineral));
 }
 
 .stock-list em {
   color: var(--clay);
-  font-size: 13px;
+  font-size: 15px;
   font-style: normal;
   font-weight: 600;
 }
@@ -1952,27 +1998,27 @@ footer small {
     background var(--fast) var(--ease),
     transform var(--fast) var(--ease);
   display: grid;
-  grid-template-columns: 90px 1.6fr 1fr 110px 130px 150px;
-  gap: 10px;
+  grid-template-columns: 100px 1.6fr 1fr 120px 140px 160px;
+  gap: 12px;
   align-items: center;
-  min-width: 780px;
-  padding: 16px 0;
+  min-width: 860px;
+  padding: 20px 0;
   border-top: 1px solid color-mix(in srgb, var(--paper) 10%, var(--mineral));
-  font-size: 13px;
+  font-size: 15px;
 }
 
 .order-row>span {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
 }
 
 .order-row strong {
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .order-row small {
-  font-size: 11px;
+  font-size: 13px;
   color: color-mix(in srgb, var(--paper) 50%, var(--mineral));
 }
 
@@ -1980,9 +2026,9 @@ footer small {
   background: var(--ink);
   color: var(--paper);
   border: 1px solid var(--copy);
-  padding: 10px 12px;
+  padding: 12px 14px;
   border-radius: 6px;
-  font-size: 12px;
+  font-size: 14px;
   cursor: pointer;
   transition: border-color var(--fast);
 }
@@ -2003,12 +2049,12 @@ footer small {
 .table-row {
   display: grid;
   grid-template-columns: 2fr 0.9fr 0.8fr 0.9fr 0.8fr 0.6fr;
-  gap: 12px;
+  gap: 14px;
   align-items: center;
-  padding: 14px 22px;
-  min-width: 820px;
+  padding: 18px 24px;
+  min-width: 860px;
   border-top: 1px solid color-mix(in srgb, var(--paper) 10%, var(--mineral));
-  font-size: 13px;
+  font-size: 15px;
   transition:
     background var(--fast) var(--ease),
     transform var(--fast) var(--ease);
@@ -2020,7 +2066,7 @@ footer small {
 }
 
 .table-labels {
-  font-size: 11px;
+  font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: color-mix(in srgb, var(--paper) 45%, var(--mineral));
@@ -2029,13 +2075,13 @@ footer small {
 
 .product-cell {
   display: flex;
-  gap: 14px;
+  gap: 16px;
   align-items: center;
 }
 
 .product-cell img {
-  width: 56px;
-  height: 66px;
+  width: 64px;
+  height: 74px;
   object-fit: cover;
   border-radius: 8px;
 }
@@ -2048,36 +2094,36 @@ footer small {
 }
 
 .product-cell b {
-  font-size: 15px;
+  font-size: 17px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .product-cell small {
-  font-size: 11px;
+  font-size: 13px;
   color: color-mix(in srgb, var(--paper) 50%, var(--mineral));
 }
 
 .status {
-  padding: 6px 12px;
+  padding: 8px 16px;
   border-radius: 999px;
   background: color-mix(in srgb, var(--clay) 24%, var(--mineral));
   font-style: normal;
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .row-actions {
   display: flex;
-  gap: 2px;
+  gap: 4px;
 }
 
 .row-actions button {
   border: 0;
   background: none;
   color: inherit;
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   border-radius: 6px;
   transition:
     background var(--fast) var(--ease),
@@ -2100,17 +2146,17 @@ footer small {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
-  gap: 16px;
+  margin-bottom: 28px;
+  gap: 20px;
 }
 
 .admin-toolbar label {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   background: var(--mineral);
-  padding: 10px 16px;
-  width: min(400px, 55%);
+  padding: 12px 20px;
+  width: min(440px, 55%);
   border-radius: 8px;
   border: 1px solid transparent;
   transition: border-color var(--fast);
@@ -2126,17 +2172,17 @@ footer small {
   color: inherit;
   outline: 0;
   width: 100%;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .admin-primary {
   background: var(--paper) !important;
   color: var(--ink) !important;
   border: 0 !important;
-  padding: 14px 22px !important;
-  min-height: 48px;
+  padding: 16px 26px !important;
+  min-height: 52px;
   border-radius: 8px !important;
-  font-size: 14px !important;
+  font-size: 16px !important;
   font-weight: 600 !important;
   display: inline-flex !important;
   align-items: center;

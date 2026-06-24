@@ -46,6 +46,49 @@ const FALLBACK_REVIEWS_POOL = [
   }
 ];
 
+const colorName = (hex: string) => {
+  const map: Record<string, string> = {
+    "#d8c7ad": "Natural",
+    "#292723": "Charcoal",
+    "#87907c": "Sage",
+    "#e8e1d5": "Sand",
+    "#2d2b29": "Basalt",
+    "#e6dfd0": "Alabaster",
+    "#b6a58d": "Oatmeal",
+    "#9b6c4e": "Clay",
+    "#ded1bf": "Cream",
+    "#222220": "Obsidian",
+    "#ccb78f": "Bronze",
+    "#b77b55": "Terracotta",
+    "#ddd5c8": "Linen",
+    "#f2efe8": "Bone",
+    "#6c4933": "Walnut",
+    "#b39b7c": "Ash",
+    "#ded8cb": "Parchment",
+    "#8a7967": "Taupe",
+    "#edeae3": "Chalk",
+    "#252525": "Midnight Black",
+    "#f3f1ec": "Pebble",
+    "#20211f": "Slate",
+    "#ded2bd": "Warm Linen",
+    "#899082": "Olive",
+    "#cab99e": "Mist",
+    "#a66f52": "Copper",
+    "#e1d4c1": "Off-White",
+    "#1e1f1d": "Ink Black",
+    "#d7d0c4": "Ivory",
+    "#a85e40": "Rust",
+    "#d6c2a7": "Warm Sand",
+    "#171815": "Eclipse Black",
+    "#d7aa67": "Solar Gold",
+    "#b89163": "Oak",
+    "#664a35": "Dark Oak",
+    "#eeece5": "Cloud",
+    "#9ca099": "Mist Grey"
+  };
+  return map[hex.toLowerCase()] || hex;
+};
+
 export default function ProductPageClient({
   initialProduct,
   initialReviews = [],
@@ -72,6 +115,10 @@ export default function ProductPageClient({
     return (sum / productReviews.length).toFixed(1);
   }, [productReviews]);
 
+  const [selectedColor, setSelectedColor] = useState(() => {
+    return initialProduct?.colors?.[0] || "";
+  });
+
   if (!initialProduct) {
     return (
       <div className="access-denied">
@@ -90,7 +137,7 @@ export default function ProductPageClient({
 
   const handleAdd = () => {
     if (isOut) return;
-    addToCart(p, qty);
+    addToCart(p, qty, colorName(selectedColor));
     setAdded(true);
     setDrawer(true);
     window.setTimeout(() => setAdded(false), 1600);
@@ -152,15 +199,19 @@ export default function ProductPageClient({
             <p>{p.description}</p>
             <div className="pdp-colors">
               <label>
-                Color <b>Natural</b>
+                Color: <b>{colorName(selectedColor)}</b>
               </label>
-              {p.colors.map((c, i) => (
-                <button
-                  aria-label={`Color ${i + 1}`}
-                  key={`${c}-${i}`}
-                  style={{ background: c }}
-                />
-              ))}
+              <div className="pdp-colors-list">
+                {p.colors.map((c, i) => (
+                  <button
+                    aria-label={`Select Color ${colorName(c)}`}
+                    key={`${c}-${i}`}
+                    className={selectedColor === c ? "active" : ""}
+                    onClick={() => setSelectedColor(c)}
+                    style={{ background: c }}
+                  />
+                ))}
+              </div>
             </div>
             <div className={`stock ${isOut ? "out" : isLow ? "low" : ""}`}>
               <i />
@@ -207,25 +258,25 @@ export default function ProductPageClient({
 
             {/* Premium Specifications Table */}
             <div className="pdp-specifications" style={{ marginTop: "40px", borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: "30px" }}>
-              <h3 style={{ fontSize: "14px", textTransform: "uppercase", letterSpacing: "0.05em", color: "var(--clay)", margin: "0 0 20px" }}>
+              <h3 style={{ fontSize: "14px", textTransform: "uppercase", letterSpacing: "0.05em", color: "#d1b894", margin: "0 0 20px" }}>
                 Specifications & Materials
               </h3>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px 32px", fontSize: "13px", color: "var(--copy)" }}>
-                <div style={{ borderBottom: "1px solid rgba(255,255,255,0.03)", paddingBottom: "8px" }}>
-                  <span style={{ opacity: 0.6, display: "block" }}>Origin</span>
-                  <strong>Sustainably Crafted</strong>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px 32px", fontSize: "13px", color: "#ffffff" }}>
+                <div style={{ borderBottom: "1px solid rgba(255,255,255,0.05)", paddingBottom: "8px" }}>
+                  <span style={{ opacity: 0.75, display: "block", fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.05em" }}>Origin</span>
+                  <strong style={{ color: "#ffffff" }}>Sustainably Crafted</strong>
                 </div>
-                <div style={{ borderBottom: "1px solid rgba(255,255,255,0.03)", paddingBottom: "8px" }}>
-                  <span style={{ opacity: 0.6, display: "block" }}>Dimensions</span>
-                  <strong>Standard Size</strong>
+                <div style={{ borderBottom: "1px solid rgba(255,255,255,0.05)", paddingBottom: "8px" }}>
+                  <span style={{ opacity: 0.75, display: "block", fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.05em" }}>Dimensions</span>
+                  <strong style={{ color: "#ffffff" }}>Standard Size</strong>
                 </div>
-                <div style={{ borderBottom: "1px solid rgba(255,255,255,0.03)", paddingBottom: "8px" }}>
-                  <span style={{ opacity: 0.6, display: "block" }}>Material</span>
-                  <strong>Premium Organic Blends</strong>
+                <div style={{ borderBottom: "1px solid rgba(255,255,255,0.05)", paddingBottom: "8px" }}>
+                  <span style={{ opacity: 0.75, display: "block", fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.05em" }}>Material</span>
+                  <strong style={{ color: "#ffffff" }}>Premium Organic Blends</strong>
                 </div>
-                <div style={{ borderBottom: "1px solid rgba(255,255,255,0.03)", paddingBottom: "8px" }}>
-                  <span style={{ opacity: 0.6, display: "block" }}>Finish</span>
-                  <strong>Matte Mineral Glaze</strong>
+                <div style={{ borderBottom: "1px solid rgba(255,255,255,0.05)", paddingBottom: "8px" }}>
+                  <span style={{ opacity: 0.75, display: "block", fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.05em" }}>Finish</span>
+                  <strong style={{ color: "#ffffff" }}>Matte Mineral Glaze</strong>
                 </div>
               </div>
             </div>
@@ -282,16 +333,16 @@ export default function ProductPageClient({
           <div style={{ maxWidth: "800px", margin: "0 auto" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "40px" }}>
               <div>
-                <small style={{ color: "var(--clay)", textTransform: "uppercase", letterSpacing: "0.08em", fontWeight: "600" }}>Community Voices</small>
-                <h2 style={{ fontSize: "28px", marginTop: "8px", fontFamily: "var(--font-serif)" }}>Customer Reviews</h2>
+                <small style={{ color: "#d1b894", textTransform: "uppercase", letterSpacing: "0.08em", fontWeight: "600" }}>Community Voices</small>
+                <h2 style={{ fontSize: "28px", marginTop: "8px", fontFamily: "var(--font-serif)", color: "#ffffff" }}>Customer Reviews</h2>
               </div>
               <div style={{ textAlign: "right" }}>
-                <div style={{ fontSize: "36px", fontWeight: "300", fontFamily: "var(--font-serif)" }}>
-                  {averageRating} <span style={{ fontSize: "16px", color: "var(--clay)" }}>/ 5.0</span>
+                <div style={{ fontSize: "36px", fontWeight: "300", fontFamily: "var(--font-serif)", color: "#ffffff" }}>
+                  {averageRating} <span style={{ fontSize: "16px", color: "#d1b894" }}>/ 5.0</span>
                 </div>
                 <div style={{ display: "flex", gap: "2px", justifyContent: "flex-end", marginTop: "4px" }}>
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} size={14} fill={i < Math.round(Number(averageRating)) ? "var(--clay)" : "none"} stroke="var(--clay)" />
+                    <Star key={i} size={14} fill={i < Math.round(Number(averageRating)) ? "#d1b894" : "none"} stroke="#d1b894" />
                   ))}
                 </div>
               </div>
@@ -303,10 +354,10 @@ export default function ProductPageClient({
                   key={r.id || i} 
                   style={{ 
                     padding: "24px", 
-                    background: "rgba(255, 255, 255, 0.02)", 
+                    background: "rgba(255, 255, 255, 0.03)", 
                     backdropFilter: "blur(8px)",
                     borderRadius: "8px", 
-                    border: "1px solid rgba(255, 255, 255, 0.04)" 
+                    border: "1px solid rgba(255, 255, 255, 0.06)" 
                   }}
                 >
                   <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "16px" }}>
@@ -317,9 +368,9 @@ export default function ProductPageClient({
                     />
                     <div style={{ flex: 1 }}>
                       <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                        <strong style={{ fontSize: "14px", color: "var(--fg)" }}>{r.author_name}</strong>
+                        <strong style={{ fontSize: "14px", color: "#ffffff" }}>{r.author_name}</strong>
                         {r.is_verified_purchase && (
-                          <span style={{ fontSize: "10px", color: "var(--clay)", background: "rgba(209, 184, 148, 0.1)", padding: "2px 8px", borderRadius: "99px", display: "inline-flex", alignItems: "center", gap: "3px" }}>
+                          <span style={{ fontSize: "10px", color: "#d1b894", background: "rgba(209, 184, 148, 0.08)", border: "1px solid rgba(209, 184, 148, 0.3)", padding: "2px 8px", borderRadius: "99px", display: "inline-flex", alignItems: "center", gap: "3px" }}>
                             <Sparkles size={8} /> Verified Buyer
                           </span>
                         )}
@@ -329,14 +380,14 @@ export default function ProductPageClient({
                           <Star
                             key={idx}
                             size={12}
-                            fill={idx < r.rating ? "var(--clay)" : "none"}
-                            stroke="var(--clay)"
+                            fill={idx < r.rating ? "#d1b894" : "none"}
+                            stroke="#d1b894"
                           />
                         ))}
                       </div>
                     </div>
                   </div>
-                  <p style={{ margin: 0, fontSize: "14px", lineHeight: "1.6", color: "var(--copy)", opacity: 0.9 }}>
+                  <p style={{ margin: 0, fontSize: "14px", lineHeight: "1.6", color: "#ffffff", opacity: 0.95 }}>
                     {r.content}
                   </p>
                 </div>
