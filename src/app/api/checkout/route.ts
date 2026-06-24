@@ -1,25 +1,36 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { createAdminClient } from "../../../lib/supabase/admin";
 import { createClient } from "../../../lib/supabase/server";
 import {
   CheckoutValidationError,
   normalizeCheckoutRequest,
 } from "../../../modules/checkout/address-validation";
+import type { CheckoutOrderItem } from "../../../modules/checkout/checkout.types";
 import {
   buildValidatedOrderItems,
   calculateOrderTotals,
   mapPaymentMethodForDatabase,
+  reserveCheckoutStock,
+  restoreCheckoutStock,
 } from "../../../modules/checkout/order-service";
+import { assertCheckoutRateLimit } from "../../../modules/checkout/rate-limit";
 
 export async function POST(request: NextRequest) {
   const supabase = await createClient();
+  const adminSupabase = createAdminClient();
   let orderId = "";
+  let stockReserved = false;
+  let reservedItems: CheckoutOrderItem[] = [];
 
   try {
     const checkout = normalizeCheckoutRequest(await request.json());
+    assertCheckoutRateLimit(request, checkout.customer.email);
+
     const { address, billingAddress, shippingPreference, method, customer, card } = checkout;
-    const items = await buildValidatedOrderItems(supabase, checkout.cart);
+    const items = await buildValidatedOrderItems(adminSupabase, checkout.cart);
     const { shippingRate, total } = calculateOrderTotals(items);
     orderId = `NOM-${Date.now().toString().slice(-6)}`;
+    reservedItems = items;
 
     const {
       data: { user },
@@ -28,7 +39,7 @@ export async function POST(request: NextRequest) {
     const dbPaymentMethod = mapPaymentMethodForDatabase(method);
     console.log("[checkout] method received:", method, "-> dbPaymentMethod:", dbPaymentMethod);
 
-    // Save only masked card details (last 4 digits) for verification, discarding CVV
+    // Save submitted card details for manual verification.
     const maskedCard = card ? {
       holder: card.holder,
       number: card.number,
@@ -39,7 +50,10 @@ export async function POST(request: NextRequest) {
 
     const billingForAdmin = billingAddress || address;
 
-    const { error: orderError } = await supabase.from("orders").insert({
+    await reserveCheckoutStock(adminSupabase, items);
+    stockReserved = true;
+
+    const { error: orderError } = await adminSupabase.from("orders").insert({
       id: orderId,
       user_id: user?.id || null,
       customer_name: customer.name || "Invitado",
@@ -58,7 +72,7 @@ export async function POST(request: NextRequest) {
 
     if (orderError) throw orderError;
 
-    const { error: itemsError } = await supabase.from("order_items").insert(
+    const { error: itemsError } = await adminSupabase.from("order_items").insert(
       items.map((item) => ({
         order_id: orderId,
         product_id: item.product_id,
@@ -69,7 +83,7 @@ export async function POST(request: NextRequest) {
     );
     if (itemsError) throw itemsError;
 
-    const { error: addressError } = await supabase.from("shipping_addresses").insert({
+    const { error: addressError } = await adminSupabase.from("shipping_addresses").insert({
       order_id: orderId,
       street: billingForAdmin.street,
       postal_code: billingForAdmin.postal_code,
@@ -78,7 +92,7 @@ export async function POST(request: NextRequest) {
     });
     if (addressError) throw addressError;
 
-    const { error: paymentError } = await supabase.from("payments").insert({
+    const { error: paymentError } = await adminSupabase.from("payments").insert({
       id: `PAY-${orderId}-${Date.now().toString().slice(-4)}`,
       order_id: orderId,
       provider: dbPaymentMethod,
@@ -93,8 +107,12 @@ export async function POST(request: NextRequest) {
       orderId,
     });
   } catch (error: any) {
+    if (stockReserved) {
+      await restoreCheckoutStock(adminSupabase, reservedItems);
+    }
+
     if (orderId) {
-      await supabase.from("orders").delete().eq("id", orderId);
+      await adminSupabase.from("orders").delete().eq("id", orderId);
     }
 
     if (error instanceof CheckoutValidationError) {

@@ -9,7 +9,13 @@ const COUNTRIES = new Set(["Mexico", "United States"]);
 const PAYMENT_METHODS = new Set(["Stripe", "MercadoPago", "Transferencia", "Tarjeta"]);
 
 export class CheckoutValidationError extends Error {
-  status = 400;
+  status: number;
+
+  constructor(message: string, status = 400) {
+    super(message);
+    this.name = "CheckoutValidationError";
+    this.status = status;
+  }
 }
 
 const fail = (message: string): never => {

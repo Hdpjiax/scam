@@ -9,6 +9,10 @@ type SupabaseClientLike = {
   from: (table: string) => any;
 };
 
+type SupabaseRpcClientLike = {
+  rpc: (fn: string, args?: Record<string, unknown>) => any;
+};
+
 type ProductRow = {
   id: number;
   name: string;
@@ -101,4 +105,34 @@ export const calculateOrderTotals = (items: CheckoutOrderItem[]) => {
     shippingRate,
     total: subtotal + shippingRate,
   };
+};
+
+const stockPayloadFor = (items: CheckoutOrderItem[]) =>
+  items.map((item) => ({
+    product_id: item.product_id,
+    quantity: item.quantity,
+  }));
+
+export const reserveCheckoutStock = async (
+  supabase: SupabaseRpcClientLike,
+  items: CheckoutOrderItem[],
+) => {
+  const { error } = await supabase.rpc("reserve_checkout_stock", {
+    items: stockPayloadFor(items),
+  });
+  if (error) {
+    throw new CheckoutValidationError(error.message || "Insufficient stock for one or more products.");
+  }
+};
+
+export const restoreCheckoutStock = async (
+  supabase: SupabaseRpcClientLike,
+  items: CheckoutOrderItem[],
+) => {
+  const { error } = await supabase.rpc("restore_checkout_stock", {
+    items: stockPayloadFor(items),
+  });
+  if (error) {
+    console.error("Failed to restore checkout stock", error);
+  }
 };
