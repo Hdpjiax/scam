@@ -55,25 +55,25 @@ export default function Header({
   return (
     <>
       <a className="skip-link" href="#catalogo">
-        Saltar al catálogo
+        Skip to catalog
       </a>
       <div className="announcement">
-        Envío gratuito desde $1,999 <span aria-hidden="true">/</span>{" "}
-        Devoluciones durante 30 días
+        Free shipping on orders over $100 <span aria-hidden="true">/</span>{" "}
+        30-day returns
       </div>
       <header className="site-header">
         <button
           className="icon mobile"
-          aria-label="Abrir menú"
+          aria-label="Open menu"
           aria-expanded={menu}
           onClick={() => setMenu(true)}
         >
           <Menu />
         </button>
-        <TransitionLink className="brand" href="/" aria-label="NŌMA, inicio">
-          NŌMA<span>casa viva</span>
+        <TransitionLink className="brand" href="/" aria-label="NŌMA, home">
+          NŌMA<span>living spaces</span>
         </TransitionLink>
-        <nav aria-label="Navegación principal">
+        <nav aria-label="Main navigation">
           {navCategories.map((category) => (
             <TransitionLink
               key={category.slug}
@@ -86,7 +86,7 @@ export default function Header({
         <div className="actions">
           <button
             className="icon search-trigger"
-            aria-label="Buscar"
+            aria-label="Search"
             onClick={() => setSearch(!search)}
           >
             <Search />
@@ -94,18 +94,18 @@ export default function Header({
           <Link
             className="icon user-link"
             href={profile?.role === "admin" ? "/admin" : "/login"}
-            aria-label={profile ? `Cuenta de ${profile.name}` : "Iniciar sesión"}
+            aria-label={profile ? `${profile.name}'s account` : "Log in"}
           >
             <UserRound />
             <span>{profile ? profile.name.split(" ")[0] : ""}</span>
           </Link>
-          <button className="icon" aria-label="Ver favoritos">
+          <button className="icon" aria-label="View favorites">
             <Heart />
           </button>
           <button
             className={`icon cart ${pulse ? "pulse" : ""}`}
             onClick={onCart}
-            aria-label={`Abrir carrito, ${cartCount} productos`}
+            aria-label={`Open cart, ${cartCount} items`}
           >
             <ShoppingBag />
             <b aria-hidden="true">{cartCount}</b>
@@ -114,16 +114,16 @@ export default function Header({
         {search && (
           <form className="header-search" onSubmit={(e) => e.preventDefault()}>
             <Search />
-            <label htmlFor="global-search">Buscar en NŌMA</label>
+            <label htmlFor="global-search">Search NŌMA</label>
             <input
               id="global-search"
               autoFocus
-              placeholder="Lámparas, textiles, muebles..."
+              placeholder="Lamps, textiles, furniture..."
               onChange={(e) => onSearch?.(e.target.value)}
             />
             <button
               type="button"
-              aria-label="Cerrar búsqueda"
+              aria-label="Close search"
               onClick={() => setSearch(false)}
             >
               <X />
@@ -137,12 +137,12 @@ export default function Header({
       >
         <div className="mobile-menu-head">
           <span>NŌMA</span>
-          <button aria-label="Cerrar menú" onClick={() => setMenu(false)}>
+          <button aria-label="Close menu" onClick={() => setMenu(false)}>
             <X />
           </button>
         </div>
-        <p>Encuentra tu próxima pieza</p>
-        <nav aria-label="Menú móvil">
+        <p>Find your next piece</p>
+        <nav aria-label="Mobile menu">
           {navCategories.map((category, index) => (
             <Link
               href={`/categoria/${category.slug}`}
@@ -157,7 +157,7 @@ export default function Header({
         </nav>
         <div className="mobile-menu-foot">
           <Link href="/login" onClick={() => setMenu(false)}>
-            Mi cuenta
+            My account
           </Link>
           <button
             onClick={() => {
@@ -165,7 +165,7 @@ export default function Header({
               setSearch(true);
             }}
           >
-            Buscar
+            Search
           </button>
         </div>
       </div>

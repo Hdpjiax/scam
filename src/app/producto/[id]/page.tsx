@@ -8,6 +8,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
   const { id } = await params;
   const productId = Number(id);
   let product: any = null;
+  let reviews: any[] = [];
 
   try {
     const supabase = await createClient();
@@ -18,8 +19,17 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
       .single();
     
     product = data;
+
+    const { data: reviewsData } = await supabase
+      .from("reviews")
+      .select("*")
+      .eq("product_id", productId);
+    
+    if (reviewsData) {
+      reviews = reviewsData;
+    }
   } catch (e) {
-    console.error("Fallo al obtener producto de Supabase", e);
+    console.error("Fallo al obtener producto o reseñas de Supabase", e);
   }
 
   // Fallback a semilla si no se encontró en base de datos
@@ -31,5 +41,5 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
     product = normalizeProduct(product, productId - 1);
   }
 
-  return <ProductPageClient initialProduct={product} />;
+  return <ProductPageClient initialProduct={product} initialReviews={reviews} />;
 }

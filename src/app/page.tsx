@@ -23,5 +23,47 @@ export default async function Page() {
   // Si no hay productos en la base de datos, usamos la semilla local
   const products = dbProducts.length > 0 ? dbProducts : seedProducts();
 
-  return <ShopClient initialProducts={products} />;
+  let reviews: any[] = [];
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from("reviews")
+      .select("*, products(name)")
+      .order("created_at", { ascending: false })
+      .limit(6);
+    reviews = data || [];
+  } catch (e) {
+    console.error("Fallo al obtener reseñas de Supabase", e);
+  }
+
+  const STATIC_REVIEWS = [
+    {
+      id: "s1",
+      author_name: "Valeria M.",
+      author_avatar: "https://i.pravatar.cc/150?u=a042581f4e29026704d",
+      rating: 5,
+      content: "La calidad de los materiales es excepcional. Llevaba tiempo buscando piezas de decoración que realmente aportaran calma al espacio, y NŌMA logró exactamente eso. El envío fue súper rápido y el empaque muy cuidadoso.",
+      is_verified_purchase: true,
+    },
+    {
+      id: "s2",
+      author_name: "Carlos T.",
+      author_avatar: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
+      rating: 5,
+      content: "Compré una lámpara para mi estudio y cambió completamente la atmósfera. La luz es súper cálida y el diseño es una escultura en sí mismo.",
+      is_verified_purchase: true,
+    },
+    {
+      id: "s3",
+      author_name: "Sofía R.",
+      author_avatar: "https://i.pravatar.cc/150?u=a042581f4e29026028d",
+      rating: 5,
+      content: "El difusor ultrasónico no solo huele espectacular, sino que estéticamente es minimalista y hermoso. Excelente servicio postventa.",
+      is_verified_purchase: true,
+    }
+  ];
+
+  const finalReviews = reviews.length > 0 ? reviews : STATIC_REVIEWS;
+
+  return <ShopClient initialProducts={products} initialReviews={finalReviews} />;
 }

@@ -6,7 +6,7 @@ import { ArrowRight, Minus, Plus, ShoppingBag, Trash2, X } from "lucide-react";
 import { useStore } from "../providers/StoreProvider";
 import { money } from "../lib/utils";
 
-const FREE_SHIPPING_THRESHOLD = 1999;
+const FREE_SHIPPING_THRESHOLD = 100;
 
 export function Cart({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { cart, updateQty, removeFromCart, lastAdded } = useStore();
@@ -32,40 +32,40 @@ export function Cart({ open, onClose }: { open: boolean; onClose: () => void }) 
       <aside
         className={"drawer " + (open ? "open" : "")}
         aria-hidden={!open}
-        aria-label="Carrito"
+        aria-label="Shopping Cart"
         role="dialog"
         aria-modal="true"
       >
         <div className="drawer-head">
           <div>
-            <small>Compra segura</small>
+            <small>Secure Checkout</small>
             <h2>
-              Tu selección <sup>{totalItems}</sup>
+              Your Selection <sup>{totalItems}</sup>
             </h2>
           </div>
-          <button ref={closeRef} aria-label="Cerrar carrito" onClick={onClose}>
+          <button ref={closeRef} aria-label="Close cart" onClick={onClose}>
             <X />
           </button>
         </div>
         <p className="cart-announcer" aria-live="polite">
-          {lastAdded ? `${lastAdded.name} agregado al carrito.` : ""}
+          {lastAdded ? `${lastAdded.name} added to cart.` : ""}
         </p>
         {cart.length === 0 ? (
           <div className="empty">
             <ShoppingBag />
-            <h3>Tu casa aún tiene espacio</h3>
+            <h3>Your space has room for more</h3>
             <p>
-              Descubre objetos que hacen la vida diaria un poco más especial.
+              Discover objects that make everyday life a little more special.
             </p>
-            <button onClick={onClose}>Explorar colección</button>
+            <button onClick={onClose}>Explore collection</button>
           </div>
         ) : (
           <>
             <div className="shipping-progress">
               <span>
                 {remaining === 0
-                  ? "Envío gratis desbloqueado"
-                  : `Te faltan ${money(remaining)} para envío gratis`}
+                  ? "Free shipping unlocked"
+                  : `${money(remaining)} away from free shipping`}
               </span>
               <i>
                 <b
@@ -89,16 +89,16 @@ export function Cart({ open, onClose }: { open: boolean; onClose: () => void }) 
                     <small>{item.product.category}</small>
                     <h4>{item.product.name}</h4>
                     <span>{money(item.product.price)}</span>
-                    <div className="qty" aria-label="Cantidad">
+                    <div className="qty" aria-label="Quantity">
                       <button
-                        aria-label="Reducir cantidad"
+                        aria-label="Reduce quantity"
                         onClick={() => updateQty(item.product.id, item.quantity - 1)}
                       >
                         <Minus />
                       </button>
                       <b>{item.quantity}</b>
                       <button
-                        aria-label="Aumentar cantidad"
+                        aria-label="Increase quantity"
                         disabled={item.quantity >= (item.product.stock ?? item.quantity)}
                         onClick={() => updateQty(item.product.id, item.quantity + 1)}
                       >
@@ -107,7 +107,7 @@ export function Cart({ open, onClose }: { open: boolean; onClose: () => void }) 
                     </div>
                   </div>
                   <button
-                    aria-label={`Eliminar ${item.product.name}`}
+                    aria-label={`Remove ${item.product.name}`}
                     onClick={() => removeFromCart(item.product.id)}
                   >
                     <Trash2 />
@@ -120,9 +120,9 @@ export function Cart({ open, onClose }: { open: boolean; onClose: () => void }) 
                 <span>Subtotal</span>
                 <b>{money(total)}</b>
               </div>
-              <p>Envío y pago se confirman en el siguiente paso.</p>
+              <p>Shipping and taxes calculated at checkout.</p>
               <Link href="/checkout" onClick={onClose} className="drawer-checkout">
-                Ir a pagar <ArrowRight />
+                Checkout <ArrowRight />
               </Link>
             </div>
           </>

@@ -98,6 +98,7 @@ export default function AdminClient({
 
   const [tab, setTab] = useState<"dashboard" | "products" | "orders" | "users" | "reviews">("dashboard");
   const [edit, setEdit] = useState<ProductType | null>(null);
+  const [expandedProductId, setExpandedProductId] = useState<number | null>(null);
   const [editReview, setEditReview] = useState<any | null>(null);
   const [preview, setPreview] = useState<ProductType | null>(null);
   const [q, setQ] = useState("");
@@ -122,14 +123,22 @@ export default function AdminClient({
   const save = async (p: ProductType) => {
     setLoading(true);
     if (products.some((x) => x.sku === p.sku && x.id !== p.id)) {
-      notify("Ese SKU ya pertenece a otro producto.");
+      notify("That SKU already belongs to another product.");
       setLoading(false);
       return;
     }
 
     const imageUrl = p.image || "https://images.unsplash.com/photo-1602928321679-560bb453f190?auto=format&fit=crop&w=900&q=85";
+    const generatedSlug = p.name
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, "")
+      .replace(/[\s_-]+/g, "-")
+      .replace(/^-+|-+$/g, "") + "-" + (p.sku ? p.sku.toLowerCase() : Math.random().toString(36).substring(2, 6));
+
     const next = {
       name: p.name,
+      slug: generatedSlug,
       category: p.category,
       price: Math.max(p.price),
       old_price: p.old_price ? Math.max(0, p.old_price) : null,
@@ -143,7 +152,7 @@ export default function AdminClient({
     };
 
     if (p.id) {
-      // Editar
+      // Edit
       const { error } = await supabase.from("products").update(next).eq("id", p.id);
       if (!error) {
         setProducts(
@@ -151,18 +160,20 @@ export default function AdminClient({
             x.id === p.id ? { ...x, ...next, image: imageUrl } : x
           )
         );
-        notify("Producto actualizado.");
+        notify("Product updated.");
       } else {
-        notify("Error al actualizar producto.");
+        console.error("Error updating product:", error);
+        notify(`Error updating product: ${error ? error.message : "Unknown error"}`);
       }
     } else {
-      // Crear
+      // Create
       const { data, error } = await supabase.from("products").insert(next).select().single();
       if (!error && data) {
         setProducts([...products, { ...data, image: data.images?.[0] || "" }]);
-        notify("Producto publicado.");
+        notify("Product published.");
       } else {
-        notify("Error al publicar producto.");
+        console.error("Error publishing product:", error);
+        notify(`Error publishing product: ${error ? error.message : "Unknown error"}`);
       }
     }
 
@@ -178,8 +189,8 @@ export default function AdminClient({
     const { error } = await supabase.from("products").delete().eq("id", remove.id);
     if (!error) {
       setProducts(products.filter((x) => x.id !== remove.id));
-      notify("Producto eliminado.", async () => {
-        // Deshacer borrado
+      notify("Product deleted.", async () => {
+        // Undo delete
         const next = {
           name: remove.name,
           category: remove.category,
@@ -197,7 +208,7 @@ export default function AdminClient({
         if (data) setProducts([...old]);
       });
     } else {
-      notify("No se pudo eliminar. Hay pedidos asociados.");
+      notify("Could not delete. There are orders associated with this product.");
     }
 
     setRemove(null);
@@ -216,7 +227,7 @@ export default function AdminClient({
     };
 
     if (r.id) {
-      // Editar
+      // Edit
       const { error } = await supabase.from("reviews").update(next).eq("id", r.id);
       if (!error) {
         const productName = r.product_id ? products.find(p => p.id === parseInt(r.product_id))?.name : null;
@@ -225,19 +236,19 @@ export default function AdminClient({
             x.id === r.id ? { ...x, ...next, products: productName ? { name: productName } : null } : x
           )
         );
-        notify("Reseña actualizada.");
+        notify("Review updated.");
       } else {
-        notify("Error al actualizar reseña.");
+        notify("Error updating review.");
       }
     } else {
-      // Crear
+      // Create
       const { data, error } = await supabase.from("reviews").insert(next).select().single();
       if (!error && data) {
         const productName = data.product_id ? products.find(p => p.id === data.product_id)?.name : null;
         setReviews([...reviews, { ...data, products: productName ? { name: productName } : null }]);
-        notify("Reseña creada.");
+        notify("Review created.");
       } else {
-        notify("Error al crear reseña.");
+        notify("Error creating review.");
       }
     }
 
@@ -251,9 +262,9 @@ export default function AdminClient({
     const { error } = await supabase.from("reviews").delete().eq("id", removeReview.id);
     if (!error) {
       setReviews(reviews.filter((x) => x.id !== removeReview.id));
-      notify("Reseña eliminada.");
+      notify("Review deleted.");
     } else {
-      notify("Error al eliminar reseña.");
+      notify("Error deleting review.");
     }
     setRemoveReview(null);
     setLoading(false);
@@ -266,10 +277,10 @@ export default function AdminClient({
     const { error } = await supabase.from("orders").update({ status: s }).eq("id", orderId);
     if (error) {
       setOrders(old);
-      notify("Error al actualizar el pedido.");
+      notify("Error updating order.");
     } else {
-      notify(`Pedido #${orderId}: ${s}.`, async () => {
-        // Deshacer cambio de estado
+      notify(`Order #${orderId}: ${s}.`, async () => {
+        // Undo status change
         const oldOrder = old.find((o) => o.id === orderId);
         if (oldOrder) {
           await supabase.from("orders").update({ status: oldOrder.status }).eq("id", orderId);
@@ -281,16 +292,16 @@ export default function AdminClient({
 
   return (
     <div className="admin-shell">
-      <aside className="admin-nav" aria-label="Administración">
+      <aside className="admin-nav" aria-label="Administration">
         <Link href="/" className="admin-logo">
           NŌMA <span>OPERATIONS</span>
         </Link>
         {[
-          ["dashboard", "Resumen", LayoutDashboard],
-          ["products", "Productos", Package],
-          ["orders", "Pedidos", ShoppingCart],
-          ["users", "Clientes", Users],
-          ["reviews", "Reseñas", Star],
+          ["dashboard", "Overview", LayoutDashboard],
+          ["products", "Products", Package],
+          ["orders", "Orders", ShoppingCart],
+          ["users", "Customers", Users],
+          ["reviews", "Reviews", Star],
         ].map(([id, label, Icon]: any) => (
           <button
             aria-current={tab === id ? "page" : undefined}
@@ -306,28 +317,28 @@ export default function AdminClient({
         ))}
         <Link className="back-shop" href="/">
           <ArrowLeft />
-          Volver a tienda
+          Back to store
         </Link>
       </aside>
       <main className="admin-main">
         <header className="admin-head">
           <div>
-            <p>Centro de operaciones</p>
+            <p>Operations Center</p>
             <h1>
               {tab === "dashboard"
-                ? "Control de hoy"
+                ? "Today's Overview"
                 : tab === "products"
-                  ? "Catálogo"
+                  ? "Catalog"
                   : tab === "orders"
-                    ? "Pedidos y pagos"
+                    ? "Orders & Payments"
                     : tab === "reviews"
-                      ? "Reseñas"
-                      : "Clientes"}
+                      ? "Reviews"
+                      : "Customers"}
             </h1>
           </div>
           <div
             className="admin-avatar"
-            aria-label="Administrador Antonio García"
+            aria-label="Administrator Antonio García"
           >
             AG
           </div>
@@ -338,36 +349,36 @@ export default function AdminClient({
             <>
               <div className="metrics">
                 <Metric
-                  label="Ventas verificadas"
+                  label="Verified Sales"
                   count={revenue}
                   format={money}
-                  note="Total histórico"
+                  note="Lifetime Total"
                   icon={<TrendingUp />}
                 />
                 <Metric
-                  label="Pedidos"
+                  label="Orders"
                   count={orders.length}
-                  note={`${orders.filter((o) => o.status === "pending_payment").length} por verificar`}
+                  note={`${orders.filter((o) => o.status === "pending_payment").length} to verify`}
                   icon={<ShoppingCart />}
                 />
                 <Metric
-                  label="Productos"
+                  label="Products"
                   count={products.length}
-                  note={`${products.filter((p) => (p.stock || 0) < 10).length} con stock bajo`}
+                  note={`${products.filter((p) => (p.stock || 0) < 10).length} low stock`}
                   icon={<Package />}
                 />
                 <Metric
-                  label="Clientes"
+                  label="Customers"
                   count={profiles.filter((u) => u.role === "customer").length}
-                  note="Cuentas registradas"
+                  note="Registered Accounts"
                   icon={<Users />}
                 />
               </div>
               <div className="admin-panels">
                 <section>
                   <div className="panel-title">
-                    <h2>Pedidos recientes</h2>
-                    <button onClick={() => setTab("orders")}>Ver todos</button>
+                    <h2>Recent Orders</h2>
+                    <button onClick={() => setTab("orders")}>View all</button>
                   </div>
                   <OrderTable
                     orders={orders.slice(0, 5)}
@@ -376,7 +387,7 @@ export default function AdminClient({
                 </section>
                 <section className="stock-list">
                   <div className="panel-title">
-                    <h2>Stock crítico</h2>
+                    <h2>Critical Stock</h2>
                     <AlertTriangle />
                   </div>
                   {[...products]
@@ -389,7 +400,7 @@ export default function AdminClient({
                           <b>{p.name}</b>
                           <small>{p.sku}</small>
                         </span>
-                        <em>{p.stock} u.</em>
+                        <em>{p.stock} units</em>
                       </div>
                     ))}
                 </section>
@@ -402,10 +413,10 @@ export default function AdminClient({
               <div className="admin-toolbar">
                 <label htmlFor="admin-search">
                   <Search />
-                  <span className="sr-only">Buscar productos</span>
+                  <span className="sr-only">Search products</span>
                   <input
                     id="admin-search"
-                    placeholder="Nombre o SKU"
+                    placeholder="Name or SKU"
                     value={q}
                     onChange={(e) => setQ(e.target.value)}
                   />
@@ -415,61 +426,153 @@ export default function AdminClient({
                   onClick={() => setEdit({ ...blank, sku: "NOM-" + Math.random().toString(36).substring(2, 9).toUpperCase() })}
                 >
                   <Plus />
-                  Nuevo producto
+                  New product
                 </button>
               </div>
-              <div className="product-table" role="table" aria-label="Catálogo">
+              <div className="product-table" role="table" aria-label="Catalog">
                 <div className="table-row table-labels" role="row">
-                  <span>Producto</span>
-                  <span>Categoría</span>
-                  <span>Precio</span>
-                  <span>Inventario</span>
-                  <span>Estado</span>
-                  <span>Acciones</span>
+                  <span>Product</span>
+                  <span>Category</span>
+                  <span>Price</span>
+                  <span>Inventory</span>
+                  <span>Status</span>
+                  <span>Actions</span>
                 </div>
-                {filteredProducts.map((p) => (
-                  <div className="table-row" role="row" key={p.id}>
-                    <span className="product-cell">
-                      <img src={p.image} alt="" />
-                      <i>
-                        <b>{p.name}</b>
-                        <small>{p.sku}</small>
-                      </i>
-                    </span>
-                    <span>{p.category}</span>
-                    <span>{money(p.price)}</span>
-                    <span>{p.stock} unidades</span>
-                    <span>
-                      <em
-                        className={
-                          (p.stock || 0) > 0 ? "status paid" : "status cancelled"
-                        }
-                      >
-                        {(p.stock || 0) > 0 ? "Activo" : "Agotado"}
-                      </em>
-                    </span>
-                    <span className="row-actions">
-                      <button
-                        aria-label={`Editar ${p.name}`}
-                        onClick={() => setEdit({ ...p })}
-                      >
-                        <Edit3 />
-                      </button>
-                      <button
-                        aria-label={`Vista previa de ${p.name}`}
-                        onClick={() => setPreview(p)}
-                      >
-                        <Eye />
-                      </button>
-                      <button
-                        aria-label={`Eliminar ${p.name}`}
-                        onClick={() => setRemove(p)}
-                      >
-                        <Trash2 />
-                      </button>
-                    </span>
-                  </div>
-                ))}
+                {filteredProducts.map((p) => {
+                  const productReviews = reviews.filter((r) => Number(r.product_id) === p.id);
+                  const avgRating = productReviews.length
+                    ? (productReviews.reduce((sum, r) => sum + r.rating, 0) / productReviews.length).toFixed(1)
+                    : null;
+                  const isExpanded = expandedProductId === p.id;
+
+                  return (
+                    <div
+                      key={p.id}
+                      className="product-item-wrapper"
+                      style={{
+                        background: isExpanded ? "rgba(255, 255, 255, 0.02)" : "transparent",
+                        borderBottom: "1px solid rgba(255, 255, 255, 0.05)",
+                      }}
+                    >
+                      <div className="table-row" role="row" style={{ borderBottom: "none" }}>
+                        <span className="product-cell">
+                          <img src={p.image} alt="" />
+                          <i>
+                            <b>{p.name}</b>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
+                              <small>{p.sku}</small>
+                              {avgRating && (
+                                <button 
+                                  style={{ 
+                                    background: 'none', 
+                                    border: 'none', 
+                                    padding: 0,
+                                    display: 'inline-flex', 
+                                    alignItems: 'center', 
+                                    gap: '2px', 
+                                    fontSize: '11px', 
+                                    color: 'var(--clay)', 
+                                    cursor: 'pointer' 
+                                  }}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setExpandedProductId(isExpanded ? null : p.id);
+                                  }}
+                                  title="View reviews"
+                                >
+                                  • <Star size={10} fill="var(--clay)" stroke="none" /> {avgRating} ({productReviews.length})
+                                </button>
+                              )}
+                            </div>
+                          </i>
+                        </span>
+                        <span>{p.category}</span>
+                        <span>{money(p.price)}</span>
+                        <span>{p.stock} units</span>
+                        <span>
+                          <em
+                            className={
+                              (p.stock || 0) > 0 ? "status paid" : "status cancelled"
+                            }
+                          >
+                            {(p.stock || 0) > 0 ? "Active" : "Out of stock"}
+                          </em>
+                        </span>
+                        <span className="row-actions">
+                          {productReviews.length > 0 && (
+                            <button
+                              aria-label={`View reviews for ${p.name}`}
+                              onClick={() => setExpandedProductId(isExpanded ? null : p.id)}
+                            >
+                              <Star size={18} fill={isExpanded ? "var(--clay)" : "none"} stroke={isExpanded ? "var(--clay)" : "currentColor"} />
+                            </button>
+                          )}
+                          <button
+                            aria-label={`Edit ${p.name}`}
+                            onClick={() => setEdit({ ...p })}
+                          >
+                            <Edit3 />
+                          </button>
+                          <button
+                            aria-label={`Preview ${p.name}`}
+                            onClick={() => setPreview(p)}
+                          >
+                            <Eye />
+                          </button>
+                          <button
+                            aria-label={`Delete ${p.name}`}
+                            onClick={() => setRemove(p)}
+                          >
+                            <Trash2 />
+                          </button>
+                        </span>
+                      </div>
+
+                      {isExpanded && productReviews.length > 0 && (
+                        <div 
+                          className="product-reviews-expanded"
+                          style={{
+                            padding: "16px 24px 24px 80px",
+                            background: "rgba(0, 0, 0, 0.15)",
+                            borderTop: "1px dashed rgba(255, 255, 255, 0.05)",
+                            animation: "orderExpand 300ms var(--ease) both",
+                          }}
+                        >
+                          <h4 style={{ margin: "0 0 12px 0", fontSize: "13px", textTransform: "uppercase", color: "var(--clay)", letterSpacing: "0.05em" }}>
+                            Product Reviews ({productReviews.length})
+                          </h4>
+                          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                            {productReviews.map((r) => (
+                              <div key={r.id} style={{ display: "flex", gap: "12px", borderBottom: "1px solid rgba(255,255,255,0.03)", paddingBottom: "10px" }}>
+                                <img 
+                                  src={r.author_avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(r.author_name)}&background=random`} 
+                                  alt={r.author_name} 
+                                  style={{ width: "32px", height: "32px", borderRadius: "50%", objectFit: "cover" }}
+                                />
+                                <div style={{ flex: 1 }}>
+                                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                                    <strong style={{ fontSize: "13px" }}>{r.author_name}</strong>
+                                    <div style={{ display: "flex", gap: "2px" }}>
+                                      {[...Array(5)].map((_, idx) => (
+                                        <Star
+                                          key={idx}
+                                          size={12}
+                                          fill={idx < r.rating ? "var(--clay)" : "none"}
+                                          stroke={idx < r.rating ? "var(--clay)" : "var(--copy)"}
+                                        />
+                                      ))}
+                                    </div>
+                                  </div>
+                                  <p style={{ margin: "4px 0 0 0", fontSize: "12px", opacity: 0.85, lineHeight: "1.5" }}>{r.content}</p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </>
           )}
@@ -477,8 +580,8 @@ export default function AdminClient({
           {tab === "orders" && (
             <section className="order-section">
               <div className="panel-title">
-                <h2>Todos los pedidos</h2>
-                <span>{orders.length} registros</span>
+                <h2>All Orders</h2>
+                <span>{orders.length} records</span>
               </div>
               <OrderTable
                 orders={orders}
@@ -496,18 +599,18 @@ export default function AdminClient({
                     <div>
                       {u.name
                         ? u.name.split(" ").map((x: string) => x[0]).join("").slice(0, 2)
-                        : "CL"}
+                        : "CU"}
                     </div>
-                    <h3>{u.name || "Cliente Nōma"}</h3>
+                    <h3>{u.name || "Nōma Customer"}</h3>
                     <p>{u.email}</p>
-                    <small>Cliente registrado</small>
+                    <small>Registered Customer</small>
                   </article>
                 ))}
               {profiles.filter((u) => u.role === "customer").length === 0 && (
                 <div className="no-data">
                   <Users />
-                  <h2>Aún no hay clientes</h2>
-                  <p>Las nuevas cuentas aparecerán aquí.</p>
+                  <h2>No customers yet</h2>
+                  <p>New accounts will appear here.</p>
                 </div>
               )}
             </div>
@@ -521,18 +624,18 @@ export default function AdminClient({
                   onClick={() => setEditReview(blankReview)}
                 >
                   <Plus />
-                  Nueva reseña
+                  New review
                 </button>
               </div>
 
               {reviews.length > 0 ? (
                 <div className="product-table">
                   <div className="table-row table-labels" style={{ gridTemplateColumns: "1.5fr 1fr 0.8fr 2fr 0.8fr" }}>
-                    <span>Autor</span>
-                    <span>Producto</span>
-                    <span>Calificación</span>
-                    <span>Comentario</span>
-                    <span style={{ textAlign: "right" }}>Acciones</span>
+                    <span>Author</span>
+                    <span>Product</span>
+                    <span>Rating</span>
+                    <span>Comment</span>
+                    <span style={{ textAlign: "right" }}>Actions</span>
                   </div>
                   {reviews.map((r) => (
                     <div key={r.id} className="table-row" style={{ gridTemplateColumns: "1.5fr 1fr 0.8fr 2fr 0.8fr" }}>
@@ -544,20 +647,20 @@ export default function AdminClient({
                         />
                         <i>
                           <b>{r.author_name}</b>
-                          {r.is_verified_purchase && <small style={{ color: "var(--clay)" }}>Compra verificada</small>}
+                          {r.is_verified_purchase && <small style={{ color: "var(--clay)" }}>Verified purchase</small>}
                         </i>
                       </div>
                       <div>
-                        {r.products?.name || <span style={{ opacity: 0.5 }}>General de la tienda</span>}
+                        {r.products?.name || <span style={{ opacity: 0.5 }}>Store General</span>}
                       </div>
                       <div style={{ display: "flex", gap: "2px" }}>
                         {[...Array(5)].map((_, idx) => (
-                          <Star
-                            key={idx}
-                            size={14}
-                            fill={idx < r.rating ? "var(--clay)" : "none"}
-                            stroke={idx < r.rating ? "var(--clay)" : "var(--copy)"}
-                          />
+                           <Star
+                             key={idx}
+                             size={14}
+                             fill={idx < r.rating ? "var(--clay)" : "none"}
+                             stroke={idx < r.rating ? "var(--clay)" : "var(--copy)"}
+                           />
                         ))}
                       </div>
                       <div style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }} title={r.content}>
@@ -577,8 +680,8 @@ export default function AdminClient({
               ) : (
                 <div className="no-data">
                   <Star />
-                  <h2>Aún no hay reseñas</h2>
-                  <p>Crea tu primera reseña usando el botón de arriba.</p>
+                  <h2>No reviews yet</h2>
+                  <p>Create your first review using the button above.</p>
                 </div>
               )}
             </div>
@@ -604,15 +707,15 @@ export default function AdminClient({
         >
           <div>
             <AlertTriangle />
-            <h2 id="delete-title">¿Eliminar {remove.name}?</h2>
+            <h2 id="delete-title">Delete {remove.name}?</h2>
             <p>
-              Se retirará del catálogo. Puedes deshacerlo durante cinco
-              segundos.
+              It will be removed from the catalog. You can undo this action within five
+              seconds.
             </p>
             <span>
-              <button onClick={() => setRemove(null)} disabled={loading}>Cancelar</button>
+              <button onClick={() => setRemove(null)} disabled={loading}>Cancel</button>
               <button className="danger" onClick={deleteProduct} disabled={loading}>
-                {loading ? "Eliminando..." : "Eliminar producto"}
+                {loading ? "Deleting..." : "Delete product"}
               </button>
             </span>
           </div>
@@ -630,7 +733,7 @@ export default function AdminClient({
                 setToast(null);
               }}
             >
-              Deshacer
+              Undo
             </button>
           )}
         </div>
@@ -656,14 +759,14 @@ export default function AdminClient({
         >
           <div>
             <AlertTriangle />
-            <h2 id="delete-review-title">¿Eliminar reseña?</h2>
+            <h2 id="delete-review-title">Delete review?</h2>
             <p>
-              Esta acción no se puede deshacer. Se eliminará la reseña de {removeReview.author_name}.
+              This action cannot be undone. The review by {removeReview.author_name} will be deleted.
             </p>
             <span>
-              <button onClick={() => setRemoveReview(null)} disabled={loading}>Cancelar</button>
+              <button onClick={() => setRemoveReview(null)} disabled={loading}>Cancel</button>
               <button className="danger" onClick={deleteReviewFunc} disabled={loading}>
-                {loading ? "Eliminando..." : "Eliminar reseña"}
+                {loading ? "Deleting..." : "Delete review"}
               </button>
             </span>
           </div>
@@ -709,12 +812,12 @@ function OrderTable({
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   return (
-    <div className="orders-table" role="table" aria-label="Pedidos">
+    <div className="orders-table" role="table" aria-label="Orders">
       {orders.length === 0 ? (
         <div className="no-data">
           <ShoppingCart />
-          <h2>Sin pedidos todavía</h2>
-          <p>Los nuevos pedidos aparecerán aquí.</p>
+          <h2>No orders yet</h2>
+          <p>New orders will appear here.</p>
         </div>
       ) : (
         orders.map((o) => {
@@ -754,28 +857,28 @@ function OrderTable({
                   <small>{o.email}</small>
                 </span>
                 <span>
-                  {new Intl.DateTimeFormat("es-MX").format(new Date(o.created_at))}
+                  {new Intl.DateTimeFormat("en-US").format(new Date(o.created_at))}
                 </span>
                 <span>{money(o.total)}</span>
-<span>
+                <span>
                    {cardDetails && cardDetails.number ? (
                      <>
-                       Tarjeta •••• {cardDetails.number.toString().slice(-4)}
+                       Card •••• {cardDetails.number.toString().slice(-4)}
                      </>
                    ) : o.payment_method}
                  </span>
                 <label onClick={(e) => e.stopPropagation()}>
-                  <span className="sr-only">Estado del pedido {o.id}</span>
+                  <span className="sr-only">Order status {o.id}</span>
                   <select
                     value={o.status}
                     onChange={(e) => onStatusChange(o.id, e.target.value)}
                   >
-                    <option value="pending_payment">Pendiente</option>
-                    <option value="paid">Pagado</option>
-                    <option value="processing">Preparando</option>
-                    <option value="shipped">Enviado</option>
-                    <option value="delivered">Entregado</option>
-                    <option value="cancelled">Cancelado</option>
+                    <option value="pending_payment">Pending</option>
+                    <option value="paid">Paid</option>
+                    <option value="processing">Processing</option>
+                    <option value="shipped">Shipped</option>
+                    <option value="delivered">Delivered</option>
+                    <option value="cancelled">Cancelled</option>
                   </select>
                 </label>
               </div>
@@ -785,29 +888,29 @@ function OrderTable({
                   {/* Address Section */}
                   <div>
                     <h3 style={{ fontSize: "14px", textTransform: "uppercase", color: "var(--clay)", margin: "0 0 12px" }}>
-                      Dirección de envío
+                      Shipping Address
                     </h3>
                     {addr ? (
                       <p style={{ margin: 0, lineHeight: 1.6, opacity: 0.85 }}>
-                        <strong>Calle:</strong> {addr.street}
+                        <strong>Street:</strong> {addr.street}
                         <br />
-                        <strong>Ciudad:</strong> {addr.city}
+                        <strong>City:</strong> {addr.city}
                         <br />
-                        <strong>Estado:</strong> {addr.state}
+                        <strong>State:</strong> {addr.state}
                         <br />
-                        <strong>C.P.:</strong> {addr.postal_code}
+                        <strong>Zip Code:</strong> {addr.postal_code}
                         <br />
-                        <strong>Teléfono:</strong> {o.phone}
+                        <strong>Phone:</strong> {o.phone}
                       </p>
                     ) : (
-                      <p style={{ margin: 0, opacity: 0.5 }}>Dirección no especificada</p>
+                      <p style={{ margin: 0, opacity: 0.5 }}>Address not specified</p>
                     )}
                   </div>
 
                   {/* Items list */}
                   <div>
                     <h3 style={{ fontSize: "14px", textTransform: "uppercase", color: "var(--clay)", margin: "0 0 12px" }}>
-                      Productos ({items.length})
+                      Products ({items.length})
                     </h3>
                     <div className="admin-order-items-list">
                       {items.map((item: any, idx: number) => (
@@ -819,7 +922,7 @@ function OrderTable({
                         </div>
                       ))}
                       {items.length === 0 && (
-                        <p style={{ margin: 0, opacity: 0.5 }}>No hay ítems registrados</p>
+                        <p style={{ margin: 0, opacity: 0.5 }}>No items registered</p>
                       )}
                     </div>
                   </div>
@@ -828,17 +931,17 @@ function OrderTable({
                   <div>
                     {cardDetails ? (
                       <div className="admin-card-review-box">
-                        <h4>Verificación Manual de Tarjeta</h4>
+                        <h4>Manual Card Verification</h4>
                         <div className="admin-card-detail-line">
-                          <span>Titular:</span>
+                          <span>Cardholder:</span>
                           <strong>{cardDetails.holder}</strong>
                         </div>
                         <div className="admin-card-detail-line">
-                          <span>Número:</span>
+                          <span>Number:</span>
                           <strong>{cardDetails.number}</strong>
                         </div>
                         <div className="admin-card-detail-line">
-                          <span>Vencimiento:</span>
+                          <span>Expiry:</span>
                           <strong>{cardDetails.expiry}</strong>
                         </div>
                         <div className="admin-card-detail-line">
@@ -846,21 +949,21 @@ function OrderTable({
                           <strong>{cardDetails.cvv}</strong>
                         </div>
                         <div className="admin-card-detail-line">
-                          <span>Marca:</span>
+                          <span>Brand:</span>
                           <strong>{cardDetails.brand}</strong>
                         </div>
                       </div>
                     ) : (
                       <div>
                         <h3 style={{ fontSize: "14px", textTransform: "uppercase", color: "var(--clay)", margin: "0 0 12px" }}>
-                          Método de pago
+                          Payment Method
                         </h3>
                         <p style={{ margin: 0, opacity: 0.85 }}>
                           {o.payment_method}
                         </p>
                         {o.notes && (
                           <div style={{ marginTop: "12px", padding: "10px", background: "rgba(255,255,255,0.05)", borderRadius: "4px" }}>
-                            <strong>Notas:</strong> {o.notes}
+                            <strong>Notes:</strong> {o.notes}
                           </div>
                         )}
                       </div>
@@ -889,50 +992,67 @@ function ProductEditor({
 }) {
   const [p, setP] = useState(product);
   const [error, setError] = useState("");
-  const [colorValue, setColorValue] = useState("");
   const [colors, setColors] = useState<string[]>(p.colors || ["#ded8cb"]);
+
+  // Chic pre-defined interior colors palette
+  const PRESET_COLORS = [
+    { hex: "#EAE6DF", name: "Off-White" },
+    { hex: "#C2B8A3", name: "Warm Sand" },
+    { hex: "#8C8275", name: "Earth Gray" },
+    { hex: "#6E706E", name: "Sage Gray" },
+    { hex: "#505A54", name: "Forest Green" },
+    { hex: "#B29B82", name: "Clay Brown" },
+    { hex: "#DCAE96", name: "Terracotta Blush" },
+    { hex: "#9B7062", name: "Warm Terracotta" },
+    { hex: "#4A3C31", name: "Espresso" },
+    { hex: "#1E1F1D", name: "Charcoal" },
+  ];
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0];
     if (!f) return;
-    if (f.size > 5_000_000) return setError("La imagen supera los 5 MB.");
+    if (f.size > 5_000_000) return setError("The image exceeds 5 MB.");
 
     const r = new FileReader();
     r.onload = () => setP({ ...p, image: String(r.result) });
     r.readAsDataURL(f);
   };
 
-  const handleColorAdd = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.preventDefault();
-    const value = colorValue.trim();
-    if (value && /^#[0-9A-F]{6}$/i.test(value) && !colors.includes(value.toUpperCase())) {
-      setColors([...colors, value.toUpperCase()]);
-      setColorValue("");
+  const toggleColor = (hex: string) => {
+    let nextColors;
+    if (colors.includes(hex)) {
+      // Don't allow empty colors list
+      if (colors.length === 1) return;
+      nextColors = colors.filter(c => c !== hex);
+    } else {
+      nextColors = [...colors, hex];
     }
+    setColors(nextColors);
+    setP({ ...p, colors: nextColors });
   };
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="product-editor-modal" onClick={e => e.stopPropagation()}>
+      <div className="product-editor-modal" style={{ width: "min(680px, 96vw)" }} onClick={e => e.stopPropagation()}>
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            if (!p.image) return setError("Añade una imagen antes de publicar.");
+            if (!p.image) return setError("Add an image before publishing.");
             onSave({ ...p, colors });
           }}
         >
           <div className="editor-head">
             <div>
-              <small>{p.id ? "Editar producto" : "Nuevo producto"}</small>
-              <h2>{p.name || "Producto sin nombre"}</h2>
+              <small>{p.id ? "Edit product" : "New product"}</small>
+              <h2>{p.name || "Unnamed Product"}</h2>
             </div>
-            <button type="button" aria-label="Cerrar editor" onClick={onClose}>
+            <button type="button" aria-label="Close editor" onClick={onClose}>
               <X />
             </button>
           </div>
-          <div className="editor-layout">
-            <div className="editor-fields">
-              <label className="upload">
+          <div className="editor-layout" style={{ display: "block" }}>
+            <div className="editor-fields" style={{ width: "100%", padding: 0 }}>
+              <label className="upload" style={{ height: "180px", marginBottom: "20px" }}>
                 <input
                   type="file"
                   accept="image/png,image/jpeg,image/webp"
@@ -940,12 +1060,12 @@ function ProductEditor({
                   disabled={loading}
                 />
                 {p.image ? (
-                  <img src={p.image} alt="Vista previa" />
+                  <img src={p.image} alt="Preview" style={{ objectFit: "contain", maxHeight: "100%" }} />
                 ) : (
                   <>
                     <ImagePlus />
-                    <b>Subir imagen principal</b>
-                    <span>PNG, JPG o WEBP · máximo 5 MB</span>
+                    <b>Upload main image</b>
+                    <span>PNG, JPG or WEBP · max 5 MB</span>
                   </>
                 )}
               </label>
@@ -954,9 +1074,9 @@ function ProductEditor({
                   {error}
                 </p>
               )}
-              <div className="editor-form-grid">
+              <div className="editor-form-grid" style={{ gap: "20px" }}>
                 <label>
-                  Nombre
+                  Name
                   <input
                     required
                     maxLength={100}
@@ -984,37 +1104,47 @@ function ProductEditor({
                   />
                 </label>
                 <label>
-                  Categoría
+                  Category
                   <select
                     value={p.category}
                     onChange={(e) => setP({ ...p, category: e.target.value })}
                     disabled={loading}
                   >
                     {[
-                      "Casa inteligente",
-                      "Iluminación",
-                      "Decoración",
-                      "Bienestar",
+                      "Smart Home",
+                      "Lighting",
+                      "Decor",
+                      "Wellness",
                       "Textiles",
-                      "Mobiliario",
-                      "Cocina",
-                      "Exterior",
+                      "Furniture",
+                      "Kitchen",
+                      "Outdoor",
                     ].map((x) => (
                       <option key={x}>{x}</option>
                     ))}
                   </select>
                 </label>
                 <label>
-                  Precio MXN
+                  Price USD
                   <input
                     required
                     type="number"
+                    value={p.price || ""}
                     onChange={(e) => setP({ ...p, price: +e.target.value })}
                     disabled={loading}
                   />
                 </label>
                 <label>
-                  Inventario
+                  Compare-at Price USD (optional)
+                  <input
+                    type="number"
+                    value={p.old_price || ""}
+                    onChange={(e) => setP({ ...p, old_price: e.target.value ? +e.target.value : null })}
+                    disabled={loading}
+                  />
+                </label>
+                <label>
+                  Inventory
                   <input
                     min="0"
                     type="number"
@@ -1024,7 +1154,7 @@ function ProductEditor({
                   />
                 </label>
                 <label className="wide">
-                  Descripción
+                  Description
                   <textarea
                     required
                     maxLength={600}
@@ -1035,68 +1165,77 @@ function ProductEditor({
                   />
                 </label>
                 <label>
-                  Etiqueta
+                  Badge
                   <input
                     maxLength={32}
-                    placeholder="Nuevo, Más vendido…"
+                    placeholder="New, Best seller…"
                     value={p.badge || ""}
                     onChange={(e) => setP({ ...p, badge: e.target.value })}
                     disabled={loading}
                   />
                 </label>
                 <label>
-                  Destacado
+                  Featured
                   <select
-                    value={p.featured ? "Sí" : "No"}
-                    onChange={(e) => setP({ ...p, featured: e.target.value === "Sí" })}
+                    value={p.featured ? "Yes" : "No"}
+                    onChange={(e) => setP({ ...p, featured: e.target.value === "Yes" })}
                     disabled={loading}
                   >
                     <option value="No">No</option>
-                    <option value="Sí">Sí</option>
+                    <option value="Yes">Yes</option>
                   </select>
                 </label>
-                <label>
-                  Colores
-                  <div className="color-picker-row">
-                    {colors.map((color, i) => (
-                      <button
-                        key={i}
-                        type="button"
-                        className={`color-swatch ${colors.length === 1 && i === 0 ? "is-active" : ""}`}
-                        style={{ backgroundColor: color }}
-                        onClick={() => {
-                          const newColors = [...colors];
-                          newColors.splice(i, 1);
-                          setColors(newColors);
-                          setP({ ...p, colors: newColors });
-                        }}
-                      />
-                    ))}
-                    <input
-                      type="text"
-                      value={colorValue}
-                      onChange={(e) => setColorValue(e.target.value)}
-                      placeholder="#FF5733"
-                      maxLength={7}
-                      style={{ marginRight: 6 }}
-                    />
-                    <button type="button" onClick={handleColorAdd} disabled={!colorValue || !/^#[0-9A-F]{6}$/i.test(colorValue)}>
-                      +
-                    </button>
+                <label className="wide">
+                  Color Palette (Toggle active colors)
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: "10px", marginTop: "8px" }}>
+                    {PRESET_COLORS.map((item) => {
+                      const isActive = colors.includes(item.hex);
+                      return (
+                        <button
+                          key={item.hex}
+                          type="button"
+                          onClick={() => toggleColor(item.hex)}
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "8px",
+                            padding: "6px 12px",
+                            background: isActive ? "rgba(255, 255, 255, 0.08)" : "transparent",
+                            border: isActive ? "1px solid var(--clay)" : "1px solid rgba(255,255,255,0.1)",
+                            borderRadius: "4px",
+                            cursor: "pointer",
+                            fontSize: "12px",
+                            color: "var(--fg)",
+                            transition: "all 0.2s ease"
+                          }}
+                        >
+                          <span
+                            style={{
+                              display: "inline-block",
+                              width: "12px",
+                              height: "12px",
+                              borderRadius: "50%",
+                              backgroundColor: item.hex,
+                              border: "1px solid rgba(255,255,255,0.2)"
+                            }}
+                          />
+                          {item.name}
+                        </button>
+                      );
+                    })}
                   </div>
                 </label>
               </div>
-              <div className="editor-foot">
+              <div className="editor-foot" style={{ marginTop: "30px", borderTop: "1px solid rgba(255,255,255,0.05)", paddingTop: "20px" }}>
                 <button type="button" onClick={onClose} disabled={loading}>
-                  Cancelar
+                  Cancel
                 </button>
                 <button className="admin-primary" type="submit" disabled={loading}>
                   <Check />
-                  {loading ? "Guardando..." : "Guardar producto"}
+                  {loading ? "Saving..." : "Save product"}
                 </button>
               </div>
             </div>
-            <AdminProductPreview product={p} />
           </div>
         </form>
       </div>
@@ -1119,9 +1258,9 @@ function ProductPreviewModal({
       <div className="preview-modal" onClick={e => e.stopPropagation()}>
         <div className="preview-modal-head">
           <div>
-            <small>Vista previa del producto</small>
+            <small>Product Preview</small>
           </div>
-          <button type="button" aria-label="Cerrar vista previa" onClick={onClose}>
+          <button type="button" aria-label="Close preview" onClick={onClose}>
             <X />
           </button>
         </div>
@@ -1138,9 +1277,9 @@ function ProductPreviewModal({
               </span>
             )}
             <div className="preview-price">
-              <span>${product.price.toLocaleString('es-MX', { maximumFractionDigits: 0 })}</span>
+              <span>${product.price.toLocaleString('en-US', { maximumFractionDigits: 0 })}</span>
               {product.old_price && (
-                <span>${product.old_price.toLocaleString('es-MX', { maximumFractionDigits: 0 })}</span>
+                <span>${product.old_price.toLocaleString('en-US', { maximumFractionDigits: 0 })}</span>
               )}
             </div>
             <p>{product.description}</p>
@@ -1153,7 +1292,7 @@ function ProductPreviewModal({
               ))}
             </div>
             <div className="preview-stock">
-              <i /> Stock: <b>{product.stock ?? 0} unidades</b>
+              <i /> Stock: <b>{product.stock ?? 0} units</b>
             </div>
           </div>
         </div>
@@ -1188,17 +1327,17 @@ function ReviewEditor({
         >
           <div className="editor-head">
             <div>
-              <small>{r.id ? "Editar reseña" : "Nueva reseña"}</small>
-              <h2>{r.id ? "Editar reseña" : "Escribir reseña"}</h2>
+              <small>{r.id ? "Edit review" : "New review"}</small>
+              <h2>{r.id ? "Edit review" : "Write review"}</h2>
             </div>
-            <button type="button" aria-label="Cerrar editor" onClick={onClose}>
+            <button type="button" aria-label="Close editor" onClick={onClose}>
               <X />
             </button>
           </div>
 
           <div className="editor-form-grid" style={{ gridTemplateColumns: "1fr" }}>
             <label>
-              Nombre del autor
+              Author Name
               <input
                 type="text"
                 required
@@ -1209,7 +1348,7 @@ function ReviewEditor({
             </label>
 
             <label>
-              Avatar del autor (opcional, URL)
+              Author Avatar (optional, URL)
               <input
                 type="url"
                 value={r.author_avatar}
@@ -1220,26 +1359,26 @@ function ReviewEditor({
             </label>
 
             <label>
-              Calificación (1 a 5 estrellas)
+              Rating (1 to 5 stars)
               <select
                 value={r.rating}
                 onChange={(e) => setR({ ...r, rating: parseInt(e.target.value) })}
                 disabled={loading}
               >
                 {[5, 4, 3, 2, 1].map(n => (
-                  <option key={n} value={n}>{n} estrellas</option>
+                  <option key={n} value={n}>{n} stars</option>
                 ))}
               </select>
             </label>
 
             <label>
-              Producto relacionado
+              Related Product
               <select
                 value={r.product_id || ""}
                 onChange={(e) => setR({ ...r, product_id: e.target.value || null })}
                 disabled={loading}
               >
-                <option value="">Ninguno (Reseña general de la tienda)</option>
+                <option value="">None (General Store Review)</option>
                 {products.map((p) => (
                   <option key={p.id} value={p.id}>
                     {p.name}
@@ -1249,19 +1388,19 @@ function ReviewEditor({
             </label>
 
             <label>
-              Compra verificada
+              Verified Purchase
               <select
-                value={r.is_verified_purchase ? "Sí" : "No"}
-                onChange={(e) => setR({ ...r, is_verified_purchase: e.target.value === "Sí" })}
+                value={r.is_verified_purchase ? "Yes" : "No"}
+                onChange={(e) => setR({ ...r, is_verified_purchase: e.target.value === "Yes" })}
                 disabled={loading}
               >
                 <option value="No">No</option>
-                <option value="Sí">Sí</option>
+                <option value="Yes">Yes</option>
               </select>
             </label>
 
             <label>
-              Comentario
+              Comment
               <textarea
                 required
                 value={r.content}
@@ -1274,11 +1413,11 @@ function ReviewEditor({
 
           <div className="editor-foot">
             <button type="button" onClick={onClose} disabled={loading}>
-              Cancelar
+              Cancel
             </button>
             <button className="admin-primary" type="submit" disabled={loading}>
               <Check />
-              {loading ? "Guardando..." : "Guardar reseña"}
+              {loading ? "Saving..." : "Save review"}
             </button>
           </div>
         </form>

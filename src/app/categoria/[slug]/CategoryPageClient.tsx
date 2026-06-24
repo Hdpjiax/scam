@@ -19,16 +19,16 @@ export default function CategoryPageClient({
 }) {
   const { addToCart } = useStore();
   const [drawer, setDrawer] = useState(false);
-  const [sort, setSort] = useState("Curaduría NŌMA");
+  const [sort, setSort] = useState("NŌMA Curated");
   const [toast, setToast] = useState("");
 
   const sortedProducts = useMemo(() => {
     return [...products].sort((a, b) =>
-      sort === "Precio ascendente"
+      sort === "Price: Low to High"
         ? a.price - b.price
-        : sort === "Precio descendente"
+        : sort === "Price: High to Low"
           ? b.price - a.price
-          : sort === "Disponibilidad"
+          : sort === "Availability"
             ? (b.stock ?? 0) - (a.stock ?? 0)
             : Number(b.featured ?? 0) - Number(a.featured ?? 0),
     );
@@ -36,7 +36,7 @@ export default function CategoryPageClient({
 
   const add = (product: Product) => {
     addToCart(product, 1);
-    setToast(`${product.name} agregado al carrito.`);
+    setToast(`${product.name} added to cart.`);
     window.setTimeout(() => setToast(""), 2200);
   };
 
@@ -54,7 +54,7 @@ export default function CategoryPageClient({
           }
         >
           <Link href="/" className="category-back">
-            <ArrowLeft /> Volver a NŌMA
+            <ArrowLeft /> Back to NŌMA
           </Link>
           <div>
             <span>{category.name}</span>
@@ -66,25 +66,25 @@ export default function CategoryPageClient({
         <section className="category-catalog" id="catalogo">
           <div className="section-top">
             <div>
-              <p>{products.length} piezas curadas</p>
+              <p>{products.length} curated pieces</p>
               <h2>
-                Comprar
+                Shop
                 <br />
                 <em>{category.name}.</em>
               </h2>
             </div>
             <label className="category-sort">
               <SlidersHorizontal />
-              Ordenar
+              Sort by
               <select
-                aria-label="Ordenar productos"
+                aria-label="Sort products"
                 value={sort}
                 onChange={(event) => setSort(event.target.value)}
               >
-                <option>Curaduría NŌMA</option>
-                <option>Precio ascendente</option>
-                <option>Precio descendente</option>
-                <option>Disponibilidad</option>
+                <option>NŌMA Curated</option>
+                <option>Price: Low to High</option>
+                <option>Price: High to Low</option>
+                <option>Availability</option>
               </select>
             </label>
           </div>
@@ -101,17 +101,17 @@ export default function CategoryPageClient({
             </div>
           ) : (
             <div className="no-results">
-              <h3>Esta atmósfera aún está en curaduría.</h3>
-              <p>Vuelve a la colección completa mientras llegan nuevas piezas.</p>
+              <h3>This atmosphere is still being curated.</h3>
+              <p>Return to the full collection while new pieces arrive.</p>
               <Link href="/">
-                Ver tienda <ArrowRight />
+                View shop <ArrowRight />
               </Link>
             </div>
           )}
         </section>
 
         <section className="category-crosslinks">
-          <p>Otras atmósferas</p>
+          <p>Other Atmospheres</p>
           <div>
             {categories
               .filter((item) => item.slug !== category.slug)
@@ -127,7 +127,7 @@ export default function CategoryPageClient({
       </main>
       <div className={`cart-toast ${toast ? "show" : ""}`} role="status">
         {toast}
-        <button onClick={() => setDrawer(true)}>Ver bolsa</button>
+        <button onClick={() => setDrawer(true)}>View Cart</button>
       </div>
       <Cart open={drawer} onClose={() => setDrawer(false)} />
     </>

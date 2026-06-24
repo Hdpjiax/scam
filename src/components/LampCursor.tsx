@@ -1,17 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { usePathname } from "next/navigation";
-const DISABLED_PREFIXES = ["/admin", "/checkout", "/login"];
 
 function lerp(current: number, target: number, amount: number) {
   return current + (target - current) * amount;
 }
 
 export default function LampCursor() {
-  const pathname = usePathname();
-  const enabled = !DISABLED_PREFIXES.some((p) => pathname.startsWith(p));
-
   const [ready, setReady] = useState(false);
   const [visible, setVisible] = useState(false);
   const [pressing, setPressing] = useState(false);
@@ -27,18 +22,9 @@ export default function LampCursor() {
     typeof window !== "undefined" &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  const active = enabled && ready && finePointer && !reducedMotion;
+  const active = ready && finePointer && !reducedMotion;
 
   useEffect(() => {
-    if (!enabled) {
-      document.documentElement.classList.remove(
-        "lamp-cursor-on",
-        "lamp-cursor-paused",
-      );
-      setReady(false);
-      return;
-    }
-
     const fine = window.matchMedia("(pointer: fine)");
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
 
@@ -119,7 +105,7 @@ export default function LampCursor() {
       window.removeEventListener("pointerup", onUp);
       window.removeEventListener("pointerleave", onLeave);
     };
-  }, [enabled]);
+  }, []);
 
   if (!active) return null;
 
@@ -129,12 +115,6 @@ export default function LampCursor() {
       aria-hidden="true"
     >
       <span className="lamp-pool" />
-      <span className="lamp-bulb">
-        <span className="lamp-cap" />
-        <span className="lamp-glass">
-          <span className="lamp-filament" />
-        </span>
-      </span>
     </div>
   );
 }

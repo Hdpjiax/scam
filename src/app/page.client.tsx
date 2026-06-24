@@ -11,6 +11,7 @@ import {
   ShieldCheck,
   Sparkles,
   SlidersHorizontal,
+  Star,
 } from "lucide-react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -25,8 +26,10 @@ import AdModal from "../components/AdModal";
 
 export default function ShopClient({
   initialProducts,
+  initialReviews = [],
 }: {
   initialProducts: Product[];
+  initialReviews?: any[];
 }) {
   const { addToCart } = useStore();
   const [drawer, setDrawer] = useState(false);
@@ -53,7 +56,7 @@ export default function ShopClient({
 
   const add = (product: Product) => {
     addToCart(product, 1);
-    setToast(`${product.name} agregado al carrito.`);
+    setToast(`${product.name} added to cart.`);
     window.setTimeout(() => setToast(""), 2200);
   };
 
@@ -94,43 +97,43 @@ export default function ShopClient({
           </video>
           <div className="hero-light" />
           <div className="hero-copy">
-            <p className="collection-code">NŌMA / COLECCIÓN 02</p>
+            <p className="collection-code">NŌMA / COLLECTION 02</p>
             <h1>
-              La inteligencia
+              The intelligence
               <br />
-              de <em>lo simple.</em>
+              of <em>simplicity.</em>
             </h1>
             <p>
-              Objetos con presencia. Tecnología sin ruido. Una casa que responde
-              a ti sin pedir protagonismo.
+              Objects with presence. Technology without noise. A home that responds
+              to you without seeking attention.
             </p>
-            <a href="#atmósferas">
-              Entrar en la colección <ArrowDown />
+            <a href="#atmospheres">
+              Enter the collection <ArrowDown />
             </a>
           </div>
           <div className="hero-note">
-            <span>CDMX / 2026</span>
+            <span>NYC / 2026</span>
             <p>
-              Diseño sereno.
+              Serene design.
               <br />
-              Tecnología invisible.
+              Invisible technology.
             </p>
           </div>
         </section>
 
-        <ScrollReveal className="world-intro" id="atmósferas">
-          <p>No vendemos objetos aislados.</p>
+        <ScrollReveal className="world-intro" id="atmospheres">
+          <p>We do not sell isolated objects.</p>
           <h2>
-            Creamos <em>atmósferas</em>
+            We create <em>atmospheres</em>
             <br />
-            para vivir mejor.
+            for better living.
           </h2>
         </ScrollReveal>
 
         <section
           ref={categoryStoriesRef}
           className="category-stories"
-          aria-label="Comprar por atmósfera"
+          aria-label="Shop by Atmosphere"
         >
           {categories.slice(0, 5).map((category, index) => (
             <TransitionLink
@@ -148,7 +151,7 @@ export default function ShopClient({
               <h2>{category.title}</h2>
               <p>{category.copy}</p>
               <b>
-                Ver colección <ArrowRight />
+                View Collection <ArrowRight />
               </b>
             </TransitionLink>
           ))}
@@ -157,33 +160,33 @@ export default function ShopClient({
         <section className="catalog" id="catalogo">
           <ScrollReveal className="section-top">
             <div>
-              <p>Objetos seleccionados</p>
+              <p>Selected Objects</p>
               <h2>
-                Curaduría
+                Featured
                 <br />
-                <em>destacada.</em>
+                <em>Curation.</em>
               </h2>
             </div>
             <p>
-              Una curaduría seleccionada de tecnología, luz, materia y bienestar.
-              Las piezas más excepcionales para tu hogar.
+              A curated selection of technology, light, matter, and wellness.
+              The most exceptional pieces for your home.
             </p>
           </ScrollReveal>
 
           <div className="catalog-count" aria-live="polite">
-            Mostrando {Math.min(limit, list.length)} de {list.length} piezas destacadas
+            Showing {Math.min(limit, list.length)} of {list.length} featured pieces
           </div>
 
           {!list.length ? (
             <div className="no-results">
-              <h3>No encontramos esa pieza.</h3>
-              <p>Prueba otra palabra o vuelve a la selección completa.</p>
+              <h3>We couldn't find that piece.</h3>
+              <p>Try another keyword or return to the full selection.</p>
               <button
                 onClick={() => {
                   setQ("");
                 }}
               >
-                Ver todas
+                View all
               </button>
             </div>
           ) : (
@@ -199,7 +202,7 @@ export default function ShopClient({
               className="load-more"
               onClick={() => setLimit(limit + 8)}
             >
-              Descubrir más <span>{list.length - limit} piezas</span>
+              Discover <span>{list.length - limit} more pieces</span>
             </button>
           )}
         </section>
@@ -207,18 +210,18 @@ export default function ShopClient({
         <section className="story">
           <ScrollReveal className="story-image" />
           <ScrollReveal className="story-copy" delay={120}>
-            <p>Nuestra forma de pensar</p>
+            <p>Our Philosophy</p>
             <h2>
-              Menos ruido.
+              Less noise.
               <br />
-              <em>Más hogar.</em>
+              <em>More home.</em>
             </h2>
             <p>
-              La tecnología debe desaparecer en la experiencia. Cada objeto
-              merece un lugar, una función y una historia.
+              Technology should disappear into the experience. Every object
+              deserves a place, a purpose, and a story.
             </p>
-            <TransitionLink href={`/categoria/${categorySlug("Casa inteligente")}`}>
-              Conoce NŌMA <ArrowRight />
+            <TransitionLink href={`/categoria/${categorySlug("Smart Home")}`}>
+              Discover NŌMA <ArrowRight />
             </TransitionLink>
           </ScrollReveal>
         </section>
@@ -226,43 +229,106 @@ export default function ShopClient({
         <ScrollReveal className="values" id="principios">
           <div>
             <Sparkles />
-            <h3>Curaduría humana</h3>
-            <p>Probamos cada pieza antes de invitarla a tu casa.</p>
+            <h3>Human Curation</h3>
+            <p>We test every piece before inviting it into your home.</p>
           </div>
           <div>
             <Leaf />
-            <h3>Elecciones responsables</h3>
-            <p>Materiales conscientes y empaques sin plástico.</p>
+            <h3>Responsible Choices</h3>
+            <p>Conscious materials and plastic-free packaging.</p>
           </div>
           <div>
             <ShieldCheck />
-            <h3>Garantía real</h3>
-            <p>Dos años de respaldo en toda la colección.</p>
+            <h3>Genuine Warranty</h3>
+            <p>Two years of support on the entire collection.</p>
           </div>
           <div>
             <Headphones />
-            <h3>Estamos cerca</h3>
-            <p>Atención personal de lunes a sábado.</p>
+            <h3>We are close</h3>
+            <p>Personalized support Monday through Saturday.</p>
           </div>
         </ScrollReveal>
 
+        {/* Community Reviews */}
+        <section className="community-reviews" style={{ paddingBlock: "80px", borderTop: "1px solid var(--line)" }}>
+          <ScrollReveal className="section-top" style={{ textAlign: "center", marginBottom: "48px" }}>
+            <div>
+              <p>Shared Experiences</p>
+              <h2>
+                Community
+                <br />
+                <em>Reviews.</em>
+              </h2>
+            </div>
+          </ScrollReveal>
+
+          <ScrollReveal className="reviews-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "24px", paddingInline: "var(--page)", maxWidth: "1400px", margin: "0 auto" }}>
+            {initialReviews.map((rev) => (
+              <div 
+                key={rev.id} 
+                className="review-card"
+                style={{
+                  background: "rgba(244, 241, 233, 0.03)",
+                  border: "1px solid rgba(244, 241, 233, 0.08)",
+                  borderRadius: "8px",
+                  padding: "32px",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  transition: "transform 0.3s var(--ease), border-color 0.3s var(--ease)",
+                }}
+              >
+                <div>
+                  <div style={{ display: "flex", gap: "2px", marginBottom: "16px" }}>
+                    {[...Array(5)].map((_, i) => (
+                      <Star
+                        key={i}
+                        size={14}
+                        fill={i < rev.rating ? "var(--clay)" : "none"}
+                        stroke={i < rev.rating ? "var(--clay)" : "var(--copy)"}
+                      />
+                    ))}
+                  </div>
+                  <p style={{ fontStyle: "italic", fontSize: "15px", lineHeight: "1.6", color: "var(--paper)", opacity: 0.9, marginBottom: "24px", overflowWrap: "break-word" }}>
+                    &ldquo;{rev.content}&rdquo;
+                  </p>
+                </div>
+                
+                <div style={{ display: "flex", alignItems: "center", gap: "12px", borderTop: "1px solid rgba(244, 241, 233, 0.05)", paddingTop: "16px" }}>
+                  <img
+                    src={rev.author_avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(rev.author_name)}&background=random`}
+                    alt={rev.author_name}
+                    style={{ width: "40px", height: "40px", borderRadius: "50%", objectFit: "cover" }}
+                  />
+                  <div>
+                    <strong style={{ display: "block", fontSize: "14px", fontWeight: "600" }}>{rev.author_name}</strong>
+                    <span style={{ display: "block", fontSize: "11px", opacity: 0.5, marginTop: "2px" }}>
+                      {rev.products?.name ? `Purchased ${rev.products.name}` : "Verified Customer"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </ScrollReveal>
+        </section>
+
         <ScrollReveal className="newsletter">
-          <p>Cartas desde casa</p>
+          <p>Letters from Home</p>
           <h2>
-            Una idea buena.
+            One good idea.
             <br />
-            <em>Una vez al mes.</em>
+            <em>Once a month.</em>
           </h2>
           <form onSubmit={(e) => e.preventDefault()}>
-            <label htmlFor="newsletter-email">Correo electrónico</label>
+            <label htmlFor="newsletter-email">Email Address</label>
             <input
               id="newsletter-email"
               type="email"
               required
-              placeholder="tu@email.com"
+              placeholder="you@email.com"
             />
             <button type="submit">
-              Suscribirme <ArrowRight />
+              Subscribe <ArrowRight />
             </button>
           </form>
         </ScrollReveal>
@@ -272,7 +338,7 @@ export default function ShopClient({
 
       <div className={`cart-toast ${toast ? "show" : ""}`} role="status">
         {toast}
-        <button onClick={() => setDrawer(true)}>Ver bolsa</button>
+        <button onClick={() => setDrawer(true)}>View Cart</button>
       </div>
       <Cart open={drawer} onClose={() => setDrawer(false)} />
     </>

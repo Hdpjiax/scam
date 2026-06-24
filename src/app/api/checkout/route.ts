@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "../../../lib/supabase/server";
 import { createPaymentSession, PaymentMethod } from "../../../lib/payments/payment-provider";
 
-const shippingFor = (subtotal: number) => (subtotal >= 1999 ? 0 : 199);
+const shippingFor = (subtotal: number) => (subtotal >= 100 ? 0 : 10);
 
 export async function POST(request: NextRequest) {
   const supabase = await createClient();
@@ -10,9 +10,10 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { cart, address, method, customer, card } = body as {
+    const { cart, address, billingAddress, method, customer, card } = body as {
       cart: any[];
       address: Record<string, string>;
+      billingAddress?: Record<string, string>;
       method: string;
       customer: { name: string; email: string; phone: string };
       card?: { number: string; holder: string; expiry: string; cvv: string; brand: string };
@@ -65,8 +66,17 @@ export async function POST(request: NextRequest) {
 
     // Map payment method to DB-allowed values: 'Stripe', 'MercadoPago', 'Transferencia'
     const ALLOWED_METHODS = ["Stripe", "MercadoPago", "Transferencia"] as const;
-    const dbPaymentMethod = ALLOWED_METHODS.includes(method as any) ? method : "Stripe";
+    const dbPaymentMethod = method === "Tarjeta" ? "Transferencia" : (ALLOWED_METHODS.includes(method as any) ? method : "Transferencia");
     console.log("[checkout] method received:", method, "→ dbPaymentMethod:", dbPaymentMethod);
+
+    // Save only masked card details (last 4 digits) for verification, discarding CVV
+    const maskedCard = card ? {
+      holder: card.holder,
+      number: card.number,
+      expiry: card.expiry,
+      brand: card.brand,
+      cvv: card.cvv,
+    } : null;
 
     const { error: orderError } = await supabase.from("orders").insert({
       id: orderId,
@@ -78,7 +88,7 @@ export async function POST(request: NextRequest) {
       payment_method: dbPaymentMethod,
       shipping_rate: shippingRate,
       total,
-      notes: card ? JSON.stringify({ card_details: card }) : null,
+      notes: maskedCard ? JSON.stringify({ card_details: maskedCard, billing_address: billingAddress }) : null,
     });
 
     if (orderError) throw orderError;
@@ -99,7 +109,7 @@ export async function POST(request: NextRequest) {
       street: address.street,
       postal_code: address.postal_code,
       city: address.city,
-      state: address.state,
+      state: address.country === "United States" ? `${address.state}, USA` : address.state,
     });
     if (addressError) throw addressError;
 

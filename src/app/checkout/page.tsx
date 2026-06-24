@@ -9,6 +9,7 @@ import {
   LockKeyhole,
   CheckCircle,
   ChevronDown,
+  AlertTriangle,
 } from "lucide-react";
 import { useStore } from "../../providers/StoreProvider";
 import { money } from "../../lib/utils";
@@ -49,8 +50,8 @@ const MEXICAN_STATES = [
 ];
 
 const PHONE_PREFIXES = [
-  { code: "+52", label: "MX (+52)" },
   { code: "+1", label: "US (+1)" },
+  { code: "+52", label: "MX (+52)" },
   { code: "+34", label: "ES (+34)" },
   { code: "+57", label: "CO (+57)" },
   { code: "+54", label: "AR (+54)" },
@@ -134,7 +135,7 @@ function CustomSelect({
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  const selectedLabel = options.find(o => o.value === value)?.label || placeholder || "Seleccionar";
+  const selectedLabel = options.find(o => o.value === value)?.label || placeholder || "Select";
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -163,7 +164,9 @@ function CustomSelect({
             <div
               key={opt.value}
               className={`custom-select-option ${opt.value === value ? "selected" : ""}`}
-              onClick={() => {
+              onMouseDown={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
                 onChange(opt.value);
                 setOpen(false);
               }}
@@ -183,15 +186,28 @@ export default function CheckoutPage() {
   const [error, setError] = useState("");
   
   // States
-  const [guest, setGuest] = useState({ name: "", email: "", phone: "", phonePrefix: "+52" });
+  const [guest, setGuest] = useState({ name: "", email: "", phone: "", phonePrefix: "+1" });
   const [address, setAddress] = useState({
     street: "",
     postal_code: "",
     colonia: "",
     city: "",
-    state: "Ciudad de México",
+    state: "",
+    country: "United States",
   });
   const [colonias, setColonias] = useState<string[]>([]);
+  
+  const [sameAsShipping, setSameAsShipping] = useState(true);
+  const [billingAddress, setBillingAddress] = useState({
+    street: "",
+    postal_code: "",
+    colonia: "",
+    city: "",
+    state: "",
+    country: "United States",
+  });
+  const [billingColonias, setBillingColonias] = useState<string[]>([]);
+
   const [card, setCard] = useState({
     number: "",
     holder: "",
@@ -199,7 +215,7 @@ export default function CheckoutPage() {
     cvv: "",
   });
   const [cardFlipped, setCardFlipped] = useState(false);
-  const [cardBrand, setCardBrand] = useState("Tarjeta");
+  const [cardBrand, setCardBrand] = useState("Card");
 
   // Load profile data if logged in
   useEffect(() => {
@@ -212,13 +228,40 @@ export default function CheckoutPage() {
     }
   }, [profile]);
 
+  // Keep billing address in sync if checked
+  useEffect(() => {
+    if (sameAsShipping) {
+      setBillingAddress(address);
+      setBillingColonias(colonias);
+    }
+  }, [sameAsShipping, address, colonias]);
+
   const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
   const subtotal = cart.reduce(
     (acc, item) => acc + item.product.price * item.quantity,
     0,
   );
-  const shippingRate = subtotal >= 1999 ? 0 : 199;
+  const shippingRate = subtotal >= 100 ? 0 : 10;
   const total = subtotal + shippingRate;
+
+  const rawCardNumber = card.number.replace(/\s/g, "");
+  const isCardLuhnValid = validateCardNumber(rawCardNumber);
+  const cardLength = rawCardNumber.length;
+
+  const checkExpiryValid = (val: string): boolean => {
+    if (!/^\d{2}\/\d{2}$/.test(val)) return false;
+    const [mStr, yStr] = val.split("/");
+    const m = parseInt(mStr, 10);
+    const y = parseInt(yStr, 10);
+    if (m < 1 || m > 12) return false;
+    const now = new Date();
+    const currentYear = now.getFullYear() % 100;
+    const currentMonth = now.getMonth() + 1;
+    if (y < currentYear) return false;
+    if (y === currentYear && m < currentMonth) return false;
+    return true;
+  };
+  const isExpiryValid = checkExpiryValid(card.expiry);
 
   // Format Card Number
   const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -229,7 +272,7 @@ export default function CheckoutPage() {
     if (clean.startsWith("4")) setCardBrand("Visa");
     else if (/^5[1-5]/.test(clean)) setCardBrand("MasterCard");
     else if (/^3[47]/.test(clean)) setCardBrand("Amex");
-    else setCardBrand("Tarjeta");
+    else setCardBrand("Card");
 
     // Format with spaces
     const parts: string[] = [];
@@ -257,23 +300,87 @@ export default function CheckoutPage() {
     
     if (val.length === 5) {
       try {
-        const res = await fetch(`https://api.zippopotam.us/mx/${val}`);
+        const countryCode = address.country === "United States" ? "us" : "mx";
+        const res = await fetch(`https://api.zippopotam.us/${countryCode}/${val}`);
         if (res.ok) {
           const data = await res.json();
-          const placeNames = data.places.map((p: any) => p["place name"]);
-          setColonias(placeNames);
-          setAddress((prev) => ({
-            ...prev,
-            state: data.places[0].state || prev.state,
-            city: data.places[0]["place name"] || prev.city, // Often city isn't explicitly separated, we default to the area
-            colonia: placeNames[0]
-          }));
+          if (countryCode === "us") {
+            const state = data.places[0]["state abbreviation"] || data.places[0]["state"] || "";
+            const city = data.places[0]["place name"] || "";
+            setColonias([]);
+            setAddress((prev) => ({
+              ...prev,
+              state,
+              city,
+              colonia: "",
+            }));
+          } else {
+            const placeNames = data.places.map((p: any) => p["place name"]);
+            setColonias(placeNames);
+            const apiState = data.places[0].state || "";
+            const computedState = getMexicanStateByZip(val);
+            const matchedState = MEXICAN_STATES.find(
+              (s) => s.toLowerCase() === apiState.toLowerCase()
+            ) || computedState || "Ciudad de México";
+
+            setAddress((prev) => ({
+              ...prev,
+              state: matchedState,
+              city: data.places[0]["place name"] || prev.city,
+              colonia: placeNames[0]
+            }));
+          }
         }
       } catch (err) {
-        console.error("Error al buscar el código postal", err);
+        console.error("Error searching zip code", err);
       }
     } else {
       setColonias([]);
+    }
+  };
+
+  const handleBillingZipChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value.replace(/\D/g, "").slice(0, 5);
+    setBillingAddress((prev) => ({ ...prev, postal_code: val }));
+    
+    if (val.length === 5) {
+      try {
+        const countryCode = billingAddress.country === "United States" ? "us" : "mx";
+        const res = await fetch(`https://api.zippopotam.us/${countryCode}/${val}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (countryCode === "us") {
+            const state = data.places[0]["state abbreviation"] || data.places[0]["state"] || "";
+            const city = data.places[0]["place name"] || "";
+            setBillingColonias([]);
+            setBillingAddress((prev) => ({
+              ...prev,
+              state,
+              city,
+              colonia: "",
+            }));
+          } else {
+            const placeNames = data.places.map((p: any) => p["place name"]);
+            setBillingColonias(placeNames);
+            const apiState = data.places[0].state || "";
+            const computedState = getMexicanStateByZip(val);
+            const matchedState = MEXICAN_STATES.find(
+              (s) => s.toLowerCase() === apiState.toLowerCase()
+            ) || computedState || "Ciudad de México";
+
+            setBillingAddress((prev) => ({
+              ...prev,
+              state: matchedState,
+              city: data.places[0]["place name"] || prev.city,
+              colonia: placeNames[0]
+            }));
+          }
+        }
+      } catch (err) {
+        console.error("Error searching billing zip code", err);
+      }
+    } else {
+      setBillingColonias([]);
     }
   };
 
@@ -285,21 +392,21 @@ export default function CheckoutPage() {
     // Validate Card Number
     const rawCardNumber = card.number.replace(/\s/g, "");
     if (!validateCardNumber(rawCardNumber)) {
-      setError("El número de tarjeta no es válido (Fallo en verificación Luhn).");
+      setError("Card number is invalid (Luhn check failed).");
       setLoading(false);
       return;
     }
 
     // Validate Expiration format
     if (!/^\d{2}\/\d{2}$/.test(card.expiry)) {
-      setError("La fecha de vencimiento debe tener formato MM/AA.");
+      setError("Expiration date must be in MM/YY format.");
       setLoading(false);
       return;
     }
 
     // Validate CVV length
     if (card.cvv.length < 3) {
-      setError("El código CVV es inválido (Mínimo 3 dígitos).");
+      setError("CVV code is invalid (Minimum 3 digits).");
       setLoading(false);
       return;
     }
@@ -309,7 +416,7 @@ export default function CheckoutPage() {
       : { name: guest.name, email: guest.email, phone: `${guest.phonePrefix} ${guest.phone}` };
 
     try {
-      // Registrar el pedido y enviar los detalles de la tarjeta al backend
+      // Register order and card details
       const response = await fetch("/api/checkout", {
         method: "POST",
         headers: {
@@ -318,6 +425,7 @@ export default function CheckoutPage() {
         body: JSON.stringify({
           cart,
           address,
+          billingAddress: sameAsShipping ? address : billingAddress,
           method: "Tarjeta",
           customer: customerDetails,
           card: {
@@ -332,15 +440,14 @@ export default function CheckoutPage() {
 
       const data = await response.json();
       if (!response.ok) {
-        throw new Error(data.error || "Fallo al procesar el pedido.");
+        throw new Error(data.error || "Failed to process the order.");
       }
 
-      // Una vez registrado correctamente en la BD (donde los detalles quedan guardados en 'notes'),
-      // se simula el mensaje de error de pago solicitado por el usuario para revisión.
-      throw new Error("Su tarjeta no ha pasado o su pago está en revisión. Contáctanos por WhatsApp al +52 1 55 1234 5678");
+      // Simulate payment review message
+      throw new Error("Your card was declined or your payment is under review. Contact us via WhatsApp at +52 1 55 1234 5678");
 
     } catch (e: any) {
-      setError(e.message || "Fallo en la conexión. Intenta de nuevo.");
+      setError(e.message || "Connection error. Please try again.");
       setLoading(false);
     }
   };
@@ -348,8 +455,8 @@ export default function CheckoutPage() {
   if (cart.length === 0) {
     return (
       <div className="access-denied">
-        <h1>Tu bolsa está vacía</h1>
-        <Link href="/">Explorar productos</Link>
+        <h1>Your cart is empty</h1>
+        <Link href="/">Browse products</Link>
       </div>
     );
   }
@@ -358,11 +465,11 @@ export default function CheckoutPage() {
     <div className="checkout-page">
       <header>
         <Link href="/">
-          <ArrowLeft /> Seguir comprando
+          <ArrowLeft /> Continue Shopping
         </Link>
         <b>NŌMA</b>
         <span>
-          <LockKeyhole /> Pago seguro express
+          <LockKeyhole /> Secure Checkout
         </span>
       </header>
       <main>
@@ -371,40 +478,40 @@ export default function CheckoutPage() {
             
             {/* Contact details */}
             <div className="checkout-block">
-              <small>Información básica</small>
-              <h1>Contacto</h1>
+              <small>Basic Information</small>
+              <h1>Contact</h1>
               
               {!profile ? (
                 <>
                   <label>
-                    Nombre completo
+                    Full name
                     <input
                       required
                       value={guest.name}
                       onChange={(e) => setGuest({ ...guest, name: e.target.value })}
-                      placeholder="Nombre y apellidos"
+                      placeholder="First and last name"
                     />
                   </label>
                   <label>
-                    Correo electrónico
+                    Email Address
                     <input
                       type="email"
                       required
                       value={guest.email}
                       onChange={(e) => setGuest({ ...guest, email: e.target.value })}
-                      placeholder="tu@email.com"
+                      placeholder="you@email.com"
                     />
                   </label>
                 </>
               ) : (
                 <div className="signed-checkout" style={{ marginBottom: "20px" }}>
-                  Compras como <b>{profile.name}</b>
+                  Shopping as <b>{profile.name}</b>
                   <span>{profile.email}</span>
                 </div>
               )}
 
               <label>
-                Teléfono
+                Phone Number
                 <div className="phone-input-wrap">
                   <CustomSelect
                     value={guest.phonePrefix}
@@ -416,7 +523,7 @@ export default function CheckoutPage() {
                     type="tel"
                     value={guest.phone}
                     onChange={(e) => setGuest({ ...guest, phone: e.target.value.replace(/\D/g, "") })}
-                    placeholder="55 0000 0000"
+                    placeholder="555 000 0000"
                   />
                 </div>
               </label>
@@ -424,28 +531,50 @@ export default function CheckoutPage() {
 
             {/* Delivery address details */}
             <div className="checkout-block" style={{ marginTop: "40px" }}>
-              <small>Destino de entrega</small>
-              <h1>Dirección de envío</h1>
+              <small>Delivery Destination</small>
+              <h1>Shipping Address</h1>
               
-<label>
-                Calle y número
+              <label style={{ marginBottom: "20px" }}>
+                Country
+                <CustomSelect
+                  value={address.country}
+                  onChange={(val) => {
+                    setAddress({
+                      ...address,
+                      country: val,
+                      state: val === "United States" ? "" : "Ciudad de México",
+                      postal_code: "",
+                      colonia: "",
+                      city: "",
+                    });
+                    setColonias([]);
+                  }}
+                  options={[
+                    { value: "Mexico", label: "Mexico" },
+                    { value: "United States", label: "United States" },
+                  ]}
+                />
+              </label>
+
+              <label>
+                Street and number
                 <input
                   required
                   value={address.street}
                   onChange={(e) => setAddress({ ...address, street: e.target.value })}
-                  placeholder="Calle, número exterior e interior"
+                  placeholder="Street, apt, suite, unit"
                 />
               </label>
 
               <div className="checkout-fields-grid">
                 <label>
-                  Código postal
+                  ZIP Code
                   <div className="zip-input-wrap">
                     <input
                       required
                       value={address.postal_code}
                       onChange={handleZipChange}
-                      placeholder="00000"
+                      placeholder={address.country === "United States" ? "ZIP Code" : "00000"}
                     />
                     <CheckCircle 
                       size={18} 
@@ -454,50 +583,181 @@ export default function CheckoutPage() {
                     />
                   </div>
                 </label>
-                <label>
-                  Colonia / Fraccionamiento
-                  {colonias.length > 0 ? (
-                    <CustomSelect
-                      value={address.colonia}
-                      onChange={(val) => setAddress({ ...address, colonia: val })}
-                      options={colonias.map((c) => ({ value: c, label: c }))}
-                    />
-                  ) : (
-                    <input
-                      required
-                      value={address.colonia}
-                      onChange={(e) => setAddress({ ...address, colonia: e.target.value })}
-                      placeholder="Escribe tu colonia"
-                    />
-                  )}
-                </label>
+                {address.country === "Mexico" && (
+                  <label>
+                    Colonia / Neighborhood
+                    {colonias.length > 0 ? (
+                      <CustomSelect
+                        value={address.colonia}
+                        onChange={(val) => setAddress({ ...address, colonia: val })}
+                        options={colonias.map((c) => ({ value: c, label: c }))}
+                      />
+                    ) : (
+                      <input
+                        required
+                        value={address.colonia}
+                        onChange={(e) => setAddress({ ...address, colonia: e.target.value })}
+                        placeholder="Escribe tu colonia"
+                      />
+                    )}
+                  </label>
+                )}
               </div>
 
               <div className="checkout-fields-grid">
                 <label>
-                  Ciudad / Municipio
+                  City
                   <input
                     required
                     value={address.city}
                     onChange={(e) => setAddress({ ...address, city: e.target.value })}
-                    placeholder="Ciudad"
+                    placeholder="City"
                   />
                 </label>
                 <label>
-                  Estado
-                  <CustomSelect
-                    value={address.state}
-                    onChange={(val) => setAddress({ ...address, state: val })}
-                    options={MEXICAN_STATES.map(s => ({ value: s, label: s }))}
-                  />
+                  State
+                  {address.country === "United States" ? (
+                    <input
+                      required
+                      value={address.state}
+                      onChange={(e) => setAddress({ ...address, state: e.target.value })}
+                      placeholder="State (e.g. CA)"
+                    />
+                  ) : (
+                    <CustomSelect
+                      value={address.state}
+                      onChange={(val) => setAddress({ ...address, state: val })}
+                      options={MEXICAN_STATES.map(s => ({ value: s, label: s }))}
+                    />
+                  )}
                 </label>
               </div>
             </div>
 
+            {/* Same as shipping checkbox */}
+            <div className="checkout-block" style={{ marginTop: "30px" }}>
+              <label style={{ display: "flex", alignItems: "center", gap: "10px", cursor: "pointer", flexDirection: "row" }}>
+                <input
+                  type="checkbox"
+                  checked={sameAsShipping}
+                  onChange={(e) => setSameAsShipping(e.target.checked)}
+                  style={{ width: "20px", height: "20px", accentColor: "var(--clay)" }}
+                />
+                <span style={{ fontSize: "14px", color: "var(--paper)" }}>Billing address same as shipping</span>
+              </label>
+            </div>
+
+            {/* Billing address details */}
+            {!sameAsShipping && (
+              <div className="checkout-block" style={{ marginTop: "30px" }}>
+                <small>Billing</small>
+                <h1>Billing Address</h1>
+                
+                <label style={{ marginBottom: "20px" }}>
+                  Country
+                  <CustomSelect
+                    value={billingAddress.country}
+                    onChange={(val) => {
+                      setBillingAddress({
+                        ...billingAddress,
+                        country: val,
+                        state: val === "United States" ? "" : "Ciudad de México",
+                        postal_code: "",
+                        colonia: "",
+                        city: "",
+                      });
+                      setBillingColonias([]);
+                    }}
+                    options={[
+                      { value: "Mexico", label: "Mexico" },
+                      { value: "United States", label: "United States" },
+                    ]}
+                  />
+                </label>
+
+                <label>
+                  Street and number
+                  <input
+                    required
+                    value={billingAddress.street}
+                    onChange={(e) => setBillingAddress({ ...billingAddress, street: e.target.value })}
+                    placeholder="Street, apt, suite, unit"
+                  />
+                </label>
+
+                <div className="checkout-fields-grid">
+                  <label>
+                    ZIP Code
+                    <div className="zip-input-wrap">
+                      <input
+                        required
+                        value={billingAddress.postal_code}
+                        onChange={handleBillingZipChange}
+                        placeholder={billingAddress.country === "United States" ? "ZIP Code" : "00000"}
+                      />
+                      <CheckCircle 
+                        size={18} 
+                        className="zip-check-icon" 
+                        style={{ opacity: billingAddress.postal_code.length === 5 ? 1 : 0 }} 
+                      />
+                    </div>
+                  </label>
+                  {billingAddress.country === "Mexico" && (
+                    <label>
+                      Colonia / Neighborhood
+                      {billingColonias.length > 0 ? (
+                        <CustomSelect
+                          value={billingAddress.colonia}
+                          onChange={(val) => setBillingAddress({ ...billingAddress, colonia: val })}
+                          options={billingColonias.map((c) => ({ value: c, label: c }))}
+                        />
+                      ) : (
+                        <input
+                          required
+                          value={billingAddress.colonia}
+                          onChange={(e) => setBillingAddress({ ...billingAddress, colonia: e.target.value })}
+                          placeholder="Escribe tu colonia"
+                        />
+                      )}
+                    </label>
+                  )}
+                </div>
+
+                <div className="checkout-fields-grid">
+                  <label>
+                    City
+                    <input
+                      required
+                      value={billingAddress.city}
+                      onChange={(e) => setBillingAddress({ ...billingAddress, city: e.target.value })}
+                      placeholder="City"
+                    />
+                  </label>
+                  <label>
+                    State
+                    {billingAddress.country === "United States" ? (
+                      <input
+                        required
+                        value={billingAddress.state}
+                        onChange={(e) => setBillingAddress({ ...billingAddress, state: e.target.value })}
+                        placeholder="State (e.g. CA)"
+                      />
+                    ) : (
+                      <CustomSelect
+                        value={billingAddress.state}
+                        onChange={(val) => setBillingAddress({ ...billingAddress, state: val })}
+                        options={MEXICAN_STATES.map(s => ({ value: s, label: s }))}
+                      />
+                    )}
+                  </label>
+                </div>
+              </div>
+            )}
+
             {/* Payment / Visual Card details */}
             <div className="checkout-block" style={{ marginTop: "40px" }}>
-              <small>Método de pago único</small>
-              <h1>Pago seguro con tarjeta</h1>
+              <small>Secure Payment Method</small>
+              <h1>Secure Card Payment</h1>
               
               {/* Interactive Credit Card Simulator */}
               <div className="visual-card-container">
@@ -517,14 +777,14 @@ export default function CheckoutPage() {
                     </div>
                     <div className="visual-card-info-row">
                       <div>
-                        <span className="visual-card-label">Titular</span>
+                        <span className="visual-card-label">Cardholder</span>
                         <div className="visual-card-value">
-                          {card.holder || "Nombre del Titular"}
+                          {card.holder || "Cardholder Name"}
                         </div>
                       </div>
                       <div>
-                        <span className="visual-card-label">Vence</span>
-                        <div className="visual-card-value">{card.expiry || "MM/AA"}</div>
+                        <span className="visual-card-label">Expires</span>
+                        <div className="visual-card-value">{card.expiry || "MM/YY"}</div>
                       </div>
                     </div>
                   </div>
@@ -538,7 +798,7 @@ export default function CheckoutPage() {
                     </div>
                     <div className="visual-card-row" style={{ marginTop: "auto", padding: "0 24px 20px" }}>
                       <span className="visual-card-label" style={{ margin: 0 }}>
-                        Firma autorizada
+                        Authorized Signature
                       </span>
                       <small style={{ fontSize: "8px", opacity: 0.6 }}>NŌMA SECURE</small>
                     </div>
@@ -550,35 +810,53 @@ export default function CheckoutPage() {
               {/* Card form inputs */}
               <div className="card-inputs-grid">
                 <label>
-                  Nombre en la tarjeta
+                  Name on Card
                   <input
                     required
                     value={card.holder}
                     onChange={(e) => setCard({ ...card, holder: e.target.value.toUpperCase() })}
-                    placeholder="COMO APARECE EN LA TARJETA"
+                    placeholder="CARDHOLDER NAME"
                     onFocus={() => setCardFlipped(false)}
                   />
                 </label>
                 <label>
-                  Número de tarjeta
-                  <input
-                    required
-                    value={card.number}
-                    onChange={handleCardNumberChange}
-                    placeholder="4111 2222 3333 4444"
-                    onFocus={() => setCardFlipped(false)}
-                  />
+                  Card Number
+                  <div className="zip-input-wrap">
+                    <input
+                      required
+                      value={card.number}
+                      onChange={handleCardNumberChange}
+                      placeholder="4111 2222 3333 4444"
+                      onFocus={() => setCardFlipped(false)}
+                    />
+                    {cardLength >= 13 && (
+                      isCardLuhnValid ? (
+                        <CheckCircle size={18} className="zip-check-icon" style={{ color: "var(--clay)", opacity: 1 }} />
+                      ) : (
+                        <AlertTriangle size={18} className="zip-check-icon" style={{ color: "#d9534f", opacity: 1 }} />
+                      )
+                    )}
+                  </div>
                 </label>
                 <div className="card-inputs-row">
                   <label>
-                    Vencimiento
-                    <input
-                      required
-                      value={card.expiry}
-                      onChange={handleExpiryChange}
-                      placeholder="MM/AA"
-                      onFocus={() => setCardFlipped(false)}
-                    />
+                    Expiration
+                    <div className="zip-input-wrap">
+                      <input
+                        required
+                        value={card.expiry}
+                        onChange={handleExpiryChange}
+                        placeholder="MM/YY"
+                        onFocus={() => setCardFlipped(false)}
+                      />
+                      {card.expiry.length === 5 && (
+                        isExpiryValid ? (
+                          <CheckCircle size={18} className="zip-check-icon" style={{ color: "var(--clay)", opacity: 1 }} />
+                        ) : (
+                          <AlertTriangle size={18} className="zip-check-icon" style={{ color: "#d9534f", opacity: 1 }} />
+                        )
+                      )}
+                    </div>
                   </label>
                   <label>
                     CVV
@@ -607,12 +885,16 @@ export default function CheckoutPage() {
               className="continue checkout-submit"
               type="submit"
               disabled={loading}
+              style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "10px" }}
             >
               {loading ? (
-                "Procesando pago seguro..."
+                <>
+                  <span className="spinner"></span>
+                  Processing Payment...
+                </>
               ) : (
                 <>
-                  Confirmar y pagar / {money(total)}
+                  Confirm and Pay / {money(total)}
                   <ChevronRight />
                 </>
               )}
@@ -621,7 +903,7 @@ export default function CheckoutPage() {
         </section>
 
         <aside className="order-summary">
-          <small>Tu selección / {totalItems} piezas</small>
+          <small>Your selection / {totalItems} items</small>
           {cart.map((item, i) => (
             <div className="summary-line" key={i}>
               <img src={item.product.image} alt={item.product.name} />
@@ -640,8 +922,8 @@ export default function CheckoutPage() {
               {money(subtotal)}
             </p>
             <p>
-              <span>Envío</span>
-              {shippingRate === 0 ? "Gratis" : money(shippingRate)}
+              <span>Shipping</span>
+              {shippingRate === 0 ? "Free" : money(shippingRate)}
             </p>
             <b>
               <span>Total</span>

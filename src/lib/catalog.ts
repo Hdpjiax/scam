@@ -12,55 +12,55 @@ export type CategoryMeta = {
 
 export const categories: CategoryMeta[] = [
   {
-    name: "Casa inteligente",
-    slug: "casa-inteligente",
-    title: "Tecnología que desaparece",
-    copy: "Control, bienestar y seguridad sin convertir tu casa en un laboratorio.",
+    name: "Smart Home",
+    slug: "smart-home",
+    title: "Technology that disappears",
+    copy: "Control, wellness, and security without turning your house into a lab.",
     image:
       "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=1800&q=88",
     accent: "#8c9785",
   },
   {
-    name: "Iluminación",
-    slug: "iluminacion",
-    title: "La arquitectura de la luz",
-    copy: "Atmósferas precisas para leer, conversar, descansar y celebrar.",
+    name: "Lighting",
+    slug: "lighting",
+    title: "The architecture of light",
+    copy: "Precise settings for reading, talking, resting, and celebrating.",
     image:
       "https://images.unsplash.com/photo-1540932239986-30128078f3c5?auto=format&fit=crop&w=1800&q=88",
     accent: "#c39a61",
   },
   {
-    name: "Mobiliario",
-    slug: "mobiliario",
-    title: "Formas para bajar el ritmo",
-    copy: "Piezas honestas, táctiles y hechas para acompañar la vida real.",
+    name: "Furniture",
+    slug: "furniture",
+    title: "Shapes to slow down",
+    copy: "Honest, tactile pieces made to accompany real life.",
     image:
       "https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&w=1800&q=88",
     accent: "#9d5037",
   },
   {
-    name: "Decoración",
-    slug: "decoracion",
-    title: "Materia con memoria",
-    copy: "Objetos de presencia serena para terminar una habitación sin llenarla de ruido.",
+    name: "Decor",
+    slug: "decor",
+    title: "Matter with memory",
+    copy: "Serene presence objects to complete a room without filling it with noise.",
     image:
       "https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=1800&q=88",
     accent: "#b57a55",
   },
   {
-    name: "Cocina",
-    slug: "cocina",
-    title: "Rituales para la mesa",
-    copy: "Herramientas y piezas que vuelven más precisos los momentos cotidianos.",
+    name: "Kitchen",
+    slug: "kitchen",
+    title: "Rituals for the table",
+    copy: "Tools and pieces that make daily moments more precise.",
     image:
       "https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=1800&q=88",
     accent: "#a66f52",
   },
   {
-    name: "Bienestar",
-    slug: "bienestar",
-    title: "Pausa, aire y textura",
-    copy: "Una selección para bajar el volumen del día sin renunciar al diseño.",
+    name: "Wellness",
+    slug: "wellness",
+    title: "Pause, air, and texture",
+    copy: "A selection to lower the day's volume without compromising on design.",
     image:
       "https://images.unsplash.com/photo-1602928321679-560bb453f190?auto=format&fit=crop&w=1800&q=88",
     accent: "#b6a58d",
@@ -68,17 +68,17 @@ export const categories: CategoryMeta[] = [
   {
     name: "Textiles",
     slug: "textiles",
-    title: "Capas de calma",
-    copy: "Fibras, peso y tacto para hacer que el descanso se sienta diseñado.",
+    title: "Layers of calm",
+    copy: "Fibers, weight, and touch to make rest feel designed.",
     image:
       "https://images.unsplash.com/photo-1583845112203-454c2254edab?auto=format&fit=crop&w=1800&q=88",
     accent: "#b77b55",
   },
   {
-    name: "Exterior",
-    slug: "exterior",
-    title: "La casa sigue afuera",
-    copy: "Piezas pensadas para patios, terrazas y balcones con vida propia.",
+    name: "Outdoor",
+    slug: "outdoor",
+    title: "The home continues outside",
+    copy: "Pieces designed for patios, terraces, and balconies with their own life.",
     image:
       "https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=1800&q=88",
     accent: "#a85e40",
