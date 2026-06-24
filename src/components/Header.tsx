@@ -5,7 +5,6 @@ import Link from "next/link";
 import TransitionLink from "./TransitionLink";
 import {
   ArrowUpRight,
-  ChevronDown,
   Heart,
   LogOut,
   Menu,
@@ -26,14 +25,12 @@ export default function Header({
   onWishlist?: () => void;
   onSearch?: (value: string) => void;
 }) {
-  const { cart, profile, cartPulse, wishlist, signOut, setOrdersOpen } = useStore();
+  const { cart, profile, cartPulse, wishlist, signOut } = useStore();
   const [menu, setMenu] = useState(false);
   const [search, setSearch] = useState(false);
-  const [accountOpen, setAccountOpen] = useState(false);
   const [pulse, setPulse] = useState(false);
 
   const cartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
-  const navCategories = categories.slice(0, 5);
 
   useEffect(() => {
     if (!cartPulse) return;
@@ -223,13 +220,12 @@ export default function Header({
             </Link>
           ))}
         </nav>
-        <div className="mobile-menu-foot" style={{ display: "flex", flexDirection: "column", gap: "12px", width: "100%", padding: "20px" }}>
+        <div className="mobile-menu-foot">
           {profile ? (
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%", borderBottom: "1px solid rgba(255,255,255,0.05)", paddingBottom: "16px", marginBottom: "8px" }}>
+            <div className="mobile-account-row">
               <Link
                 href="/cuenta"
                 onClick={() => setMenu(false)}
-                style={{ display: "flex", alignItems: "center", gap: "8px", textDecoration: "none", color: "inherit", fontWeight: "600" }}
               >
                 <UserRound size={18} />
                 <span>{profile.name}</span>
@@ -240,21 +236,20 @@ export default function Header({
                   setMenu(false);
                   signOut();
                 }}
-                style={{ background: "none", border: "none", color: "var(--clay)", display: "flex", alignItems: "center", gap: "6px", cursor: "pointer", fontSize: "14px", fontWeight: "500", padding: 0 }}
               >
                 <LogOut size={16} />
                 <span>Sign out</span>
               </button>
             </div>
           ) : (
-            <Link href="/login" onClick={() => setMenu(false)} style={{ display: "flex", alignItems: "center", gap: "8px", textDecoration: "none", color: "inherit", borderBottom: "1px solid rgba(255,255,255,0.05)", paddingBottom: "16px", marginBottom: "8px", width: "100%" }}>
+            <Link className="mobile-account-link" href="/login" onClick={() => setMenu(false)}>
               <UserRound size={18} />
               <span>Log in / Register</span>
             </Link>
           )}
           
           {profile && profile.role === "admin" && (
-            <Link href="/admin" onClick={() => setMenu(false)} style={{ display: "block", marginBottom: "8px", textDecoration: "none", color: "inherit", fontSize: "14px", opacity: 0.8 }}>
+            <Link className="mobile-admin-link" href="/admin" onClick={() => setMenu(false)}>
               Admin Panel
             </Link>
           )}
@@ -264,7 +259,6 @@ export default function Header({
               setMenu(false);
               setSearch(true);
             }}
-            style={{ display: "flex", alignItems: "center", gap: "8px", background: "none", border: "none", color: "inherit", cursor: "pointer", padding: 0, width: "fit-content" }}
           >
             <Search size={16} />
             <span>Search</span>

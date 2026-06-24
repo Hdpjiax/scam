@@ -6,12 +6,14 @@ import Link from "next/link";
 import {
   ArrowDown,
   ArrowRight,
+  CreditCard,
   Headphones,
   Leaf,
   ShieldCheck,
   Sparkles,
   SlidersHorizontal,
   Star,
+  Truck,
 } from "lucide-react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -218,6 +220,30 @@ export default function ShopClient({
               Discover NŌMA <ArrowRight />
             </TransitionLink>
           </ScrollReveal>
+        </section>
+
+        <section className="service-strip" aria-label="Shopping benefits">
+          <div>
+            <Truck />
+            <span>
+              <b>Free shipping from $60</b>
+              <small>Tracked delivery coordinated after checkout.</small>
+            </span>
+          </div>
+          <div>
+            <Headphones />
+            <span>
+              <b>Client attention</b>
+              <small>Private support for delivery details and order care.</small>
+            </span>
+          </div>
+          <div>
+            <CreditCard />
+            <span>
+              <b>Secure payments</b>
+              <small>Stripe, PayPal and card-ready checkout signals.</small>
+            </span>
+          </div>
         </section>
 
         {/* Community Reviews */}

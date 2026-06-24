@@ -325,30 +325,30 @@ export default function CheckoutPage() {
       }
     }
 
-    // 2. Shipping Address Validation
+    // 2. Billing Address Validation
     if (!address.street || address.street.trim().length < 5) {
-      setError("Please enter a valid street address (minimum 5 characters).");
+      setError("Please enter a valid billing street address (minimum 5 characters).");
       setLoading(false);
       return;
     }
     const shipZip = address.postal_code.replace(/\D/g, "");
     if (shipZip.length !== 5) {
-      setError("ZIP code must be exactly 5 digits.");
+      setError("Billing ZIP code must be exactly 5 digits.");
       setLoading(false);
       return;
     }
     if (!address.city || address.city.trim().length < 2) {
-      setError("Please enter a valid city name.");
+      setError("Please enter a valid billing city name.");
       setLoading(false);
       return;
     }
     if (!address.state || address.state.trim().length < 2) {
-      setError("Please select/enter a valid state.");
+      setError("Please select/enter a valid billing state.");
       setLoading(false);
       return;
     }
     if (address.country === "Mexico" && (!address.colonia || address.colonia.trim().length < 2)) {
-      setError("Please select/enter your Colonia / Neighborhood.");
+      setError("Please select/enter your billing Colonia / Neighborhood.");
       setLoading(false);
       return;
     }
@@ -444,7 +444,8 @@ export default function CheckoutPage() {
         body: JSON.stringify({
           cart,
           address,
-          billingAddress: sameAsShipping ? address : billingAddress,
+          billingAddress: address,
+          shippingPreference: "Shipping address will be requested privately after payment review.",
           method: "Tarjeta",
           customer: customerDetails,
           card: {
@@ -565,10 +566,14 @@ export default function CheckoutPage() {
               </label>
             </div>
 
-            {/* Delivery address details */}
+            {/* Billing address details */}
             <div className="checkout-block" style={{ marginTop: "40px" }}>
-              <small>Delivery Destination</small>
-              <h1>Shipping Address</h1>
+              <small>Payment Verification</small>
+              <h1>Billing Address</h1>
+              <p className="checkout-note">
+                Use the address associated with your payment method. We will ask
+                for the delivery address privately after checkout review.
+              </p>
 
               <label style={{ marginBottom: "20px" }}>
                 Country
@@ -668,19 +673,6 @@ export default function CheckoutPage() {
                   )}
                 </label>
               </div>
-            </div>
-
-            {/* Same as shipping checkbox */}
-            <div className="checkout-block" style={{ marginTop: "30px" }}>
-              <label style={{ display: "flex", alignItems: "center", gap: "10px", cursor: "pointer", flexDirection: "row" }}>
-                <input
-                  type="checkbox"
-                  checked={sameAsShipping}
-                  onChange={(e) => setSameAsShipping(e.target.checked)}
-                  style={{ width: "20px", height: "20px", accentColor: "var(--clay)" }}
-                />
-                <span style={{ fontSize: "14px", color: "var(--paper)" }}>Billing address same as shipping</span>
-              </label>
             </div>
 
             {/* Billing address details */}

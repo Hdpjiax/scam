@@ -14,8 +14,36 @@ import "../styles/checkout-forms.css";
 import "../styles/account.css";
 
 export const metadata: Metadata = {
-  title: "NŌMA Home living",
-  description: "Design & tech objects for a better living.",
+  metadataBase: new URL('https://noma-home.com'),
+  title: "NŌMA | Home Living",
+  description: "Minimalist design & smart tech objects for a premium home living experience.",
+  icons: {
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg",
+    apple: "/favicon.svg",
+  },
+  openGraph: {
+    title: "NŌMA | Home Living",
+    description: "Minimalist design & smart tech objects for a premium home living experience.",
+    url: "https://noma-home.com",
+    siteName: "NŌMA",
+    images: [
+      {
+        url: "/assets/hero-casa-noma.png",
+        width: 1200,
+        height: 630,
+        alt: "NŌMA Home Living",
+      },
+    ],
+    locale: "es_MX",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "NŌMA | Home Living",
+    description: "Minimalist design & smart tech objects for a premium home living experience.",
+    images: ["/assets/hero-casa-noma.png"],
+  },
 };
 
 export const viewport: Viewport = {

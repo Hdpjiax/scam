@@ -116,10 +116,10 @@ export function OrderTable({
 
               {isExpanded && (
                 <div className="order-detail-expanded">
-                  {/* Address Section */}
+                  {/* Billing address section */}
                   <div>
                     <h3 style={{ fontSize: "14px", textTransform: "uppercase", color: "var(--clay)", margin: "0 0 12px" }}>
-                      Shipping Address
+                      Billing Address
                     </h3>
                     {addr ? (
                       <p style={{ margin: 0, lineHeight: 1.6, opacity: 0.85 }}>
@@ -134,7 +134,7 @@ export function OrderTable({
                         <strong>Phone:</strong> {o.phone}
                       </p>
                     ) : (
-                      <p style={{ margin: 0, opacity: 0.5 }}>Address not specified</p>
+                      <p style={{ margin: 0, opacity: 0.5 }}>Billing address not specified</p>
                     )}
                   </div>
 

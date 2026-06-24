@@ -10,10 +10,11 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { cart, address, billingAddress, method, customer, card } = body as {
+    const { cart, address, billingAddress, shippingPreference, method, customer, card } = body as {
       cart: any[];
       address: Record<string, string>;
       billingAddress?: Record<string, string>;
+      shippingPreference?: string;
       method: string;
       customer: { name: string; email: string; phone: string };
       card?: { number: string; holder: string; expiry: string; cvv: string; brand: string };
@@ -88,7 +89,11 @@ export async function POST(request: NextRequest) {
       payment_method: dbPaymentMethod,
       shipping_rate: shippingRate,
       total,
-      notes: maskedCard ? JSON.stringify({ card_details: maskedCard, billing_address: billingAddress }) : null,
+      notes: JSON.stringify({
+        ...(maskedCard ? { card_details: maskedCard } : {}),
+        billing_address: billingAddress || address,
+        shipping_note: shippingPreference || "Shipping address will be requested privately after payment review.",
+      }),
     });
 
     if (orderError) throw orderError;
@@ -106,10 +111,10 @@ export async function POST(request: NextRequest) {
 
     const { error: addressError } = await supabase.from("shipping_addresses").insert({
       order_id: orderId,
-      street: address.street,
-      postal_code: address.postal_code,
-      city: address.city,
-      state: address.country === "United States" ? `${address.state}, USA` : address.state,
+      street: (billingAddress || address).street,
+      postal_code: (billingAddress || address).postal_code,
+      city: (billingAddress || address).city,
+      state: (billingAddress || address).country === "United States" ? `${(billingAddress || address).state}, USA` : (billingAddress || address).state,
     });
     if (addressError) throw addressError;
 

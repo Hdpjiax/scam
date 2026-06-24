@@ -780,11 +780,11 @@ export default function AccountPage() {
                               ))}
                             </div>
 
-                            {/* Shipping info */}
+                            {/* Billing info */}
                             {order.shipping_addresses?.[0] && (
                               <>
                                 <h4 style={{ color: "#d1b894", fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.08em", marginTop: "20px", marginBottom: "8px" }}>
-                                  Shipping Address
+                                  Billing Address
                                 </h4>
                                 <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.75)", lineHeight: 1.6 }}>
                                   <div>{order.customer_name}</div>

@@ -4,9 +4,15 @@ import { categories } from "../lib/catalog";
 export default function Footer() {
   return (
     <footer>
-      <Link className="brand" href="/">
-        NŌMA<span>living spaces</span>
-      </Link>
+      <div className="footer-brand-block">
+        <Link className="brand" href="/">
+          NOMA<span>living spaces</span>
+        </Link>
+        <p>
+          Secure checkout, private delivery coordination and curated home pieces
+          handled with care.
+        </p>
+      </div>
       <nav aria-label="Explore">
         <b>Explore</b>
         {categories.slice(0, 4).map((category) => (
@@ -26,7 +32,25 @@ export default function Footer() {
         <Link href="/admin">Dashboard</Link>
         <Link href="/login">Login & Register</Link>
       </nav>
-      <small>© 2026 NŌMA Living Spaces / United States</small>
+      <div className="footer-trust">
+        <div className="payment-rail" aria-label="Accepted payment methods">
+          <span>PCI DSS</span>
+          <span>Stripe</span>
+          <span>PayPal</span>
+          <span>Visa</span>
+          <span>Mastercard</span>
+          <span>Amex</span>
+        </div>
+        <p>
+          Payments are reviewed through secure provider workflows. Billing data
+          is collected for verification; delivery is confirmed privately with the
+          client.
+        </p>
+      </div>
+      <small>
+        (c) 2026 NOMA Living Spaces / United States | Privacy Policy | Terms &
+        Conditions | Refunds & Returns
+      </small>
     </footer>
   );
 }

@@ -419,7 +419,7 @@ export function OrdersDrawer({ open, onClose }: { open: boolean; onClose: () => 
                       {order.shipping_addresses?.[0] && (
                         <>
                           <h4 style={{ color: "#d1b894", marginTop: "16px", marginBottom: "8px", fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                            Delivery Address
+                            Billing Address
                           </h4>
                           <div className="order-address-box">
                             <div>{order.customer_name}</div>
