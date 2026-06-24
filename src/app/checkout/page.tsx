@@ -236,13 +236,40 @@ export default function CheckoutPage() {
     }
   }, [sameAsShipping, address, colonias]);
 
+  const [promoInput, setPromoInput] = useState("");
+  const [discountPercent, setDiscountPercent] = useState(0);
+  const [promoError, setPromoError] = useState("");
+  const [promoSuccess, setPromoSuccess] = useState("");
+
   const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
   const subtotal = cart.reduce(
     (acc, item) => acc + item.product.price * item.quantity,
     0,
   );
-  const shippingRate = subtotal >= 100 ? 0 : 10;
-  const total = subtotal + shippingRate;
+
+  const discountAmount = (subtotal * discountPercent) / 100;
+  const subtotalAfterDiscount = subtotal - discountAmount;
+  const shippingRate = subtotalAfterDiscount >= 100 ? 0 : 10;
+  const total = subtotalAfterDiscount + shippingRate;
+
+  const handleApplyPromo = (e: any) => {
+    e.preventDefault();
+    setPromoError("");
+    setPromoSuccess("");
+    const cleaned = promoInput.trim().toUpperCase();
+    if (!cleaned) return;
+
+    if (cleaned === "NOMA10") {
+      setDiscountPercent(10);
+      setPromoSuccess("Code 'NOMA10' applied: 10% discount");
+    } else if (cleaned === "WELCOME20") {
+      setDiscountPercent(20);
+      setPromoSuccess("Code 'WELCOME20' applied: 20% discount");
+    } else {
+      setPromoError("Invalid promo code");
+      setDiscountPercent(0);
+    }
+  };
 
   const rawCardNumber = card.number.replace(/\s/g, "");
   const isCardLuhnValid = validateCardNumber(rawCardNumber);
@@ -767,7 +794,7 @@ export default function CheckoutPage() {
                   <div className="visual-card-front">
                     <div className="visual-card-row">
                       <div className="visual-card-logo-symbol">
-                        NŌMA<span>casa viva</span>
+                        NŌMA<span>living spaces</span>
                       </div>
                       <div className="visual-card-brand-logo">{cardBrand}</div>
                     </div>
@@ -916,11 +943,67 @@ export default function CheckoutPage() {
               <strong>{money(item.product.price * item.quantity)}</strong>
             </div>
           ))}
+          {/* Promo Code Input Block */}
+          <form 
+            onSubmit={handleApplyPromo}
+            style={{
+              margin: "24px 0",
+              paddingTop: "20px",
+              borderTop: "1px solid var(--line)",
+              display: "flex",
+              flexDirection: "column",
+              gap: "8px"
+            }}
+          >
+            <label style={{ fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--copy)" }}>Promo Code</label>
+            <div style={{ display: "flex", gap: "8px" }}>
+              <input
+                type="text"
+                value={promoInput}
+                onChange={(e) => setPromoInput(e.target.value)}
+                placeholder="e.g. NOMA10"
+                style={{
+                  flex: 1,
+                  padding: "10px 14px",
+                  fontSize: "13px",
+                  border: "1px solid var(--line)",
+                  borderRadius: "4px",
+                  background: "#ffffff",
+                  color: "var(--ink)",
+                }}
+              />
+              <button
+                type="submit"
+                style={{
+                  padding: "10px 18px",
+                  background: "var(--ink)",
+                  color: "var(--light)",
+                  border: "none",
+                  borderRadius: "4px",
+                  fontSize: "11px",
+                  fontWeight: "600",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.05em",
+                }}
+              >
+                Apply
+              </button>
+            </div>
+            {promoError && <span style={{ fontSize: "11px", color: "var(--clay)", fontWeight: "500" }}>{promoError}</span>}
+            {promoSuccess && <span style={{ fontSize: "11px", color: "#2e7d32", fontWeight: "600" }}>{promoSuccess}</span>}
+          </form>
+
           <div className="summary-totals">
             <p>
               <span>Subtotal</span>
               {money(subtotal)}
             </p>
+            {discountAmount > 0 && (
+              <p style={{ color: "#2e7d32" }}>
+                <span>Discount ({discountPercent}%)</span>
+                -{money(discountAmount)}
+              </p>
+            )}
             <p>
               <span>Shipping</span>
               {shippingRate === 0 ? "Free" : money(shippingRate)}

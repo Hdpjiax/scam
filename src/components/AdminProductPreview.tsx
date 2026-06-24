@@ -34,7 +34,7 @@ export default function AdminProductPreview({
       product.image ||
       "https://images.unsplash.com/photo-1602928321679-560bb453f190?auto=format&fit=crop&w=900&q=85",
     badge: product.badge || undefined,
-    description: product.description || "Descripción del producto.",
+    description: product.description || "Product description.",
     colors: product.colors?.length ? product.colors : ["#ded8cb"],
     stock: product.stock,
     sku: product.sku,

@@ -96,9 +96,8 @@ export default function ProductPageClient({
   initialProduct: Product | null;
   initialReviews?: any[];
 }) {
-  const { cart, addToCart } = useStore();
+  const { cart, addToCart, toggleWishlist, isInWishlist } = useStore();
   const [qty, setQty] = useState(1);
-  const [fav, setFav] = useState(false);
   const [drawer, setDrawer] = useState(false);
   const [added, setAdded] = useState(false);
 
@@ -106,8 +105,9 @@ export default function ProductPageClient({
 
   const productReviews = useMemo(() => {
     if (initialReviews.length > 0) return initialReviews;
+    if (initialProduct?.reviews?.length) return initialProduct.reviews;
     return FALLBACK_REVIEWS_POOL;
-  }, [initialReviews]);
+  }, [initialProduct, initialReviews]);
 
   const averageRating = useMemo(() => {
     if (productReviews.length === 0) return 5.0;
@@ -117,6 +117,16 @@ export default function ProductPageClient({
 
   const [selectedColor, setSelectedColor] = useState(() => {
     return initialProduct?.colors?.[0] || "";
+  });
+
+  const productImages = useMemo(() => {
+    return initialProduct?.images && initialProduct.images.length > 0
+      ? initialProduct.images
+      : [initialProduct?.image].filter(Boolean) as string[];
+  }, [initialProduct]);
+
+  const [activeImage, setActiveImage] = useState(() => {
+    return productImages[0] || initialProduct?.image || "";
   });
 
   if (!initialProduct) {
@@ -129,6 +139,7 @@ export default function ProductPageClient({
   }
 
   const p = initialProduct;
+  const fav = p ? isInWishlist(p.id) : false;
   const stock = p.stock ?? 0;
   const isOut = stock <= 0;
   const isLow = stock > 0 && stock <= 5;
@@ -159,19 +170,78 @@ export default function ProductPageClient({
         </header>
         <main>
           <div className="pdp-gallery">
-            <div className="pdp-main-img">
+            <div className="pdp-main-img" style={{ position: "relative" }}>
               {p.badge && <span>{p.badge}</span>}
               <img
-                src={p.image}
+                src={activeImage}
                 alt={p.name}
                 data-fly-source={p.id}
                 style={
-                  { viewTransitionName: `product-${p.id}` } as CSSProperties
+                  { viewTransitionName: `product-${p.id}`, width: "100%", height: "100%", objectFit: "cover" } as CSSProperties
                 }
               />
+              
+              {/* Premium Floating Thumbnail Selector */}
+              {productImages.length > 1 && (
+                <div 
+                  className="no-scrollbar"
+                  style={{
+                    position: "absolute",
+                    bottom: "24px",
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    display: "flex",
+                    gap: "8px",
+                    background: "rgba(28, 29, 25, 0.4)",
+                    backdropFilter: "blur(16px)",
+                    WebkitBackdropFilter: "blur(16px)",
+                    padding: "8px 12px",
+                    borderRadius: "12px",
+                    border: "1px solid rgba(255, 255, 255, 0.08)",
+                    zIndex: 10,
+                    maxWidth: "90%",
+                    overflowX: "auto",
+                    boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
+                  }}
+                >
+                  {productImages.map((imgUrl, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setActiveImage(imgUrl)}
+                      style={{
+                        width: "48px",
+                        height: "48px",
+                        borderRadius: "6px",
+                        border: activeImage === imgUrl ? "2px solid #d1b894" : "1px solid rgba(255, 255, 255, 0.15)",
+                        padding: 0,
+                        overflow: "hidden",
+                        background: "none",
+                        cursor: "pointer",
+                        transition: "all 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
+                        flexShrink: 0,
+                        transform: activeImage === imgUrl ? "scale(1.05)" : "scale(1)",
+                      }}
+                    >
+                      <img src={imgUrl} alt={`Thumbnail ${index + 1}`} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
             <div className="pdp-secondary">
-              <img src={p.image} alt={`Detail of ${p.name}`} />
+              <img 
+                src={productImages[1] || productImages[0] || p.image} 
+                alt={`Detail of ${p.name}`} 
+                onClick={() => {
+                  if (productImages[1]) {
+                    setActiveImage(productImages[1]);
+                  }
+                }}
+                style={{ 
+                  cursor: productImages[1] ? "pointer" : "default",
+                  transition: "opacity 0.3s ease",
+                }}
+              />
               <div className="material-shot" />
             </div>
           </div>
@@ -190,7 +260,9 @@ export default function ProductPageClient({
                   </svg>
                 ))}
               </div>
-              <span>{averageRating} ({productReviews.length} Reviews)</span>
+              <span>
+                {averageRating} ({p.reviewCount || productReviews.length} Reviews)
+              </span>
             </a>
 
             <div className="pdp-price">
@@ -250,7 +322,7 @@ export default function ProductPageClient({
               <button
                 aria-label={fav ? "Remove from favorites" : "Add to favorites"}
                 aria-pressed={fav}
-                onClick={() => setFav(!fav)}
+                onClick={() => p && toggleWishlist(p)}
               >
                 <Heart />
               </button>
@@ -387,6 +459,11 @@ export default function ProductPageClient({
                       </div>
                     </div>
                   </div>
+                  {r.title && (
+                    <h3 style={{ margin: "0 0 8px", fontSize: "16px", color: "#ffffff" }}>
+                      {r.title}
+                    </h3>
+                  )}
                   <p style={{ margin: 0, fontSize: "14px", lineHeight: "1.6", color: "#ffffff", opacity: 0.95 }}>
                     {r.content}
                   </p>

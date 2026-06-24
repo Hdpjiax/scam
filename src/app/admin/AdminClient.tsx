@@ -32,6 +32,7 @@ type ProductType = {
   price: number;
   old_price?: number | null;
   image: string;
+  images?: string[] | null;
   description: string;
   colors: string[];
   stock: number;
@@ -102,6 +103,10 @@ export default function AdminClient({
   const [editReview, setEditReview] = useState<any | null>(null);
   const [preview, setPreview] = useState<ProductType | null>(null);
   const [q, setQ] = useState("");
+  const [catFilter, setCatFilter] = useState("All");
+  const [stockFilter, setStockFilter] = useState("All");
+  const [orderQuery, setOrderQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
   const [remove, setRemove] = useState<ProductType | null>(null);
   const [removeReview, setRemoveReview] = useState<any | null>(null);
   const [toast, setToast] = useState<{ text: string; undo?: () => void } | null>(null);
@@ -111,9 +116,20 @@ export default function AdminClient({
     .filter((o) => o.status === "paid" || o.status === "processing" || o.status === "shipped" || o.status === "delivered")
     .reduce((a, o) => a + o.total, 0);
 
-  const filteredProducts = products.filter((p) =>
-    (p.name + p.sku).toLowerCase().includes(q.toLowerCase())
-  );
+  const filteredProducts = products.filter((p) => {
+    const matchesSearch = (p.name + p.sku).toLowerCase().includes(q.toLowerCase());
+    const matchesCategory = catFilter === "All" || p.category === catFilter;
+    const matchesStock = stockFilter === "All" || 
+      (stockFilter === "In Stock" && (p.stock ?? 0) > 0) ||
+      (stockFilter === "Out of Stock" && (p.stock ?? 0) <= 0);
+    return matchesSearch && matchesCategory && matchesStock;
+  });
+
+  const filteredOrders = orders.filter((o) => {
+    const matchesSearch = ((o.customer_name || "") + (o.email || "") + o.id).toLowerCase().includes(orderQuery.toLowerCase());
+    const matchesStatus = statusFilter === "All" || o.status === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
 
   const notify = (text: string, undo?: () => void) => {
     setToast({ text, undo });
@@ -142,7 +158,7 @@ export default function AdminClient({
       category: p.category,
       price: Math.max(p.price),
       old_price: p.old_price ? Math.max(0, p.old_price) : null,
-      images: [imageUrl],
+      images: p.images && p.images.length > 0 ? p.images : [imageUrl],
       description: p.description,
       colors: p.colors,
       stock: Math.max(0, p.stock || 0),
@@ -157,7 +173,7 @@ export default function AdminClient({
       if (!error) {
         setProducts(
           products.map((x) =>
-            x.id === p.id ? { ...x, ...next, image: imageUrl } : x
+            x.id === p.id ? { ...x, ...next, image: next.images[0] || imageUrl, images: next.images } : x
           )
         );
         notify("Product updated.");
@@ -173,7 +189,7 @@ export default function AdminClient({
 
       const { data, error } = await supabase.from("products").insert(newProduct).select().single();
       if (!error && data) {
-        setProducts([...products, { ...data, image: data.images?.[0] || "" }]);
+        setProducts([...products, { ...data, image: data.images?.[0] || "", images: data.images }]);
         notify("Product published.");
       } else {
         console.error("Error publishing product:", error);
@@ -188,35 +204,44 @@ export default function AdminClient({
   const deleteProduct = async () => {
     if (!remove) return;
     setLoading(true);
-    const old = [...products];
-
-    const { error } = await supabase.from("products").delete().eq("id", remove.id);
-    if (!error) {
-      setProducts(products.filter((x) => x.id !== remove.id));
-      notify("Product deleted.", async () => {
-        // Undo delete
-        const next = {
-          name: remove.name,
-          category: remove.category,
-          price: remove.price,
-          old_price: remove.old_price || null,
-          images: [remove.image || ""],
-          description: remove.description,
-          colors: remove.colors,
-          stock: remove.stock,
-          sku: remove.sku,
-          badge: remove.badge || null,
-          featured: remove.featured || false,
-        };
-        const { data } = await supabase.from("products").insert(next).select().single();
-        if (data) setProducts([...old]);
-      });
-    } else {
-      notify("Could not delete. There are orders associated with this product.");
+    try {
+      const old = [...products];
+      const { error } = await supabase.from("products").delete().eq("id", remove.id);
+      if (!error) {
+        setProducts(products.filter((x) => x.id !== remove.id));
+        notify("Product deleted.", async () => {
+          // Undo delete
+          const next = {
+            name: remove.name,
+            category: remove.category,
+            price: remove.price,
+            old_price: remove.old_price || null,
+            images: remove.images && remove.images.length > 0 ? remove.images : [remove.image || ""],
+            description: remove.description,
+            colors: remove.colors,
+            stock: remove.stock,
+            sku: remove.sku,
+            badge: remove.badge || null,
+            featured: remove.featured || false,
+          };
+          try {
+            const { data } = await supabase.from("products").insert(next).select().single();
+            if (data) setProducts([...old]);
+          } catch (undoErr) {
+            console.error("Error undoing deletion:", undoErr);
+          }
+        });
+      } else {
+        console.error("Error deleting product:", error);
+        notify(`Could not delete: ${error.message || "Database constraint error"}`);
+      }
+    } catch (err: any) {
+      console.error("Exception in deleteProduct:", err);
+      notify(`Could not delete: ${err.message || "Unknown client error"}`);
+    } finally {
+      setRemove(null);
+      setLoading(false);
     }
-
-    setRemove(null);
-    setLoading(false);
   };
 
   const saveReview = async (r: any) => {
@@ -414,8 +439,8 @@ export default function AdminClient({
 
           {tab === "products" && (
             <>
-              <div className="admin-toolbar">
-                <label htmlFor="admin-search">
+              <div className="admin-toolbar" style={{ display: "flex", gap: "16px", flexWrap: "wrap", alignItems: "center" }}>
+                <label htmlFor="admin-search" style={{ margin: 0, width: "auto", flex: "1 1 200px" }}>
                   <Search />
                   <span className="sr-only">Search products</span>
                   <input
@@ -425,9 +450,50 @@ export default function AdminClient({
                     onChange={(e) => setQ(e.target.value)}
                   />
                 </label>
+
+                <select
+                  value={catFilter}
+                  onChange={(e) => setCatFilter(e.target.value)}
+                  style={{
+                    background: "var(--mineral)",
+                    color: "var(--paper)",
+                    border: "1px solid var(--copy)",
+                    padding: "10px 14px",
+                    borderRadius: "4px",
+                    fontSize: "12px",
+                    cursor: "pointer",
+                  }}
+                >
+                  <option value="All">All Categories</option>
+                  <option value="Lighting">Lighting</option>
+                  <option value="Smart Home">Smart Home</option>
+                  <option value="Wellness">Wellness</option>
+                  <option value="Decor">Decor</option>
+                  <option value="Furniture">Furniture</option>
+                </select>
+
+                <select
+                  value={stockFilter}
+                  onChange={(e) => setStockFilter(e.target.value)}
+                  style={{
+                    background: "var(--mineral)",
+                    color: "var(--paper)",
+                    border: "1px solid var(--copy)",
+                    padding: "10px 14px",
+                    borderRadius: "4px",
+                    fontSize: "12px",
+                    cursor: "pointer",
+                  }}
+                >
+                  <option value="All">All Stock</option>
+                  <option value="In Stock">In Stock</option>
+                  <option value="Out of Stock">Out of Stock</option>
+                </select>
+
                 <button
                   className="admin-primary"
                   onClick={() => setEdit({ ...blank, sku: "NOM-" + Math.random().toString(36).substring(2, 9).toUpperCase() })}
+                  style={{ marginLeft: "auto" }}
                 >
                   <Plus />
                   New product
@@ -583,12 +649,49 @@ export default function AdminClient({
 
           {tab === "orders" && (
             <section className="order-section">
-              <div className="panel-title">
+              <div className="panel-title" style={{ marginBottom: "20px" }}>
                 <h2>All Orders</h2>
-                <span>{orders.length} records</span>
+                <span>{filteredOrders.length} of {orders.length} records</span>
               </div>
+              
+              {/* Orders Toolbar */}
+              <div className="admin-toolbar" style={{ display: "flex", gap: "16px", flexWrap: "wrap", alignItems: "center", marginBottom: "24px", background: "none", padding: 0 }}>
+                <label htmlFor="order-search" style={{ margin: 0, width: "auto", flex: "1 1 200px", background: "var(--mineral)", display: "flex", alignItems: "center", gap: "8px", padding: "8px 12px" }}>
+                  <Search size={16} />
+                  <span className="sr-only">Search orders</span>
+                  <input
+                    id="order-search"
+                    placeholder="Customer name, email or Order ID"
+                    value={orderQuery}
+                    onChange={(e) => setOrderQuery(e.target.value)}
+                    style={{ background: "none", border: "none", outline: "none", color: "inherit", width: "100%" }}
+                  />
+                </label>
+
+                <select
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value)}
+                  style={{
+                    background: "var(--mineral)",
+                    color: "var(--paper)",
+                    border: "1px solid var(--copy)",
+                    padding: "10px 14px",
+                    borderRadius: "4px",
+                    fontSize: "12px",
+                    cursor: "pointer",
+                  }}
+                >
+                  <option value="All">All Statuses</option>
+                  <option value="pending_payment">Pending Payment</option>
+                  <option value="processing">Processing</option>
+                  <option value="shipped">Shipped</option>
+                  <option value="delivered">Delivered</option>
+                  <option value="cancelled">Cancelled</option>
+                </select>
+              </div>
+
               <OrderTable
-                orders={orders}
+                orders={filteredOrders}
                 onStatusChange={handleStatusChange}
               />
             </section>
@@ -704,24 +807,24 @@ export default function AdminClient({
 
       {remove && (
         <div
-          className="confirm-wrap"
+          className="confirm-modal-overlay"
           role="dialog"
           aria-modal="true"
           aria-labelledby="delete-title"
         >
-          <div>
+          <div className="confirm-modal">
             <AlertTriangle />
             <h2 id="delete-title">Delete {remove.name}?</h2>
             <p>
               It will be removed from the catalog. You can undo this action within five
               seconds.
             </p>
-            <span>
+            <div className="confirm-actions">
               <button onClick={() => setRemove(null)} disabled={loading}>Cancel</button>
               <button className="danger" onClick={deleteProduct} disabled={loading}>
                 {loading ? "Deleting..." : "Delete product"}
               </button>
-            </span>
+            </div>
           </div>
         </div>
       )}
@@ -756,23 +859,23 @@ export default function AdminClient({
 
       {removeReview && (
         <div
-          className="confirm-wrap"
+          className="confirm-modal-overlay"
           role="dialog"
           aria-modal="true"
           aria-labelledby="delete-review-title"
         >
-          <div>
+          <div className="confirm-modal">
             <AlertTriangle />
             <h2 id="delete-review-title">Delete review?</h2>
             <p>
               This action cannot be undone. The review by {removeReview.author_name} will be deleted.
             </p>
-            <span>
+            <div className="confirm-actions">
               <button onClick={() => setRemoveReview(null)} disabled={loading}>Cancel</button>
               <button className="danger" onClick={deleteReviewFunc} disabled={loading}>
                 {loading ? "Deleting..." : "Delete review"}
               </button>
-            </span>
+            </div>
           </div>
         </div>
       )}
@@ -997,6 +1100,52 @@ function ProductEditor({
   const [p, setP] = useState(product);
   const [error, setError] = useState("");
   const [colors, setColors] = useState<string[]>(p.colors || ["#ded8cb"]);
+  const [imagesList, setImagesList] = useState<string[]>(() => {
+    return p.images || (p.image ? [p.image] : []);
+  });
+  const [loadingLocal, setLoadingLocal] = useState(false);
+
+  // HTML5 Canvas compression helper
+  const compressImage = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.src = URL.createObjectURL(file);
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        let width = img.width;
+        let height = img.height;
+
+        const MAX_WIDTH = 1200;
+        const MAX_HEIGHT = 1200;
+
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height = Math.round((height * MAX_WIDTH) / width);
+            width = MAX_WIDTH;
+          }
+        } else {
+          if (height > MAX_HEIGHT) {
+            width = Math.round((width * MAX_HEIGHT) / height);
+            height = MAX_HEIGHT;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext("2d");
+        if (!ctx) {
+          resolve("");
+          return;
+        }
+
+        ctx.drawImage(img, 0, 0, width, height);
+        const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.75);
+        resolve(compressedDataUrl);
+      };
+      img.onerror = (err) => reject(err);
+    });
+  };
 
   // Chic pre-defined interior colors palette
   const PRESET_COLORS = [
@@ -1012,14 +1161,30 @@ function ProductEditor({
     { hex: "#1E1F1D", name: "Charcoal" },
   ];
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const f = e.target.files?.[0];
-    if (!f) return;
-    if (f.size > 5_000_000) return setError("The image exceeds 5 MB.");
+  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+    setLoadingLocal(true);
+    setError("");
 
-    const r = new FileReader();
-    r.onload = () => setP({ ...p, image: String(r.result) });
-    r.readAsDataURL(f);
+    try {
+      const compressedUrls: string[] = [];
+      for (const file of files) {
+        if (file.size > 10_000_000) {
+          setError("One of the images exceeds 10 MB limit.");
+          continue;
+        }
+        const url = await compressImage(file);
+        compressedUrls.push(url);
+      }
+      const updated = [...imagesList, ...compressedUrls];
+      setImagesList(updated);
+      setP({ ...p, images: updated, image: updated[0] || "" });
+    } catch (err) {
+      setError("Error compressing or loading file.");
+    } finally {
+      setLoadingLocal(false);
+    }
   };
 
   const toggleColor = (hex: string) => {
@@ -1041,8 +1206,8 @@ function ProductEditor({
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            if (!p.image) return setError("Add an image before publishing.");
-            onSave({ ...p, colors });
+            if (imagesList.length === 0) return setError("Add at least one image before publishing.");
+            onSave({ ...p, colors, images: imagesList, image: imagesList[0] });
           }}
         >
           <div className="editor-head">
@@ -1056,25 +1221,41 @@ function ProductEditor({
           </div>
           <div className="editor-layout" style={{ display: "block" }}>
             <div className="editor-fields" style={{ width: "100%", padding: 0 }}>
-              <label className="upload" style={{ height: "180px", marginBottom: "20px" }}>
-                <input
-                  type="file"
-                  accept="image/png,image/jpeg,image/webp"
-                  onChange={handleFileChange}
-                  disabled={loading}
-                />
-                {p.image ? (
-                  <img src={p.image} alt="Preview" style={{ objectFit: "contain", maxHeight: "100%" }} />
-                ) : (
-                  <>
-                    <ImagePlus />
-                    <b>Upload main image</b>
-                    <span>PNG, JPG or WEBP · max 5 MB</span>
-                  </>
-                )}
-              </label>
+              <div style={{ marginBottom: "20px" }}>
+                <span style={{ fontSize: "14px", fontWeight: "600", display: "block", marginBottom: "8px", textTransform: "uppercase", letterSpacing: "0.03em" }}>Product Images</span>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(100px, 1fr))", gap: "12px" }}>
+                  {imagesList.map((imgUrl, idx) => (
+                    <div key={idx} style={{ position: "relative", width: "100px", height: "100px", borderRadius: "6px", overflow: "hidden", border: "1px solid rgba(255,255,255,0.1)" }}>
+                      <img src={imgUrl} alt={`Product ${idx}`} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                      <button 
+                        type="button" 
+                        onClick={() => {
+                          const updated = imagesList.filter((_, i) => i !== idx);
+                          setImagesList(updated);
+                          setP({ ...p, images: updated, image: updated[0] || "" });
+                        }}
+                        style={{ position: "absolute", top: "4px", right: "4px", background: "rgba(0,0,0,0.6)", color: "#fff", border: "none", borderRadius: "50%", width: "20px", height: "20px", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", fontSize: "10px", padding: 0 }}
+                      >
+                        <X size={12} />
+                      </button>
+                    </div>
+                  ))}
+                  <label style={{ width: "100px", height: "100px", borderRadius: "6px", border: "2px dashed rgba(255,255,255,0.15)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", cursor: "pointer", gap: "4px" }}>
+                    <input
+                      type="file"
+                      multiple
+                      accept="image/png,image/jpeg,image/webp"
+                      onChange={handleFileChange}
+                      style={{ display: "none" }}
+                      disabled={loading || loadingLocal}
+                    />
+                    <ImagePlus size={20} style={{ opacity: 0.6 }} />
+                    <span style={{ fontSize: "10px", opacity: 0.6 }}>{loadingLocal ? "Loading..." : "Add Photos"}</span>
+                  </label>
+                </div>
+              </div>
               {error && (
-                <p className="form-error" role="alert">
+                <p className="form-error" role="alert" style={{ marginBottom: "20px" }}>
                   {error}
                 </p>
               )}
@@ -1168,11 +1349,36 @@ function ProductEditor({
                     disabled={loading}
                   />
                 </label>
-                <label>
-                  Badge
+                <label className="wide">
+                  Badge selection
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginTop: "8px", marginBottom: "12px" }}>
+                    {["None", "New", "Best Seller", "Limited Edition", "Nōma Icon", "Favorite"].map((badgeOption) => {
+                      const valueToCompare = badgeOption === "None" ? "" : badgeOption;
+                      const isSelected = (p.badge || "") === valueToCompare;
+                      return (
+                        <button
+                          key={badgeOption}
+                          type="button"
+                          onClick={() => setP({ ...p, badge: valueToCompare })}
+                          style={{
+                            padding: "6px 12px",
+                            background: isSelected ? "var(--clay)" : "transparent",
+                            border: isSelected ? "1px solid var(--clay)" : "1px solid rgba(28, 29, 25, 0.2)",
+                            borderRadius: "4px",
+                            fontSize: "11px",
+                            color: isSelected ? "#ffffff" : "#1c1d19",
+                            cursor: "pointer",
+                            transition: "all 0.2s ease"
+                          }}
+                        >
+                          {badgeOption}
+                        </button>
+                      );
+                    })}
+                  </div>
                   <input
                     maxLength={32}
-                    placeholder="New, Best seller…"
+                    placeholder="Or type custom badge..."
                     value={p.badge || ""}
                     onChange={(e) => setP({ ...p, badge: e.target.value })}
                     disabled={loading}

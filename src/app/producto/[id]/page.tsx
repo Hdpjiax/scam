@@ -7,6 +7,7 @@ export const dynamic = "force-dynamic";
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const productId = Number(id);
+  const seedProduct = seedProducts().find((product) => product.id === productId) || null;
   let product: any = null;
   let reviews: any[] = [];
 
@@ -17,28 +18,28 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
       .select("*")
       .eq("id", productId)
       .single();
-    
+
     product = data;
 
     const { data: reviewsData } = await supabase
       .from("reviews")
       .select("*")
       .eq("product_id", productId);
-    
-    if (reviewsData) {
-      reviews = reviewsData;
-    }
+
+    reviews = reviewsData || [];
   } catch (e) {
-    console.error("Fallo al obtener producto o reseñas de Supabase", e);
+    console.error("Could not fetch product or reviews from Supabase.", e);
   }
 
-  // Fallback a semilla si no se encontró en base de datos
   if (!product) {
-    product = seedProducts().find((x) => x.id === productId) || null;
+    product = seedProduct;
   }
 
   if (product) {
     product = normalizeProduct(product, productId - 1);
+    if (!reviews.length && product.reviews?.length) {
+      reviews = product.reviews;
+    }
   }
 
   return <ProductPageClient initialProduct={product} initialReviews={reviews} />;

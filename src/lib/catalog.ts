@@ -17,7 +17,7 @@ export const categories: CategoryMeta[] = [
     title: "Technology that disappears",
     copy: "Control, wellness, and security without turning your house into a lab.",
     image:
-      "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=1800&q=88",
+      "https://jfyqcttmdwhllvryntcc.supabase.co/storage/v1/object/public/noma-assets/categories/smart-home.jpg",
     accent: "#8c9785",
   },
   {
@@ -26,7 +26,7 @@ export const categories: CategoryMeta[] = [
     title: "The architecture of light",
     copy: "Precise settings for reading, talking, resting, and celebrating.",
     image:
-      "https://images.unsplash.com/photo-1540932239986-30128078f3c5?auto=format&fit=crop&w=1800&q=88",
+      "https://jfyqcttmdwhllvryntcc.supabase.co/storage/v1/object/public/noma-assets/categories/lighting.jpg",
     accent: "#c39a61",
   },
   {
@@ -35,7 +35,7 @@ export const categories: CategoryMeta[] = [
     title: "Shapes to slow down",
     copy: "Honest, tactile pieces made to accompany real life.",
     image:
-      "https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&w=1800&q=88",
+      "https://jfyqcttmdwhllvryntcc.supabase.co/storage/v1/object/public/noma-assets/categories/furniture.jpg",
     accent: "#9d5037",
   },
   {
@@ -44,7 +44,7 @@ export const categories: CategoryMeta[] = [
     title: "Matter with memory",
     copy: "Serene presence objects to complete a room without filling it with noise.",
     image:
-      "https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=1800&q=88",
+      "https://jfyqcttmdwhllvryntcc.supabase.co/storage/v1/object/public/noma-assets/categories/decor.jpg",
     accent: "#b57a55",
   },
   {
@@ -53,7 +53,7 @@ export const categories: CategoryMeta[] = [
     title: "Rituals for the table",
     copy: "Tools and pieces that make daily moments more precise.",
     image:
-      "https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=1800&q=88",
+      "https://jfyqcttmdwhllvryntcc.supabase.co/storage/v1/object/public/noma-assets/categories/kitchen.jpg",
     accent: "#a66f52",
   },
   {
@@ -62,7 +62,7 @@ export const categories: CategoryMeta[] = [
     title: "Pause, air, and texture",
     copy: "A selection to lower the day's volume without compromising on design.",
     image:
-      "https://images.unsplash.com/photo-1602928321679-560bb453f190?auto=format&fit=crop&w=1800&q=88",
+      "https://jfyqcttmdwhllvryntcc.supabase.co/storage/v1/object/public/noma-assets/categories/wellness.jpg",
     accent: "#b6a58d",
   },
   {
@@ -71,7 +71,7 @@ export const categories: CategoryMeta[] = [
     title: "Layers of calm",
     copy: "Fibers, weight, and touch to make rest feel designed.",
     image:
-      "https://images.unsplash.com/photo-1583845112203-454c2254edab?auto=format&fit=crop&w=1800&q=88",
+      "https://jfyqcttmdwhllvryntcc.supabase.co/storage/v1/object/public/noma-assets/categories/textiles.jpg",
     accent: "#b77b55",
   },
   {
@@ -80,7 +80,7 @@ export const categories: CategoryMeta[] = [
     title: "The home continues outside",
     copy: "Pieces designed for patios, terraces, and balconies with their own life.",
     image:
-      "https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=1800&q=88",
+      "https://jfyqcttmdwhllvryntcc.supabase.co/storage/v1/object/public/noma-assets/categories/outdoor.jpg",
     accent: "#a85e40",
   },
 ];
@@ -103,6 +103,8 @@ export const normalizeProduct = (product: any, index = 0): Product => ({
   stock: product.stock ?? 12,
   sku: product.sku ?? `NOM-${String(index + 1).padStart(4, "0")}`,
   rating: Number(product.rating ?? 4.8),
+  reviewCount: Number(product.reviewCount ?? product.review_count ?? product.reviews?.length ?? 0),
+  reviews: product.reviews ?? [],
   featured: Boolean(product.featured),
   colors: product.colors?.length ? product.colors : ["#ded8cb"],
 });

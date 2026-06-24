@@ -9,7 +9,7 @@ export default function AdModal() {
   useEffect(() => {
     const hasSeenAd = sessionStorage.getItem("hasSeenAd");
     if (!hasSeenAd) {
-      // Pequeno delay para que la pagina cargue primero
+      // Short delay so the page can render first.
       const timer = setTimeout(() => {
         setShow(true);
       }, 1500);
@@ -27,13 +27,13 @@ export default function AdModal() {
   return (
     <div className="ad-modal-overlay" onClick={closeModal}>
       <div className="ad-modal-content" onClick={(e) => e.stopPropagation()}>
-        <button className="ad-close-btn" onClick={closeModal} aria-label="Cerrar">
+        <button className="ad-close-btn" onClick={closeModal} aria-label="Close">
           <X />
         </button>
         <div className="ad-modal-image">
           <img
             src="https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=800&q=80"
-            alt="Decoración NŌMA"
+            alt="NŌMA interior decor"
           />
         </div>
         <div className="ad-modal-text">

@@ -11,7 +11,7 @@ export default function Loading() {
           <ArrowLeft /> Volver
         </Link>
         <div className="brand">
-          NŌMA<span>casa viva</span>
+          NOMA<span>living spaces</span>
         </div>
         <button className="pdp-cart-link" disabled>
           Bolsa (0)

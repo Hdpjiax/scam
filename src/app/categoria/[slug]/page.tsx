@@ -20,7 +20,7 @@ export async function generateMetadata({
   if (!category) return {};
 
   return {
-    title: `${category.name} | NŌMA Casa Viva`,
+    title: `${category.name} | NŌMA Living Spaces`,
     description: category.copy,
   };
 }
@@ -35,6 +35,9 @@ export default async function Page({
   if (!category) notFound();
 
   let products: any[] = [];
+  const seedCategoryProducts = seedProducts().filter(
+    (product) => product.category === category.name,
+  );
 
   try {
     const supabase = await createClient();
@@ -49,11 +52,11 @@ export default async function Page({
       normalizeProduct(product, index),
     );
   } catch (error) {
-    console.error("Fallo al obtener categoría de Supabase.", error);
+    console.error("Could not fetch category products from Supabase.", error);
   }
 
-  if (!products.length) {
-    products = seedProducts().filter((product) => product.category === category.name);
+  if (products.length < seedCategoryProducts.length) {
+    products = seedCategoryProducts;
   }
 
   return <CategoryPageClient category={category} products={products} />;

@@ -415,8 +415,19 @@ h3 {
   mix-blend-mode: screen;
 }
 
+.hero-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 43.5%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+}
+
 .hero-copy {
   max-width: 720px;
+  margin-left: auto;
   animation: heroReveal 1200ms var(--ease) both;
 }
 
@@ -1178,7 +1189,6 @@ footer small {
 .pdp-top>a {
   display: flex;
   gap: 8px;
-  font-size: 10px;
 }
 
 .pdp>main {
@@ -3090,6 +3100,14 @@ footer small {
     background-position: 62% center;
   }
 
+  .hero-video {
+    width: 100%;
+  }
+
+  .hero-copy {
+    margin-left: 0;
+  }
+
   .hero h1 {
     font-size: clamp(3rem, 15vw, 4.8rem);
   }
@@ -3878,7 +3896,6 @@ li {
   border: 0;
   background: transparent;
   color: inherit;
-  font-size: 10px;
 }
 
 .pdp-main-img img {
@@ -4159,7 +4176,7 @@ li {
 .visual-card-number {
   font-size: 21px;
   letter-spacing: 0.14em;
-  font-family: "Courier New", Courier, monospace;
+  font-family: Manrope, Arial, sans-serif;
   font-weight: 600;
   margin: 20px 0 10px;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
@@ -4819,17 +4836,18 @@ li {
   content: "";
   position: absolute;
   left: 0;
-  top: 50%;
+  top: 20%;
   width: 3px;
-  height: 0;
+  height: 60%;
   background: var(--clay);
   border-radius: 0 3px 3px 0;
-  transition: height 300ms var(--ease), top 300ms var(--ease);
+  transform: scaleY(0);
+  transform-origin: center;
+  transition: transform 300ms var(--ease);
 }
 
 .admin-nav button.on:before {
-  height: 60%;
-  top: 20%;
+  transform: scaleY(1);
 }
 
 .admin-nav button:hover {
@@ -4861,25 +4879,21 @@ li {
   animation-delay: 100ms;
 }
 
-/* Success page celebration */
-@keyframes successBounce {
+/* Success page confirmation */
+@keyframes successReveal {
   0% {
     opacity: 0;
-    transform: scale(0.6);
-  }
-
-  60% {
-    transform: scale(1.08);
+    transform: translateY(12px) scale(0.94);
   }
 
   100% {
     opacity: 1;
-    transform: scale(1);
+    transform: translateY(0) scale(1);
   }
 }
 
 .success-icon-wrap {
-  animation: successBounce 650ms var(--ease) both;
+  animation: successReveal 650ms var(--ease) both;
   animation-delay: 200ms;
 }
 
@@ -5131,6 +5145,44 @@ html.lamp-cursor-on .story-image {
 .catalog .product:hover .photo-hover {
   box-shadow: inset 0 0 80px rgba(255, 236, 200, 0.12);
 }
+
+/* Premium Product Card Hover Image Swapping */
+.photo-primary,
+.photo-hover {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: 
+    transform var(--scene) var(--ease), 
+    opacity var(--scene) var(--ease), 
+    filter var(--scene) var(--ease) !important;
+}
+
+.photo-hover {
+  opacity: 0;
+  transform: scale(1.02);
+}
+
+.product:hover .photo-primary {
+  opacity: 0;
+  transform: scale(1.06);
+}
+
+.product:hover .photo-hover:not(.photo-hover-alt) {
+  opacity: 1;
+  transform: scale(1.06);
+}
+
+/* Fallback if hover image is same as primary */
+.product:hover .photo-hover.photo-hover-alt {
+  opacity: 0;
+}
+.product:hover .photo-primary {
+  opacity: 1;
+}
+
 
 @media (pointer: coarse),
 (max-width: 1020px) {
@@ -5490,4 +5542,317 @@ html.lamp-cursor-on .story-image {
 
 .review-pdp-link:hover {
   color: #ffffff !important;
+}
+
+/* ===== PRODUCTION ACCOUNT + HEADER SESSION POLISH ===== */
+.account-menu {
+  position: relative;
+}
+
+.account-trigger {
+  min-width: 112px;
+}
+
+.account-trigger svg:last-child {
+  width: 13px;
+  opacity: 0.7;
+}
+
+.account-popover {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  z-index: 110;
+  width: min(280px, calc(100vw - 28px));
+  padding: 18px;
+  background: color-mix(in srgb, var(--ink) 96%, black);
+  color: var(--paper);
+  border: 1px solid color-mix(in srgb, var(--paper) 14%, transparent);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.36);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition:
+    opacity var(--fast) var(--ease),
+    transform var(--fast) var(--ease),
+    visibility var(--fast) var(--ease);
+}
+
+.account-popover.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.account-popover small {
+  display: block;
+  color: color-mix(in srgb, var(--paper) 62%, transparent);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.account-popover strong,
+.account-popover span {
+  display: block;
+}
+
+.account-popover strong {
+  margin-top: 8px;
+  font: 18px Gloock, serif;
+}
+
+.account-popover span {
+  margin-top: 3px;
+  color: color-mix(in srgb, var(--paper) 68%, transparent);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.account-popover a,
+.account-popover button {
+  width: 100%;
+  min-height: 42px;
+  margin-top: 14px;
+  border: 1px solid color-mix(in srgb, var(--paper) 16%, transparent);
+  background: transparent;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  font-size: 12px;
+}
+
+.account-popover button:hover,
+.account-popover a:hover {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.account-page {
+  background:
+    radial-gradient(circle at 18% 18%, rgba(157, 80, 55, 0.18), transparent 32%),
+    var(--ink);
+}
+
+.account-page>section {
+  border: 1px solid color-mix(in srgb, var(--paper) 10%, transparent);
+  background: color-mix(in srgb, var(--ink) 92%, black);
+}
+
+.account-brand {
+  color: var(--paper);
+  letter-spacing: 0.12em;
+}
+
+.account-brand span {
+  display: block;
+  margin-top: 6px;
+  font: 7px Manrope, sans-serif;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+.account-art {
+  position: relative;
+  isolation: isolate;
+}
+
+.account-art:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(120deg, rgba(28, 29, 25, 0.16), rgba(28, 29, 25, 0.72));
+}
+
+.account-art small,
+.account-panel form>small,
+.session-card small {
+  color: color-mix(in srgb, var(--paper) 65%, transparent);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.account-art p {
+  max-width: 460px;
+  color: color-mix(in srgb, var(--paper) 76%, transparent);
+}
+
+.account-panel {
+  display: grid;
+  place-items: center;
+  padding: clamp(34px, 6vw, 86px);
+}
+
+.account-page form,
+.session-card {
+  width: min(470px, 100%);
+  margin: 0;
+  padding: clamp(24px, 4vw, 42px);
+  border: 1px solid color-mix(in srgb, var(--paper) 14%, transparent);
+  background: color-mix(in srgb, var(--paper) 4%, transparent);
+}
+
+.account-page form>svg,
+.session-card>svg {
+  width: 28px;
+  height: 28px;
+  color: var(--clay);
+}
+
+.account-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin: 22px 0 28px;
+  padding: 5px;
+  border: 1px solid color-mix(in srgb, var(--paper) 12%, transparent);
+}
+
+.account-tabs button {
+  min-height: 42px;
+  border: 0;
+  background: transparent;
+  color: var(--paper);
+  font-size: 12px;
+}
+
+.account-tabs button.active {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.account-page form h2,
+.session-card h2 {
+  margin: 10px 0 26px;
+  font: clamp(2.2rem, 4vw, 3.1rem)/1 Gloock, serif;
+}
+
+.account-page input {
+  border-bottom-color: color-mix(in srgb, var(--paper) 28%, transparent);
+}
+
+.account-page input::placeholder {
+  color: color-mix(in srgb, var(--paper) 38%, transparent);
+}
+
+.account-check {
+  display: flex !important;
+  gap: 12px;
+  align-items: flex-start;
+  font-size: 12px !important;
+  line-height: 1.5;
+  text-transform: none !important;
+  color: color-mix(in srgb, var(--paper) 74%, transparent);
+}
+
+.account-check input {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: var(--clay);
+}
+
+.form-error,
+.form-success {
+  margin: 18px 0;
+  padding: 12px 14px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.form-error {
+  background: rgba(157, 80, 55, 0.18);
+  border: 1px solid rgba(157, 80, 55, 0.38);
+  color: #ffe9df;
+}
+
+.form-success {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  background: rgba(140, 151, 133, 0.18);
+  border: 1px solid rgba(140, 151, 133, 0.42);
+  color: #edf6e8;
+}
+
+.form-success svg {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  margin-top: 2px;
+}
+
+.account-submit {
+  min-height: 54px;
+  align-items: center;
+  transition:
+    background var(--fast) var(--ease),
+    color var(--fast) var(--ease),
+    transform var(--fast) var(--ease);
+}
+
+.account-submit:hover:not(:disabled) {
+  background: var(--clay);
+  color: var(--light);
+  transform: translateY(-2px);
+}
+
+.session-card p {
+  margin: -12px 0 26px;
+  color: color-mix(in srgb, var(--paper) 70%, transparent);
+  overflow-wrap: anywhere;
+}
+
+.session-actions {
+  display: grid;
+  gap: 10px;
+}
+
+.session-actions a,
+.session-actions button {
+  min-height: 50px;
+  border: 1px solid color-mix(in srgb, var(--paper) 16%, transparent);
+  background: transparent;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: 16px;
+}
+
+.session-actions a:first-child,
+.session-actions button:hover,
+.session-actions a:hover {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.mini-rating em {
+  margin-left: 4px;
+  font-style: normal;
+  color: var(--copy);
+}
+
+@media (max-width: 1020px) {
+  .account-menu {
+    display: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .account-page {
+    padding: 14px;
+  }
+
+  .account-page>section {
+    min-height: auto;
+  }
+
+  .account-panel {
+    padding: 22px;
+  }
 }

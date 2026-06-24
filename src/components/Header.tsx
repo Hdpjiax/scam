@@ -1,11 +1,13 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import TransitionLink from "./TransitionLink";
 import {
   ArrowUpRight,
+  ChevronDown,
   Heart,
+  LogOut,
   Menu,
   Search,
   ShoppingBag,
@@ -17,14 +19,17 @@ import { categories } from "../lib/catalog";
 
 export default function Header({
   onCart,
+  onWishlist,
   onSearch,
 }: {
   onCart: () => void;
+  onWishlist?: () => void;
   onSearch?: (value: string) => void;
 }) {
-  const { cart, profile, cartPulse } = useStore();
+  const { cart, profile, cartPulse, wishlist, signOut } = useStore();
   const [menu, setMenu] = useState(false);
   const [search, setSearch] = useState(false);
+  const [accountOpen, setAccountOpen] = useState(false);
   const [pulse, setPulse] = useState(false);
 
   const cartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
@@ -106,16 +111,64 @@ export default function Header({
           >
             <Search />
           </button>
-          <Link
-            className="icon user-link"
-            href={profile?.role === "admin" ? "/admin" : "/login"}
-            aria-label={profile ? `${profile.name}'s account` : "Log in"}
+          <div className="account-menu">
+            {profile ? (
+              <>
+                <button
+                  className="icon user-link account-trigger"
+                  type="button"
+                  aria-label={`${profile.name}'s account`}
+                  aria-expanded={accountOpen}
+                  onClick={() => setAccountOpen((value) => !value)}
+                >
+                  <UserRound />
+                  <span>{profile.name.split(" ")[0]}</span>
+                  <ChevronDown />
+                </button>
+                <div className={`account-popover ${accountOpen ? "open" : ""}`}>
+                  <small>Signed in</small>
+                  <strong>{profile.name}</strong>
+                  <span>{profile.email}</span>
+                  {profile.role === "admin" && (
+                    <Link href="/admin" onClick={() => setAccountOpen(false)}>
+                      Admin room
+                    </Link>
+                  )}
+                  <button type="button" onClick={signOut}>
+                    <LogOut /> Sign out
+                  </button>
+                </div>
+              </>
+            ) : (
+              <Link className="icon user-link" href="/login" aria-label="Log in">
+                <UserRound />
+                <span>Account</span>
+              </Link>
+            )}
+          </div>
+          <button 
+            className="icon" 
+            aria-label={`View favorites, ${wishlist.length} items`}
+            onClick={onWishlist}
+            style={{ position: "relative" }}
           >
-            <UserRound />
-            <span>{profile ? profile.name.split(" ")[0] : ""}</span>
-          </Link>
-          <button className="icon" aria-label="View favorites">
             <Heart />
+            {wishlist.length > 0 && (
+              <b style={{
+                background: "var(--clay)",
+                color: "var(--light)",
+                borderRadius: "999px",
+                placeItems: "center",
+                minWidth: "17px",
+                height: "17px",
+                fontSize: "8px",
+                display: "grid",
+                position: "absolute",
+                top: "2px",
+                right: "2px",
+                zIndex: 2,
+              }} aria-hidden="true">{wishlist.length}</b>
+            )}
           </button>
           <button
             className={`icon cart ${pulse ? "pulse" : ""}`}
@@ -171,9 +224,20 @@ export default function Header({
           ))}
         </nav>
         <div className="mobile-menu-foot">
-          <Link href="/login" onClick={() => setMenu(false)}>
-            My account
-          </Link>
+          {profile ? (
+            <button
+              onClick={() => {
+                setMenu(false);
+                signOut();
+              }}
+            >
+              Sign out
+            </button>
+          ) : (
+            <Link href="/login" onClick={() => setMenu(false)}>
+              My account
+            </Link>
+          )}
           <button
             onClick={() => {
               setMenu(false);

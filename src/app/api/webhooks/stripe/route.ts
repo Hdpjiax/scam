@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { markOrderPaid } from "../../../../lib/orders";
 
@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ received: true });
   } catch (error: any) {
-    console.error("Fallo al procesar webhook de Stripe", error);
+    console.error("Could not process Stripe webhook", error);
     return NextResponse.json(
       { error: `Webhook Error: ${error.message}` },
       { status: 400 },

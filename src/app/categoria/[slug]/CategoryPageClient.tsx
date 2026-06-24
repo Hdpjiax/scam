@@ -17,8 +17,7 @@ export default function CategoryPageClient({
   category: CategoryMeta;
   products: Product[];
 }) {
-  const { addToCart } = useStore();
-  const [drawer, setDrawer] = useState(false);
+  const { addToCart, setCartOpen, setWishlistOpen } = useStore();
   const [sort, setSort] = useState("NŌMA Curated");
   const [toast, setToast] = useState("");
 
@@ -42,7 +41,7 @@ export default function CategoryPageClient({
 
   return (
     <>
-      <Header onCart={() => setDrawer(true)} />
+      <Header onCart={() => setCartOpen(true)} onWishlist={() => setWishlistOpen(true)} />
       <main>
         <section
           className="category-hero"
@@ -127,9 +126,8 @@ export default function CategoryPageClient({
       </main>
       <div className={`cart-toast ${toast ? "show" : ""}`} role="status">
         {toast}
-        <button onClick={() => setDrawer(true)}>View Cart</button>
+        <button onClick={() => setCartOpen(true)}>View Cart</button>
       </div>
-      <Cart open={drawer} onClose={() => setDrawer(false)} />
     </>
   );
 }

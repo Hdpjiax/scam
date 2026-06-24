@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { markOrderPaid } from "../../../../lib/orders";
 
 export async function POST(request: NextRequest) {
@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
   } catch (error: any) {
     console.error("Error en Mercado Pago webhook handler", error);
     return NextResponse.json(
-      { error: error.message || "Fallo interno" },
+      { error: error.message || "Internal error" },
       { status: 500 },
     );
   }

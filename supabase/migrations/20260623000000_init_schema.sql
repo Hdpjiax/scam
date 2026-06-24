@@ -126,6 +126,10 @@ CREATE TABLE IF NOT EXISTS public.order_items (
     quantity INT NOT NULL DEFAULT 1 CHECK (quantity > 0)
 );
 
+-- Ensure order_items product reference is ON DELETE SET NULL
+ALTER TABLE public.order_items DROP CONSTRAINT IF EXISTS order_items_product_id_fkey;
+ALTER TABLE public.order_items ADD CONSTRAINT order_items_product_id_fkey FOREIGN KEY (product_id) REFERENCES public.products(id) ON DELETE SET NULL;
+
 -- Enable RLS for Order Items
 ALTER TABLE public.order_items ENABLE ROW LEVEL SECURITY;
 

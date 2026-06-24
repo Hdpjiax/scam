@@ -17,11 +17,11 @@ export default async function Page() {
       normalizeProduct(product, index),
     );
   } catch (e) {
-    console.error("Fallo al obtener productos de Supabase, usando seed local.", e);
+    console.error("Could not fetch Supabase products. Using local seed.", e);
   }
 
-  // Si no hay productos en la base de datos, usamos la semilla local
-  const products = dbProducts.length > 0 ? dbProducts : seedProducts();
+  const seed = seedProducts();
+  const products = dbProducts.length >= seed.length ? dbProducts : seed;
 
   let reviews: any[] = [];
   try {
@@ -33,16 +33,17 @@ export default async function Page() {
       .limit(6);
     reviews = data || [];
   } catch (e) {
-    console.error("Fallo al obtener reseñas de Supabase", e);
+    console.error("Could not fetch Supabase reviews.", e);
   }
 
-  const STATIC_REVIEWS = [
+  const staticReviews = [
     {
       id: "s1",
       author_name: "Valeria M.",
       author_avatar: "https://i.pravatar.cc/150?u=a042581f4e29026704d",
       rating: 5,
-      content: "The quality of the materials is exceptional. I had been looking for decorative pieces that really brought calm to the space for a long time, and NŌMA achieved exactly that. The shipping was super fast and the packaging very careful.",
+      content:
+        "The quality of the materials is exceptional. I had been looking for decorative pieces that really brought calm to the space for a long time, and NŌMA achieved exactly that. The shipping was fast and the packaging was very careful.",
       is_verified_purchase: true,
     },
     {
@@ -50,20 +51,22 @@ export default async function Page() {
       author_name: "Carlos T.",
       author_avatar: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
       rating: 5,
-      content: "I bought a lamp for my studio and it completely changed the atmosphere. The light is super warm and the design is a sculpture in itself.",
+      content:
+        "I bought a lamp for my studio and it completely changed the atmosphere. The light is warm and the design is a sculpture in itself.",
       is_verified_purchase: true,
     },
     {
       id: "s3",
-      author_name: "Sofía R.",
+      author_name: "Sofia R.",
       author_avatar: "https://i.pravatar.cc/150?u=a042581f4e29026028d",
       rating: 5,
-      content: "The ultrasonic diffuser not only smells great, but aesthetically it is minimalist and beautiful. Excellent after-sales service.",
+      content:
+        "The ultrasonic diffuser smells beautiful and looks calm on the shelf. Excellent after-sales service.",
       is_verified_purchase: true,
-    }
+    },
   ];
 
-  const finalReviews = reviews.length > 0 ? reviews : STATIC_REVIEWS;
+  const finalReviews = reviews.length > 0 ? reviews : staticReviews;
 
   return <ShopClient initialProducts={products} initialReviews={finalReviews} />;
 }

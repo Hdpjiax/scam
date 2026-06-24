@@ -24,7 +24,7 @@ export default async function Page() {
     .select("*")
     .order("created_at", { ascending: false });
 
-  // Obtener reseñas
+  // Fetch reviews.
   const { data: reviews } = await supabase
     .from("reviews")
     .select("*, products(name)")

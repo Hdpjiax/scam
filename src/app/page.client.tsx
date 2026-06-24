@@ -31,8 +31,7 @@ export default function ShopClient({
   initialProducts: Product[];
   initialReviews?: any[];
 }) {
-  const { addToCart } = useStore();
-  const [drawer, setDrawer] = useState(false);
+  const { addToCart, setCartOpen, setWishlistOpen } = useStore();
   const [q, setQ] = useState("");
   const [limit, setLimit] = useState(8);
   const [light, setLight] = useState({ x: 50, y: 40 });
@@ -67,7 +66,7 @@ export default function ShopClient({
 
   return (
     <>
-      <Header onCart={() => setDrawer(true)} onSearch={setQ} />
+      <Header onCart={() => setCartOpen(true)} onWishlist={() => setWishlistOpen(true)} onSearch={setQ} />
       <main>
         <AdModal />
         <section
@@ -288,9 +287,8 @@ export default function ShopClient({
 
       <div className={`cart-toast ${toast ? "show" : ""}`} role="status">
         {toast}
-        <button onClick={() => setDrawer(true)}>View Cart</button>
+        <button onClick={() => setCartOpen(true)}>View Cart</button>
       </div>
-      <Cart open={drawer} onClose={() => setDrawer(false)} />
     </>
   );
 }

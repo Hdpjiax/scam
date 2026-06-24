@@ -1,89 +1,119 @@
 "use client";
 
 import { useState } from "react";
-import { createClient } from "../../lib/supabase/client";
-import { ArrowRight, Eye, EyeOff, LockKeyhole } from "lucide-react";
 import Link from "next/link";
+import {
+  ArrowRight,
+  CheckCircle2,
+  Eye,
+  EyeOff,
+  LockKeyhole,
+  LogOut,
+  ShieldCheck,
+} from "lucide-react";
+import { createClient } from "../../lib/supabase/client";
+import { useStore } from "../../providers/StoreProvider";
+
+const normalizeAuthError = (message: string) => {
+  const lower = message.toLowerCase();
+  if (lower.includes("rate limit") || lower.includes("rate_limit")) {
+    return "Too many confirmation emails were requested. Please wait a moment and try again.";
+  }
+  if (lower.includes("disabled") || lower.includes("sign up") || lower.includes("signup")) {
+    return "New account registration is disabled in Supabase. Enable email signups before launching production.";
+  }
+  if (lower.includes("already registered") || lower.includes("user already")) {
+    return "This email is already registered. Sign in instead or reset the password from Supabase Auth.";
+  }
+  if (lower.includes("invalid login") || lower.includes("invalid credentials")) {
+    return "The email or password is incorrect.";
+  }
+  return message || "Something went wrong. Please try again.";
+};
 
 export default function LoginPage() {
   const supabase = createClient();
+  const { profile, signOut } = useStore();
   const [register, setRegister] = useState(false);
   const [show, setShow] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
+    setSuccess("");
     setLoading(true);
 
-    const d = new FormData(e.currentTarget);
-    const email = String(d.get("email")).toLowerCase();
-    const password = String(d.get("password"));
-    const name = String(d.get("name") || "");
+    const form = new FormData(e.currentTarget);
+    const email = String(form.get("email") || "").trim().toLowerCase();
+    const password = String(form.get("password") || "");
+    const name = String(form.get("name") || "").trim();
+    const phone = String(form.get("phone") || "").trim();
+    const confirmPassword = String(form.get("confirmPassword") || "");
 
     try {
       if (register) {
+        if (password.length < 8) {
+          setError("Use at least 8 characters for a production-ready password.");
+          setLoading(false);
+          return;
+        }
+        if (password !== confirmPassword) {
+          setError("Passwords do not match.");
+          setLoading(false);
+          return;
+        }
+
         const { error: signUpError } = await supabase.auth.signUp({
           email,
           password,
           options: {
             data: {
               name,
+              phone,
               role: "customer",
+              marketing_opt_in: form.get("marketing") === "on",
             },
           },
         });
 
         if (signUpError) {
-          const errMsg = signUpError.message.toLowerCase();
-          if (errMsg.includes("rate limit") || errMsg.includes("rate_limit")) {
-            setError(
-              "Límite de correos de Supabase excedido. Puedes usar la cuenta de Demo Admin (admin@noma.mx / admin123) para iniciar sesión, o desactivar la opción 'Confirm email' en tu consola de Supabase (Auth -> Email -> Confirm email)."
-            );
-          } else if (errMsg.includes("disabled") || errMsg.includes("sign up") || errMsg.includes("signup")) {
-            setError(
-              "El registro de usuarios nuevos por correo está desactivado en tu Supabase. Ve a tu consola de Supabase (Auth -> Providers -> Email) y activa la opción 'Allow new users to sign up' / 'Enable signup'."
-            );
-          } else {
-            setError(signUpError.message);
-          }
+          setError(normalizeAuthError(signUpError.message));
           setLoading(false);
           return;
         }
 
-        // Registro exitoso, redirigir o mostrar confirmación
-        alert("Cuenta creada. Si la confirmación de correo está activada en Supabase, por favor verifica tu correo.");
-        window.location.href = "/";
-      } else {
-        const { data, error: signInError } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-
-        if (signInError) {
-          setError("email or password incorrect");
-          setLoading(false);
-          return;
-        }
-
-        // Obtener rol del perfil
-        const { data: profile, error: profileError } = await supabase
-          .from("profiles")
-          .select("role")
-          .eq("id", data.user?.id)
-          .single();
-
-        console.log("Login check:", { userId: data.user?.id, profile, profileError });
-
-        if (profile?.role === "admin") {
-          window.location.href = "/admin";
-        } else {
-          window.location.href = "/";
-        }
+        setSuccess(
+          "Account created. If email confirmation is enabled, check your inbox before signing in.",
+        );
+        setRegister(false);
+        e.currentTarget.reset();
+        setLoading(false);
+        return;
       }
+
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (signInError) {
+        setError(normalizeAuthError(signInError.message));
+        setLoading(false);
+        return;
+      }
+
+      const { data: userProfile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", data.user?.id)
+        .single();
+
+      window.location.href = userProfile?.role === "admin" ? "/admin" : "/";
     } catch (e: any) {
-      setError(e.message || "Ocurrió un error inesperado.");
+      setError(normalizeAuthError(e.message));
     } finally {
       setLoading(false);
     }
@@ -92,81 +122,157 @@ export default function LoginPage() {
   return (
     <div className="account-page">
       <Link className="account-brand" href="/">
-        NŌMA<span>casa viva</span>
+        NŌMA<span>living spaces</span>
       </Link>
       <section>
         <div className="account-art">
           <div>
-            <small>Your Nōma space</small>
+            <small>Private client space</small>
             <h1>
-              One house
+              Your house,
               <br />
-              <em>knows you.</em>
+              <em>remembered.</em>
             </h1>
             <p>
-              Save your favorites, check your orders and receive
-              recommendations designed for you.
+              Save curated pieces, revisit orders, and keep checkout details ready
+              for a calmer purchase flow.
             </p>
           </div>
         </div>
-        <form onSubmit={handleSubmit}>
-          <LockKeyhole />
-          <small>{register ? "Join Nōma" : "Welcome back"}</small>
-          <h2>{register ? "Create your account" : "Sign in"}</h2>
-          {register && (
-            <label>
-              Full name
-              <input name="name" required placeholder="Your name" disabled={loading} />
-            </label>
-          )}
-          <label>
-            Email
-            <input
-              name="email"
-              type="email"
-              required
-              placeholder="[EMAIL_ADDRESS]"
-              disabled={loading}
-            />
-          </label>
-          <label>
-            Password
-            <div className="password">
-              <input
-                name="password"
-                type={show ? "text" : "password"}
-                required
-                minLength={6}
-                placeholder="Minimum 6 characters"
-                disabled={loading}
-              />
-              <button type="button" onClick={() => setShow(!show)}>
-                <span className="sr-only">
-                  {show ? "Hide password" : "Show password"}
-                </span>
-                {show ? <EyeOff /> : <Eye />}
-              </button>
+
+        <div className="account-panel">
+          {profile ? (
+            <div className="session-card">
+              <ShieldCheck />
+              <small>Signed in</small>
+              <h2>Welcome, {profile.name || "NŌMA client"}</h2>
+              <p>{profile.email}</p>
+              <div className="session-actions">
+                {profile.role === "admin" && <Link href="/admin">Open admin room</Link>}
+                <Link href="/">Continue shopping</Link>
+                <button type="button" onClick={signOut}>
+                  <LogOut /> Sign out
+                </button>
+              </div>
             </div>
-          </label>
-          {error && <p className="form-error">{error}</p>}
-          <button className="account-submit" type="submit" disabled={loading}>
-            {loading ? "Processing..." : register ? "Create my account" : "Sign in"}
-            <ArrowRight />
-          </button>
-          <p>
-            {register ? "Already have an account?" : "Don't have an account yet?"}{" "}
-            <button
-              type="button"
-              disabled={loading}
-              onClick={() => {
-                setRegister(!register);
-                setError("");
-              }}
-            >
-              {register ? "Log in" : "Sign up"}
-            </button>
-          </p>
-        </form>
+          ) : (
+            <form onSubmit={handleSubmit}>
+              <LockKeyhole />
+              <div className="account-tabs" role="tablist" aria-label="Account mode">
+                <button
+                  type="button"
+                  className={!register ? "active" : ""}
+                  onClick={() => {
+                    setRegister(false);
+                    setError("");
+                    setSuccess("");
+                  }}
+                >
+                  Sign in
+                </button>
+                <button
+                  type="button"
+                  className={register ? "active" : ""}
+                  onClick={() => {
+                    setRegister(true);
+                    setError("");
+                    setSuccess("");
+                  }}
+                >
+                  Create account
+                </button>
+              </div>
+              <small>{register ? "New NŌMA client" : "Welcome back"}</small>
+              <h2>{register ? "Create your account" : "Sign in securely"}</h2>
+
+              {register && (
+                <label>
+                  Full name
+                  <input name="name" required placeholder="Avery Brooks" disabled={loading} />
+                </label>
+              )}
+
+              <label>
+                Email
+                <input
+                  name="email"
+                  type="email"
+                  required
+                  autoComplete="email"
+                  placeholder="you@example.com"
+                  disabled={loading}
+                />
+              </label>
+
+              {register && (
+                <label>
+                  Phone
+                  <input
+                    name="phone"
+                    type="tel"
+                    autoComplete="tel"
+                    placeholder="+1 555 0100"
+                    disabled={loading}
+                  />
+                </label>
+              )}
+
+              <label>
+                Password
+                <div className="password">
+                  <input
+                    name="password"
+                    type={show ? "text" : "password"}
+                    required
+                    minLength={register ? 8 : 6}
+                    autoComplete={register ? "new-password" : "current-password"}
+                    placeholder={register ? "At least 8 characters" : "Your password"}
+                    disabled={loading}
+                  />
+                  <button type="button" onClick={() => setShow(!show)}>
+                    <span className="sr-only">
+                      {show ? "Hide password" : "Show password"}
+                    </span>
+                    {show ? <EyeOff /> : <Eye />}
+                  </button>
+                </div>
+              </label>
+
+              {register && (
+                <>
+                  <label>
+                    Confirm password
+                    <input
+                      name="confirmPassword"
+                      type={show ? "text" : "password"}
+                      required
+                      minLength={8}
+                      autoComplete="new-password"
+                      placeholder="Repeat password"
+                      disabled={loading}
+                    />
+                  </label>
+                  <label className="account-check">
+                    <input name="marketing" type="checkbox" disabled={loading} />
+                    <span>Send me collection notes and private launch access.</span>
+                  </label>
+                </>
+              )}
+
+              {error && <p className="form-error" role="alert">{error}</p>}
+              {success && (
+                <p className="form-success" role="status">
+                  <CheckCircle2 /> {success}
+                </p>
+              )}
+
+              <button className="account-submit" type="submit" disabled={loading}>
+                {loading ? "Processing..." : register ? "Create account" : "Sign in"}
+                <ArrowRight />
+              </button>
+            </form>
+          )}
+        </div>
       </section>
     </div>
   );

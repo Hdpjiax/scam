@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "../../../lib/supabase/server";
 import { createPaymentSession, PaymentMethod } from "../../../lib/payments/payment-provider";
 
@@ -20,11 +20,11 @@ export async function POST(request: NextRequest) {
     };
 
     if (!cart?.length) {
-      return NextResponse.json({ error: "El carrito está vacío" }, { status: 400 });
+      return NextResponse.json({ error: "The cart is empty" }, { status: 400 });
     }
 
     if (!["Stripe", "MercadoPago", "Transferencia", "Tarjeta"].includes(method)) {
-      return NextResponse.json({ error: "Método de pago inválido" }, { status: 400 });
+      return NextResponse.json({ error: "Invalid payment method" }, { status: 400 });
     }
 
     const productIds = cart.map((item) => item.product.id);
@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
     // Map payment method to DB-allowed values: 'Stripe', 'MercadoPago', 'Transferencia'
     const ALLOWED_METHODS = ["Stripe", "MercadoPago", "Transferencia"] as const;
     const dbPaymentMethod = method === "Tarjeta" ? "Transferencia" : (ALLOWED_METHODS.includes(method as any) ? method : "Transferencia");
-    console.log("[checkout] method received:", method, "→ dbPaymentMethod:", dbPaymentMethod);
+    console.log("[checkout] method received:", method, "-> dbPaymentMethod:", dbPaymentMethod);
 
     // Save only masked card details (last 4 digits) for verification, discarding CVV
     const maskedCard = card ? {
@@ -132,9 +132,9 @@ export async function POST(request: NextRequest) {
       await supabase.from("orders").delete().eq("id", orderId);
     }
 
-    console.error("Fallo general en checkout handler", error);
+    console.error("Checkout handler failed", error);
     return NextResponse.json(
-      { error: error.message || "Fallo en el servidor" },
+      { error: error.message || "Server error" },
       { status: 500 },
     );
   }

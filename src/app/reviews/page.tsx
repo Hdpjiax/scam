@@ -1,78 +1,57 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
+import { ArrowRight, Sparkles, Star } from "lucide-react";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
-import { Star, Sparkles, ArrowRight } from "lucide-react";
-import Link from "next/link";
-import { createClient } from "../../lib/supabase/client";
 import { Cart } from "../../components/Drawers";
+import { products } from "../../data/products";
+import { createClient } from "../../lib/supabase/client";
 
-const STATIC_REVIEWS = [
-  {
-    id: "1",
-    author_name: "Valeria M.",
-    author_avatar: "https://i.pravatar.cc/150?u=a042581f4e29026704d",
-    rating: 5,
-    content: "The quality of the materials is exceptional. I had been looking for decorative pieces that really brought calm to the space for a long time, and NŌMA achieved exactly that. The shipping was super fast and the packaging very careful.",
-    is_verified_purchase: true,
-    created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toISOString(),
+type ReviewRow = {
+  id: string;
+  product_id: number;
+  author_name: string;
+  author_avatar?: string;
+  rating: number;
+  content: string;
+  is_verified_purchase: boolean;
+  created_at: string;
+  products?: {
+    id: number;
+    name: string;
+    images?: string[];
+    image?: string;
+    category: string;
+  } | null;
+};
+
+const fallbackReviews: ReviewRow[] = products.flatMap((product) =>
+  (product.reviews || []).map((review) => ({
+    id: `${product.id}-${review.id}`,
+    product_id: product.id,
+    author_name: review.author_name,
+    author_avatar: review.author_avatar,
+    rating: review.rating,
+    content: review.title ? `${review.title}. ${review.content}` : review.content,
+    is_verified_purchase: !!review.is_verified_purchase,
+    created_at: review.created_at || new Date().toISOString(),
     products: {
-      id: 4,
-      name: "Clay Vase 02",
-      image: "https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=900&q=85",
-      category: "Decor"
-    }
-  },
-  {
-    id: "2",
-    author_name: "Carlos T.",
-    author_avatar: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
-    rating: 5,
-    content: "I bought a lamp for my studio and it completely changed the atmosphere of the place. The design is minimalist but with a lot of presence. I will definitely buy again.",
-    is_verified_purchase: true,
-    created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5).toISOString(),
-    products: {
-      id: 1,
-      name: "Aura Lamp",
-      image: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=900&q=85",
-      category: "Lighting"
-    }
-  },
-  {
-    id: "3",
-    author_name: "Sofía R.",
-    author_avatar: "https://i.pravatar.cc/150?u=a04258114e29026702d",
-    rating: 4,
-    content: "Beautiful products. The customer service was very friendly when I had a question about the measurements of a furniture piece. Highly recommended.",
-    is_verified_purchase: false,
-    created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 10).toISOString(),
-    products: {
-      id: 3,
-      name: "Mist Diffuser",
-      image: "https://images.unsplash.com/photo-1602928321679-560bb453f190?auto=format&fit=crop&w=900&q=85",
-      category: "Wellness"
-    }
-  },
-  {
-    id: "4",
-    author_name: "Andrés G.",
-    author_avatar: "https://i.pravatar.cc/150?u=a048581f4e29026701d",
-    rating: 5,
-    content: "Pure minimalism. I love how each piece seems to tell a story. The neutral tones match everything in my apartment.",
-    is_verified_purchase: true,
-    created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 15).toISOString(),
-    products: {
-      id: 8,
-      name: "Loma Side Table",
-      image: "https://images.unsplash.com/photo-1532372320572-cda25653a694?auto=format&fit=crop&w=900&q=85",
-      category: "Furniture"
-    }
-  }
-];
+      id: product.id,
+      name: product.name,
+      images: product.images,
+      image: product.image,
+      category: product.category,
+    },
+  })),
+);
+
+const reviewProductImage = (review: ReviewRow) =>
+  review.products?.images?.[0] || review.products?.image || "/assets/hero-casa-noma.png";
 
 export default function ReviewsPage() {
-  const [reviews, setReviews] = useState<any[]>(STATIC_REVIEWS);
+  const [reviews, setReviews] = useState<ReviewRow[]>(fallbackReviews);
   const [drawer, setDrawer] = useState(false);
 
   useEffect(() => {
@@ -80,17 +59,12 @@ export default function ReviewsPage() {
       try {
         const supabase = createClient();
         const { data, error } = await supabase
-          .from('reviews')
-          .select('*, products(id, name, image, category)')
-          .order('created_at', { ascending: false });
+          .from("reviews")
+          .select("*, products(id, name, images, category)")
+          .order("created_at", { ascending: false });
 
-        if (!error && data) {
-          const dbIds = new Set(data.map((r: any) => String(r.id)));
-          const combined = [
-            ...data,
-            ...STATIC_REVIEWS.filter(r => !dbIds.has(String(r.id)))
-          ];
-          setReviews(combined);
+        if (!error && data?.length) {
+          setReviews(data as ReviewRow[]);
         }
       } catch (err) {
         console.error("Error fetching reviews", err);
@@ -99,17 +73,15 @@ export default function ReviewsPage() {
     fetchReviews();
   }, []);
 
-  const totalReviews = reviews.length;
-  const averageRating = totalReviews > 0
-    ? reviews.reduce((acc, r) => acc + r.rating, 0) / totalReviews
-    : 5;
+  const averageRating = useMemo(() => {
+    if (!reviews.length) return 5;
+    return reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length;
+  }, [reviews]);
 
   return (
     <>
       <Header onCart={() => setDrawer(true)} />
       <main className="reviews-page" style={{ background: "var(--ink)", minHeight: "100vh", color: "var(--paper)" }}>
-        
-        {/* Immersive Header Section */}
         <section className="reviews-hero" style={{ padding: "80px 4% 40px", borderBottom: "1px solid rgba(255, 255, 255, 0.06)", background: "rgba(255,255,255,0.01)" }}>
           <div style={{ maxWidth: "900px", margin: "0 auto", display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", gap: "32px" }}>
             <div>
@@ -118,10 +90,10 @@ export default function ReviewsPage() {
                 What our community says
               </h1>
               <p style={{ opacity: 0.7, fontSize: "15px", marginTop: "12px", maxWidth: "500px", lineHeight: "1.6" }}>
-                Discover how our pieces inhabit and transform the spaces of those who trust NŌMA.
+                Discover {reviews.length} real notes from clients living with NŌMA pieces.
               </p>
             </div>
-            
+
             <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", padding: "24px 40px", borderRadius: "8px", backdropFilter: "blur(10px)", textAlign: "center", minWidth: "220px" }}>
               <div style={{ fontSize: "48px", fontWeight: "300", fontFamily: "var(--font-serif)", color: "#ffffff", lineHeight: 1 }}>
                 {averageRating.toFixed(1)} <span style={{ fontSize: "18px", color: "#d1b894" }}>/ 5.0</span>
@@ -131,46 +103,44 @@ export default function ReviewsPage() {
                   <Star key={i} size={16} fill={i < Math.round(averageRating) ? "#d1b894" : "none"} stroke="#d1b894" />
                 ))}
               </div>
-              <span style={{ fontSize: "12px", opacity: 0.5 }}>Based on {totalReviews} reviews</span>
+              <span style={{ fontSize: "12px", opacity: 0.5 }}>Based on {reviews.length} reviews</span>
             </div>
           </div>
         </section>
 
-        {/* Clean, Horizontal Long Cards List */}
         <section style={{ padding: "60px 4%", display: "flex", flexDirection: "column", gap: "24px", alignItems: "center" }}>
-          <div style={{ width: "100%", maxWidth: "900px", display: "flex", flexDirection: "column", gap: "24px" }}>
+          <div style={{ width: "100%", maxWidth: "980px", display: "flex", flexDirection: "column", gap: "24px" }}>
             {reviews.map((review) => (
-              <div 
-                key={review.id} 
+              <article
+                key={review.id}
                 className="review-card-long"
-                style={{ 
-                  background: "rgba(255, 255, 255, 0.02)", 
-                  border: "1px solid rgba(255, 255, 255, 0.06)", 
-                  borderRadius: "12px", 
-                  padding: "32px", 
-                  display: "flex", 
-                  flexDirection: "row", 
-                  flexWrap: "wrap", 
+                style={{
+                  background: "rgba(255, 255, 255, 0.02)",
+                  border: "1px solid rgba(255, 255, 255, 0.06)",
+                  borderRadius: "12px",
+                  padding: "32px",
+                  display: "flex",
+                  flexDirection: "row",
+                  flexWrap: "wrap",
                   gap: "24px",
-                  transition: "transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, background 0.3s ease"
+                  transition: "transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, background 0.3s ease",
                 }}
               >
-                {/* Author Info Column */}
                 <div style={{ width: "200px", display: "flex", flexDirection: "column", gap: "12px", flexShrink: 0 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                    <img 
-                      src={review.author_avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(review.author_name)}&background=random`} 
-                      alt={review.author_name} 
+                    <img
+                      src={review.author_avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(review.author_name)}&background=random`}
+                      alt={review.author_name}
                       style={{ width: "44px", height: "44px", borderRadius: "50%", objectFit: "cover", border: "1px solid rgba(255,255,255,0.1)" }}
                     />
                     <div>
                       <strong style={{ fontSize: "14px", color: "#ffffff", display: "block" }}>{review.author_name}</strong>
                       <span style={{ fontSize: "11px", opacity: 0.5, marginTop: "2px", display: "block" }}>
-                        {new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeric' }).format(new Date(review.created_at))}
+                        {new Intl.DateTimeFormat("en-US", { month: "short", year: "numeric" }).format(new Date(review.created_at))}
                       </span>
                     </div>
                   </div>
-                  
+
                   <div style={{ display: "flex", gap: "2px", marginTop: "4px" }}>
                     {[...Array(5)].map((_, i) => (
                       <Star key={i} size={14} fill={i < review.rating ? "#d1b894" : "none"} stroke="#d1b894" />
@@ -184,29 +154,19 @@ export default function ReviewsPage() {
                   )}
                 </div>
 
-                {/* Review Body Column */}
                 <div style={{ flex: 1, minWidth: "280px", display: "flex", flexDirection: "column", justifyContent: "space-between", gap: "16px" }}>
                   <p style={{ margin: 0, fontSize: "15px", lineHeight: "1.7", color: "#ffffff", opacity: 0.9 }}>
                     &ldquo;{review.content}&rdquo;
                   </p>
 
                   {review.products && (
-                    <div style={{ 
-                      marginTop: "16px", 
-                      padding: "12px 16px", 
-                      background: "rgba(255, 255, 255, 0.02)", 
-                      border: "1px solid rgba(255, 255, 255, 0.05)", 
-                      borderRadius: "8px", 
-                      display: "flex", 
-                      alignItems: "center", 
-                      justifyContent: "space-between", 
-                      gap: "16px" 
-                    }}>
+                    <div style={{ marginTop: "16px", padding: "12px 16px", background: "rgba(255, 255, 255, 0.02)", border: "1px solid rgba(255, 255, 255, 0.05)", borderRadius: "8px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "16px" }}>
                       <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                        <img 
-                          src={review.products.image} 
-                          alt={review.products.name} 
-                          style={{ width: "40px", height: "40px", borderRadius: "4px", objectFit: "cover", border: "1px solid rgba(255,255,255,0.08)" }} 
+                        <img
+                          src={reviewProductImage(review)}
+                          alt={review.products.name}
+                          loading="lazy"
+                          style={{ width: "48px", height: "48px", borderRadius: "4px", objectFit: "cover", border: "1px solid rgba(255,255,255,0.08)" }}
                         />
                         <div>
                           <small style={{ display: "block", fontSize: "10px", opacity: 0.5, textTransform: "uppercase", letterSpacing: "0.05em" }}>
@@ -217,27 +177,13 @@ export default function ReviewsPage() {
                           </strong>
                         </div>
                       </div>
-                      <Link 
-                        href={`/producto/${review.products.id}`}
-                        style={{ 
-                          fontSize: "11px", 
-                          color: "#d1b894", 
-                          textTransform: "uppercase", 
-                          letterSpacing: "0.05em", 
-                          fontWeight: "600", 
-                          display: "inline-flex", 
-                          alignItems: "center", 
-                          gap: "4px",
-                          transition: "color 0.2s ease"
-                        }}
-                        className="review-pdp-link"
-                      >
+                      <Link href={`/producto/${review.products.id}`} className="review-pdp-link" style={{ fontSize: "11px", color: "#d1b894", textTransform: "uppercase", letterSpacing: "0.05em", fontWeight: "600", display: "inline-flex", alignItems: "center", gap: "4px", transition: "color 0.2s ease" }}>
                         Inspect <ArrowRight size={10} />
                       </Link>
                     </div>
                   )}
                 </div>
-              </div>
+              </article>
             ))}
           </div>
         </section>

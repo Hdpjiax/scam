@@ -18,6 +18,8 @@ export const viewport: Viewport = {
   themeColor: "#1c1d19",
 };
 
+import GlobalDrawers from "../components/GlobalDrawers";
+
 export default function RootLayout({
   children,
 }: {
@@ -43,6 +45,7 @@ export default function RootLayout({
           <ScrollProgress />
           <LampCursor />
           <FlyToCart />
+          <GlobalDrawers />
           {children}
         </StoreProvider>
       </body>
