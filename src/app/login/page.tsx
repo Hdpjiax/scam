@@ -194,11 +194,12 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const formElement = e.currentTarget;
     setError("");
     setSuccess("");
     setLoading(true);
 
-    const form = new FormData(e.currentTarget);
+    const form = new FormData(formElement);
     const email = String(form.get("email") || "").trim().toLowerCase();
     const password = String(form.get("password") || "");
     const name = String(form.get("name") || "").trim();
@@ -263,7 +264,7 @@ export default function LoginPage() {
           "Account created. If email confirmation is enabled, check your inbox before signing in.",
         );
         setRegister(false);
-        e.currentTarget.reset();
+        formElement.reset();
         setLoading(false);
         return;
       }
