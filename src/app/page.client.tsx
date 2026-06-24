@@ -13,6 +13,7 @@ import {
   SlidersHorizontal,
 } from "lucide-react";
 import Header from "../components/Header";
+import Footer from "../components/Footer";
 import ProductCard from "../components/ProductCard";
 import ScrollReveal from "../components/ScrollReveal";
 import TransitionLink from "../components/TransitionLink";
@@ -20,6 +21,7 @@ import { Cart } from "../components/Drawers";
 import { useStore } from "../providers/StoreProvider";
 import { Product } from "../data/products";
 import { categories, categorySlug } from "../lib/catalog";
+import AdModal from "../components/AdModal";
 
 export default function ShopClient({
   initialProducts,
@@ -64,6 +66,7 @@ export default function ShopClient({
     <>
       <Header onCart={() => setDrawer(true)} onSearch={setQ} />
       <main>
+        <AdModal />
         <section
           className="hero"
           style={heroStyle}
@@ -265,31 +268,7 @@ export default function ShopClient({
         </ScrollReveal>
       </main>
 
-      <footer>
-        <Link className="brand" href="/">
-          NŌMA<span>casa viva</span>
-        </Link>
-        <nav aria-label="Explorar">
-          <b>Explora</b>
-          {categories.slice(0, 4).map((category) => (
-            <Link href={`/categoria/${category.slug}`} key={category.slug}>
-              {category.name}
-            </Link>
-          ))}
-        </nav>
-        <nav aria-label="Ayuda">
-          <b>Ayuda</b>
-          <a href="mailto:hola@noma.mx">Contacto</a>
-          <Link href="/checkout">Envíos y devoluciones</Link>
-          <a href="#principios">Garantía</a>
-        </nav>
-        <nav aria-label="Administración">
-          <b>Cuenta</b>
-          <Link href="/admin">Panel de gestión</Link>
-          <Link href="/login">Acceso y registro</Link>
-        </nav>
-        <small>© 2026 NŌMA Casa Viva / Ciudad de México</small>
-      </footer>
+      <Footer />
 
       <div className={`cart-toast ${toast ? "show" : ""}`} role="status">
         {toast}

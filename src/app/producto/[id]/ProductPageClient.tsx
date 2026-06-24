@@ -82,6 +82,12 @@ export default function ProductPageClient({
                   { viewTransitionName: `product-${p.id}` } as CSSProperties
                 }
               />
+              <div className="product-reviews-link" style={{ marginTop: "30px", borderTop: "1px solid var(--border)", paddingTop: "20px" }}>
+                <Link href="/reviews" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", color: "var(--fg)", textDecoration: "none", fontSize: "14px", fontWeight: "500" }}>
+                  <span>Voces de nuestra comunidad</span>
+                  <span style={{ color: "var(--clay)" }}>Leer reseñas →</span>
+                </Link>
+              </div>
             </div>
             <div className="pdp-secondary">
               <img src={p.image} alt={`Detalle de ${p.name}`} />
@@ -94,13 +100,15 @@ export default function ProductPageClient({
               / {p.sku}
             </small>
             <h1>{p.name}</h1>
-            <div className="rating">
-              <span aria-label={`${p.rating} de 5 estrellas`}>
-                {[1, 2, 3, 4, 5].map((x) => (
-                  <Star key={x} className="filled-star" />
+            <div className="product-rating-summary">
+              <div className="stars">
+                {[...Array(5)].map((_, i) => (
+                  <svg key={i} width="16" height="16" viewBox="0 0 24 24" fill={i < Math.round(p.rating || 5) ? "#d1b894" : "none"} stroke={i < Math.round(p.rating || 5) ? "#d1b894" : "var(--border)"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
                 ))}
-              </span>
-              {p.rating} / 38 reseñas
+              </div>
+              <span>{p.rating || "5.0"} (Ver reseñas)</span>
             </div>
             <div className="pdp-price">
               {money(p.price)} {p.oldPrice && <s>{money(p.oldPrice)}</s>}

@@ -21,6 +21,7 @@ import {
   X,
   TrendingUp,
   AlertTriangle,
+  Star,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -68,25 +69,40 @@ const blank: ProductType = {
   rating: 5,
 };
 
+const blankReview = {
+  id: "",
+  product_id: "" as any,
+  author_name: "",
+  author_avatar: "",
+  rating: 5,
+  content: "",
+  is_verified_purchase: false,
+};
+
 export default function AdminClient({
   initialProducts,
   initialOrders,
   initialProfiles,
+  initialReviews,
 }: {
   initialProducts: any[];
   initialOrders: any[];
   initialProfiles: any[];
+  initialReviews: any[];
 }) {
   const supabase = createClient();
   const [products, setProducts] = useState<ProductType[]>(initialProducts);
   const [orders, setOrders] = useState<OrderType[]>(initialOrders);
   const [profiles] = useState<any[]>(initialProfiles);
+  const [reviews, setReviews] = useState<any[]>(initialReviews);
 
-  const [tab, setTab] = useState<"dashboard" | "products" | "orders" | "users">("dashboard");
+  const [tab, setTab] = useState<"dashboard" | "products" | "orders" | "users" | "reviews">("dashboard");
   const [edit, setEdit] = useState<ProductType | null>(null);
+  const [editReview, setEditReview] = useState<any | null>(null);
   const [preview, setPreview] = useState<ProductType | null>(null);
   const [q, setQ] = useState("");
   const [remove, setRemove] = useState<ProductType | null>(null);
+  const [removeReview, setRemoveReview] = useState<any | null>(null);
   const [toast, setToast] = useState<{ text: string; undo?: () => void } | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -188,6 +204,61 @@ export default function AdminClient({
     setLoading(false);
   };
 
+  const saveReview = async (r: any) => {
+    setLoading(true);
+    const next = {
+      product_id: r.product_id ? parseInt(r.product_id) : null,
+      author_name: r.author_name,
+      author_avatar: r.author_avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(r.author_name)}&background=random`,
+      rating: r.rating,
+      content: r.content,
+      is_verified_purchase: r.is_verified_purchase,
+    };
+
+    if (r.id) {
+      // Editar
+      const { error } = await supabase.from("reviews").update(next).eq("id", r.id);
+      if (!error) {
+        const productName = r.product_id ? products.find(p => p.id === parseInt(r.product_id))?.name : null;
+        setReviews(
+          reviews.map((x) =>
+            x.id === r.id ? { ...x, ...next, products: productName ? { name: productName } : null } : x
+          )
+        );
+        notify("Reseña actualizada.");
+      } else {
+        notify("Error al actualizar reseña.");
+      }
+    } else {
+      // Crear
+      const { data, error } = await supabase.from("reviews").insert(next).select().single();
+      if (!error && data) {
+        const productName = data.product_id ? products.find(p => p.id === data.product_id)?.name : null;
+        setReviews([...reviews, { ...data, products: productName ? { name: productName } : null }]);
+        notify("Reseña creada.");
+      } else {
+        notify("Error al crear reseña.");
+      }
+    }
+
+    setEditReview(null);
+    setLoading(false);
+  };
+
+  const deleteReviewFunc = async () => {
+    if (!removeReview) return;
+    setLoading(true);
+    const { error } = await supabase.from("reviews").delete().eq("id", removeReview.id);
+    if (!error) {
+      setReviews(reviews.filter((x) => x.id !== removeReview.id));
+      notify("Reseña eliminada.");
+    } else {
+      notify("Error al eliminar reseña.");
+    }
+    setRemoveReview(null);
+    setLoading(false);
+  };
+
   const handleStatusChange = async (orderId: string, s: string) => {
     const old = [...orders];
     setOrders(orders.map((o) => (o.id === orderId ? { ...o, status: s } : o)));
@@ -219,6 +290,7 @@ export default function AdminClient({
           ["products", "Productos", Package],
           ["orders", "Pedidos", ShoppingCart],
           ["users", "Clientes", Users],
+          ["reviews", "Reseñas", Star],
         ].map(([id, label, Icon]: any) => (
           <button
             aria-current={tab === id ? "page" : undefined}
@@ -248,7 +320,9 @@ export default function AdminClient({
                   ? "Catálogo"
                   : tab === "orders"
                     ? "Pedidos y pagos"
-                    : "Clientes"}
+                    : tab === "reviews"
+                      ? "Reseñas"
+                      : "Clientes"}
             </h1>
           </div>
           <div
@@ -438,6 +512,77 @@ export default function AdminClient({
               )}
             </div>
           )}
+
+          {tab === "reviews" && (
+            <div className="admin-reviews">
+              <div className="admin-toolbar">
+                <button
+                  className="admin-primary"
+                  onClick={() => setEditReview(blankReview)}
+                >
+                  <Plus />
+                  Nueva reseña
+                </button>
+              </div>
+
+              {reviews.length > 0 ? (
+                <div className="product-table">
+                  <div className="table-row table-labels" style={{ gridTemplateColumns: "1.5fr 1fr 0.8fr 2fr 0.8fr" }}>
+                    <span>Autor</span>
+                    <span>Producto</span>
+                    <span>Calificación</span>
+                    <span>Comentario</span>
+                    <span style={{ textAlign: "right" }}>Acciones</span>
+                  </div>
+                  {reviews.map((r) => (
+                    <div key={r.id} className="table-row" style={{ gridTemplateColumns: "1.5fr 1fr 0.8fr 2fr 0.8fr" }}>
+                      <div className="product-cell">
+                        <img
+                          src={r.author_avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(r.author_name)}&background=random`}
+                          alt={r.author_name}
+                          style={{ width: "36px", height: "36px", borderRadius: "50%" }}
+                        />
+                        <i>
+                          <b>{r.author_name}</b>
+                          {r.is_verified_purchase && <small style={{ color: "var(--clay)" }}>Compra verificada</small>}
+                        </i>
+                      </div>
+                      <div>
+                        {r.products?.name || <span style={{ opacity: 0.5 }}>General de la tienda</span>}
+                      </div>
+                      <div style={{ display: "flex", gap: "2px" }}>
+                        {[...Array(5)].map((_, idx) => (
+                          <Star
+                            key={idx}
+                            size={14}
+                            fill={idx < r.rating ? "var(--clay)" : "none"}
+                            stroke={idx < r.rating ? "var(--clay)" : "var(--copy)"}
+                          />
+                        ))}
+                      </div>
+                      <div style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }} title={r.content}>
+                        {r.content}
+                      </div>
+                      <div className="row-actions" style={{ justifyContent: "flex-end" }}>
+                        <button onClick={() => setEditReview(r)}>
+                          <Edit3 size={18} />
+                        </button>
+                        <button onClick={() => setRemoveReview(r)}>
+                          <Trash2 size={18} />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="no-data">
+                  <Star />
+                  <h2>Aún no hay reseñas</h2>
+                  <p>Crea tu primera reseña usando el botón de arriba.</p>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </main>
 
@@ -491,6 +636,39 @@ export default function AdminClient({
         </div>
       )}
       {preview && <ProductPreviewModal product={preview} onClose={() => setPreview(null)} />}
+
+      {editReview && (
+        <ReviewEditor
+          review={editReview}
+          products={products}
+          onClose={() => setEditReview(null)}
+          onSave={saveReview}
+          loading={loading}
+        />
+      )}
+
+      {removeReview && (
+        <div
+          className="confirm-wrap"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="delete-review-title"
+        >
+          <div>
+            <AlertTriangle />
+            <h2 id="delete-review-title">¿Eliminar reseña?</h2>
+            <p>
+              Esta acción no se puede deshacer. Se eliminará la reseña de {removeReview.author_name}.
+            </p>
+            <span>
+              <button onClick={() => setRemoveReview(null)} disabled={loading}>Cancelar</button>
+              <button className="danger" onClick={deleteReviewFunc} disabled={loading}>
+                {loading ? "Eliminando..." : "Eliminar reseña"}
+              </button>
+            </span>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -979,6 +1157,131 @@ function ProductPreviewModal({
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  );
+}
+
+function ReviewEditor({
+  review,
+  products,
+  onClose,
+  onSave,
+  loading,
+}: {
+  review: any;
+  products: ProductType[];
+  onClose: () => void;
+  onSave: (r: any) => void;
+  loading: boolean;
+}) {
+  const [r, setR] = useState(review);
+
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="product-editor-modal" style={{ width: "min(500px, 94vw)" }} onClick={e => e.stopPropagation()}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            onSave(r);
+          }}
+        >
+          <div className="editor-head">
+            <div>
+              <small>{r.id ? "Editar reseña" : "Nueva reseña"}</small>
+              <h2>{r.id ? "Editar reseña" : "Escribir reseña"}</h2>
+            </div>
+            <button type="button" aria-label="Cerrar editor" onClick={onClose}>
+              <X />
+            </button>
+          </div>
+
+          <div className="editor-form-grid" style={{ gridTemplateColumns: "1fr" }}>
+            <label>
+              Nombre del autor
+              <input
+                type="text"
+                required
+                value={r.author_name}
+                onChange={(e) => setR({ ...r, author_name: e.target.value })}
+                disabled={loading}
+              />
+            </label>
+
+            <label>
+              Avatar del autor (opcional, URL)
+              <input
+                type="url"
+                value={r.author_avatar}
+                onChange={(e) => setR({ ...r, author_avatar: e.target.value })}
+                disabled={loading}
+                placeholder="https://i.pravatar.cc/150..."
+              />
+            </label>
+
+            <label>
+              Calificación (1 a 5 estrellas)
+              <select
+                value={r.rating}
+                onChange={(e) => setR({ ...r, rating: parseInt(e.target.value) })}
+                disabled={loading}
+              >
+                {[5, 4, 3, 2, 1].map(n => (
+                  <option key={n} value={n}>{n} estrellas</option>
+                ))}
+              </select>
+            </label>
+
+            <label>
+              Producto relacionado
+              <select
+                value={r.product_id || ""}
+                onChange={(e) => setR({ ...r, product_id: e.target.value || null })}
+                disabled={loading}
+              >
+                <option value="">Ninguno (Reseña general de la tienda)</option>
+                {products.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label>
+              Compra verificada
+              <select
+                value={r.is_verified_purchase ? "Sí" : "No"}
+                onChange={(e) => setR({ ...r, is_verified_purchase: e.target.value === "Sí" })}
+                disabled={loading}
+              >
+                <option value="No">No</option>
+                <option value="Sí">Sí</option>
+              </select>
+            </label>
+
+            <label>
+              Comentario
+              <textarea
+                required
+                value={r.content}
+                onChange={(e) => setR({ ...r, content: e.target.value })}
+                disabled={loading}
+                rows={4}
+              />
+            </label>
+          </div>
+
+          <div className="editor-foot">
+            <button type="button" onClick={onClose} disabled={loading}>
+              Cancelar
+            </button>
+            <button className="admin-primary" type="submit" disabled={loading}>
+              <Check />
+              {loading ? "Guardando..." : "Guardar reseña"}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

