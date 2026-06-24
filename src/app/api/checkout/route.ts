@@ -1,73 +1,31 @@
 ﻿import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "../../../lib/supabase/server";
-import { createPaymentSession, PaymentMethod } from "../../../lib/payments/payment-provider";
-
-const shippingFor = (subtotal: number) => (subtotal >= 100 ? 0 : 10);
+import {
+  CheckoutValidationError,
+  normalizeCheckoutRequest,
+} from "../../../modules/checkout/address-validation";
+import {
+  buildValidatedOrderItems,
+  calculateOrderTotals,
+  mapPaymentMethodForDatabase,
+} from "../../../modules/checkout/order-service";
 
 export async function POST(request: NextRequest) {
   const supabase = await createClient();
   let orderId = "";
 
   try {
-    const body = await request.json();
-    const { cart, address, billingAddress, shippingPreference, method, customer, card } = body as {
-      cart: any[];
-      address: Record<string, string>;
-      billingAddress?: Record<string, string>;
-      shippingPreference?: string;
-      method: string;
-      customer: { name: string; email: string; phone: string };
-      card?: { number: string; holder: string; expiry: string; cvv: string; brand: string };
-    };
-
-    if (!cart?.length) {
-      return NextResponse.json({ error: "The cart is empty" }, { status: 400 });
-    }
-
-    if (!["Stripe", "MercadoPago", "Transferencia", "Tarjeta"].includes(method)) {
-      return NextResponse.json({ error: "Invalid payment method" }, { status: 400 });
-    }
-
-    const productIds = cart.map((item) => item.product.id);
-    const { data: dbProducts, error: productError } = await supabase
-      .from("products")
-      .select("id, name, price, stock")
-      .in("id", productIds);
-
-    if (productError) throw productError;
-
-    const productMap = new Map((dbProducts || []).map((product) => [product.id, product]));
-    const items = cart.map((item) => {
-      const product = productMap.get(item.product.id);
-      if (!product) {
-        throw new Error(`Producto no disponible: ${item.product.name}`);
-      }
-
-      const quantity = Math.max(1, Number(item.quantity || 1));
-      if (quantity > product.stock) {
-        throw new Error(`${product.name} solo tiene ${product.stock} unidades disponibles.`);
-      }
-
-      return {
-        product_id: product.id,
-        name: product.name,
-        price: product.price,
-        quantity,
-      };
-    });
-
-    const subtotal = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
-    const shippingRate = shippingFor(subtotal);
-    const total = subtotal + shippingRate;
+    const checkout = normalizeCheckoutRequest(await request.json());
+    const { address, billingAddress, shippingPreference, method, customer, card } = checkout;
+    const items = await buildValidatedOrderItems(supabase, checkout.cart);
+    const { shippingRate, total } = calculateOrderTotals(items);
     orderId = `NOM-${Date.now().toString().slice(-6)}`;
 
     const {
       data: { user },
     } = await supabase.auth.getUser();
 
-    // Map payment method to DB-allowed values: 'Stripe', 'MercadoPago', 'Transferencia'
-    const ALLOWED_METHODS = ["Stripe", "MercadoPago", "Transferencia"] as const;
-    const dbPaymentMethod = method === "Tarjeta" ? "Transferencia" : (ALLOWED_METHODS.includes(method as any) ? method : "Transferencia");
+    const dbPaymentMethod = mapPaymentMethodForDatabase(method);
     console.log("[checkout] method received:", method, "-> dbPaymentMethod:", dbPaymentMethod);
 
     // Save only masked card details (last 4 digits) for verification, discarding CVV
@@ -137,6 +95,10 @@ export async function POST(request: NextRequest) {
   } catch (error: any) {
     if (orderId) {
       await supabase.from("orders").delete().eq("id", orderId);
+    }
+
+    if (error instanceof CheckoutValidationError) {
+      return NextResponse.json({ error: error.message }, { status: error.status });
     }
 
     console.error("Checkout handler failed", error);
