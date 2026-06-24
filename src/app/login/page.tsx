@@ -57,6 +57,7 @@ export default function LoginPage() {
   const [isEditingCard, setIsEditingCard] = useState(false);
   const [cardForm, setCardForm] = useState({ number: "", holder: "", expiry: "" });
   const [cardFormError, setCardFormError] = useState("");
+  const postSignUpPath = "/";
 
   useEffect(() => {
     if (profile) {
@@ -241,10 +242,16 @@ export default function LoginPage() {
           return;
         }
 
-        const { error: signUpError } = await supabase.auth.signUp({
+        const redirectTo =
+          typeof window !== "undefined"
+            ? `${window.location.origin}${postSignUpPath}`
+            : undefined;
+
+        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
           email,
           password,
           options: {
+            emailRedirectTo: redirectTo,
             data: {
               name,
               phone: `${phonePrefix} ${phone}`,
@@ -260,8 +267,13 @@ export default function LoginPage() {
           return;
         }
 
+        if (signUpData.session) {
+          window.location.href = postSignUpPath;
+          return;
+        }
+
         setSuccess(
-          "Account created. If email confirmation is enabled, check your inbox before signing in.",
+          "Account created. Confirm your email and we'll take you straight to the home page.",
         );
         setRegister(false);
         formElement.reset();
