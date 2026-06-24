@@ -28,15 +28,19 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 
 -- Create Policies for Profiles
+DROP POLICY IF EXISTS "Allow users to read their own profile" ON public.profiles;
 CREATE POLICY "Allow users to read their own profile" ON public.profiles
     FOR SELECT USING (auth.uid() = id);
 
+DROP POLICY IF EXISTS "Allow users to update their own profile" ON public.profiles;
 CREATE POLICY "Allow users to update their own profile" ON public.profiles
     FOR UPDATE USING (auth.uid() = id);
 
+DROP POLICY IF EXISTS "Allow admins to read all profiles" ON public.profiles;
 CREATE POLICY "Allow admins to read all profiles" ON public.profiles
     FOR SELECT USING (public.is_admin(auth.uid()));
 
+DROP POLICY IF EXISTS "Allow admins to update all profiles" ON public.profiles;
 CREATE POLICY "Allow admins to update all profiles" ON public.profiles
     FOR UPDATE USING (public.is_admin(auth.uid()));
 
@@ -63,9 +67,11 @@ CREATE TABLE IF NOT EXISTS public.products (
 ALTER TABLE public.products ENABLE ROW LEVEL SECURITY;
 
 -- Create Policies for Products
+DROP POLICY IF EXISTS "Allow public read-only access to products" ON public.products;
 CREATE POLICY "Allow public read-only access to products" ON public.products
     FOR SELECT USING (true);
 
+DROP POLICY IF EXISTS "Allow admins to perform all write actions on products" ON public.products;
 CREATE POLICY "Allow admins to perform all write actions on products" ON public.products
     FOR ALL USING (
         EXISTS (
@@ -93,12 +99,15 @@ CREATE TABLE IF NOT EXISTS public.orders (
 ALTER TABLE public.orders ENABLE ROW LEVEL SECURITY;
 
 -- Create Policies for Orders
+DROP POLICY IF EXISTS "Allow users to read their own orders" ON public.orders;
 CREATE POLICY "Allow users to read their own orders" ON public.orders
     FOR SELECT USING (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Allow anyone to create an order (guest checkouts)" ON public.orders;
 CREATE POLICY "Allow anyone to create an order (guest checkouts)" ON public.orders
     FOR INSERT WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Allow admins to perform all actions on orders" ON public.orders;
 CREATE POLICY "Allow admins to perform all actions on orders" ON public.orders
     FOR ALL USING (
         EXISTS (
@@ -121,6 +130,7 @@ CREATE TABLE IF NOT EXISTS public.order_items (
 ALTER TABLE public.order_items ENABLE ROW LEVEL SECURITY;
 
 -- Create Policies for Order Items
+DROP POLICY IF EXISTS "Allow users to read their own order items" ON public.order_items;
 CREATE POLICY "Allow users to read their own order items" ON public.order_items
     FOR SELECT USING (
         EXISTS (
@@ -129,9 +139,11 @@ CREATE POLICY "Allow users to read their own order items" ON public.order_items
         )
     );
 
+DROP POLICY IF EXISTS "Allow anyone to insert order items" ON public.order_items;
 CREATE POLICY "Allow anyone to insert order items" ON public.order_items
     FOR INSERT WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Allow admins to perform all actions on order items" ON public.order_items;
 CREATE POLICY "Allow admins to perform all actions on order items" ON public.order_items
     FOR ALL USING (
         EXISTS (
@@ -154,6 +166,7 @@ CREATE TABLE IF NOT EXISTS public.shipping_addresses (
 ALTER TABLE public.shipping_addresses ENABLE ROW LEVEL SECURITY;
 
 -- Create Policies for Shipping Addresses
+DROP POLICY IF EXISTS "Allow users to read their own shipping address" ON public.shipping_addresses;
 CREATE POLICY "Allow users to read their own shipping address" ON public.shipping_addresses
     FOR SELECT USING (
         EXISTS (
@@ -162,9 +175,11 @@ CREATE POLICY "Allow users to read their own shipping address" ON public.shippin
         )
     );
 
+DROP POLICY IF EXISTS "Allow anyone to insert shipping address" ON public.shipping_addresses;
 CREATE POLICY "Allow anyone to insert shipping address" ON public.shipping_addresses
     FOR INSERT WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Allow admins to perform all actions on shipping addresses" ON public.shipping_addresses;
 CREATE POLICY "Allow admins to perform all actions on shipping addresses" ON public.shipping_addresses
     FOR ALL USING (
         EXISTS (
@@ -188,6 +203,7 @@ CREATE TABLE IF NOT EXISTS public.payments (
 ALTER TABLE public.payments ENABLE ROW LEVEL SECURITY;
 
 -- Create Policies for Payments
+DROP POLICY IF EXISTS "Allow users to read their own payments" ON public.payments;
 CREATE POLICY "Allow users to read their own payments" ON public.payments
     FOR SELECT USING (
         EXISTS (
@@ -196,9 +212,11 @@ CREATE POLICY "Allow users to read their own payments" ON public.payments
         )
     );
 
+DROP POLICY IF EXISTS "Allow anyone to insert a payment" ON public.payments;
 CREATE POLICY "Allow anyone to insert a payment" ON public.payments
     FOR INSERT WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Allow admins to perform all actions on payments" ON public.payments;
 CREATE POLICY "Allow admins to perform all actions on payments" ON public.payments
     FOR ALL USING (
         EXISTS (

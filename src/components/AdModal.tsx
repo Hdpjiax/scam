@@ -31,18 +31,18 @@ export default function AdModal() {
           <X />
         </button>
         <div className="ad-modal-image">
-          <img 
-            src="https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=800&q=80" 
-            alt="Decoración NŌMA" 
+          <img
+            src="https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=800&q=80"
+            alt="Decoración NŌMA"
           />
         </div>
         <div className="ad-modal-text">
-          <span className="ad-badge">Oferta Exclusiva</span>
-          <h2>30% DE DESCUENTO</h2>
-          <p>En toda tu primera compra. Dale vida a tus espacios con nuestra colección de objetos diseñados para inspirar tranquilidad.</p>
+          <span className="ad-badge">Exclusive Offer</span>
+          <h2>30% DISCOUNT</h2>
+          <p>On your first purchase. Bring your spaces to life with our collection of objects designed to inspire tranquility.</p>
           <div className="ad-actions">
             <button className="ad-primary-btn" onClick={closeModal}>
-              Aprovechar Descuento
+              Claim Discount
             </button>
           </div>
         </div>

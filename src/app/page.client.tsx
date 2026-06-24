@@ -130,33 +130,6 @@ export default function ShopClient({
           </h2>
         </ScrollReveal>
 
-        <section
-          ref={categoryStoriesRef}
-          className="category-stories"
-          aria-label="Shop by Atmosphere"
-        >
-          {categories.slice(0, 5).map((category, index) => (
-            <TransitionLink
-              className="category-story reveal-on-scroll"
-              href={`/categoria/${category.slug}`}
-              key={category.slug}
-              style={
-                {
-                  "--category-image": `url(${category.image})`,
-                  "--category-accent": category.accent,
-                } as CSSProperties
-              }
-            >
-              <span>{String(index + 1).padStart(2, "0")} / {category.name}</span>
-              <h2>{category.title}</h2>
-              <p>{category.copy}</p>
-              <b>
-                View Collection <ArrowRight />
-              </b>
-            </TransitionLink>
-          ))}
-        </section>
-
         <section className="catalog" id="catalogo">
           <ScrollReveal className="section-top">
             <div>
@@ -174,7 +147,7 @@ export default function ShopClient({
           </ScrollReveal>
 
           <div className="catalog-count" aria-live="polite">
-            Showing {Math.min(limit, list.length)} of {list.length} featured pieces
+             Showing {Math.min(limit, list.length)} of {list.length} featured pieces
           </div>
 
           {!list.length ? (
@@ -226,29 +199,6 @@ export default function ShopClient({
           </ScrollReveal>
         </section>
 
-        <ScrollReveal className="values" id="principios">
-          <div>
-            <Sparkles />
-            <h3>Human Curation</h3>
-            <p>We test every piece before inviting it into your home.</p>
-          </div>
-          <div>
-            <Leaf />
-            <h3>Responsible Choices</h3>
-            <p>Conscious materials and plastic-free packaging.</p>
-          </div>
-          <div>
-            <ShieldCheck />
-            <h3>Genuine Warranty</h3>
-            <p>Two years of support on the entire collection.</p>
-          </div>
-          <div>
-            <Headphones />
-            <h3>We are close</h3>
-            <p>Personalized support Monday through Saturday.</p>
-          </div>
-        </ScrollReveal>
-
         {/* Community Reviews */}
         <section className="community-reviews" style={{ paddingBlock: "80px", borderTop: "1px solid var(--line)" }}>
           <ScrollReveal className="section-top" style={{ textAlign: "center", marginBottom: "48px" }}>
@@ -264,8 +214,8 @@ export default function ShopClient({
 
           <ScrollReveal className="reviews-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "24px", paddingInline: "var(--page)", maxWidth: "1400px", margin: "0 auto" }}>
             {initialReviews.map((rev) => (
-              <div 
-                key={rev.id} 
+              <div
+                key={rev.id}
                 className="review-card"
                 style={{
                   background: "rgba(244, 241, 233, 0.03)",
@@ -293,7 +243,7 @@ export default function ShopClient({
                     &ldquo;{rev.content}&rdquo;
                   </p>
                 </div>
-                
+
                 <div style={{ display: "flex", alignItems: "center", gap: "12px", borderTop: "1px solid rgba(244, 241, 233, 0.05)", paddingTop: "16px" }}>
                   <img
                     src={rev.author_avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(rev.author_name)}&background=random`}

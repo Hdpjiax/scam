@@ -167,7 +167,11 @@ export default function AdminClient({
       }
     } else {
       // Create
-      const { data, error } = await supabase.from("products").insert(next).select().single();
+      const maxId = products.reduce((max, x) => Math.max(max, x.id), 0);
+      const nextId = maxId + 1;
+      const newProduct = { ...next, id: nextId };
+
+      const { data, error } = await supabase.from("products").insert(newProduct).select().single();
       if (!error && data) {
         setProducts([...products, { ...data, image: data.images?.[0] || "" }]);
         notify("Product published.");

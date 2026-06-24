@@ -62,7 +62,7 @@ export default function LoginPage() {
         });
 
         if (signInError) {
-          setError("Correo o contraseña incorrectos.");
+          setError("email or password incorrect");
           setLoading(false);
           return;
         }
@@ -97,52 +97,52 @@ export default function LoginPage() {
       <section>
         <div className="account-art">
           <div>
-            <small>Tu espacio Nōma</small>
+            <small>Your Nōma space</small>
             <h1>
-              Una casa que
+              One house
               <br />
-              <em>te conoce.</em>
+              <em>knows you.</em>
             </h1>
             <p>
-              Guarda tus favoritos, consulta tus pedidos y recibe
-              recomendaciones pensadas para ti.
+              Save your favorites, check your orders and receive
+              recommendations designed for you.
             </p>
           </div>
         </div>
         <form onSubmit={handleSubmit}>
           <LockKeyhole />
-          <small>{register ? "Únete a Nōma" : "Bienvenido de vuelta"}</small>
-          <h2>{register ? "Crea tu cuenta" : "Inicia sesión"}</h2>
+          <small>{register ? "Join Nōma" : "Welcome back"}</small>
+          <h2>{register ? "Create your account" : "Sign in"}</h2>
           {register && (
             <label>
-              Nombre completo
-              <input name="name" required placeholder="Tu nombre" disabled={loading} />
+              Full name
+              <input name="name" required placeholder="Your name" disabled={loading} />
             </label>
           )}
           <label>
-            Correo electrónico
+            Email
             <input
               name="email"
               type="email"
               required
-              placeholder="nombre@email.com"
+              placeholder="[EMAIL_ADDRESS]"
               disabled={loading}
             />
           </label>
           <label>
-            Contraseña
+            Password
             <div className="password">
               <input
                 name="password"
                 type={show ? "text" : "password"}
                 required
                 minLength={6}
-                placeholder="Mínimo 6 caracteres"
+                placeholder="Minimum 6 characters"
                 disabled={loading}
               />
               <button type="button" onClick={() => setShow(!show)}>
                 <span className="sr-only">
-                  {show ? "Ocultar contraseña" : "Mostrar contraseña"}
+                  {show ? "Hide password" : "Show password"}
                 </span>
                 {show ? <EyeOff /> : <Eye />}
               </button>
@@ -150,11 +150,11 @@ export default function LoginPage() {
           </label>
           {error && <p className="form-error">{error}</p>}
           <button className="account-submit" type="submit" disabled={loading}>
-            {loading ? "Procesando..." : register ? "Crear mi cuenta" : "Entrar"}
+            {loading ? "Processing..." : register ? "Create my account" : "Sign in"}
             <ArrowRight />
           </button>
           <p>
-            {register ? "¿Ya tienes cuenta?" : "¿Aún no tienes cuenta?"}{" "}
+            {register ? "Already have an account?" : "Don't have an account yet?"}{" "}
             <button
               type="button"
               disabled={loading}
@@ -163,10 +163,9 @@ export default function LoginPage() {
                 setError("");
               }}
             >
-              {register ? "Inicia sesión" : "Regístrate"}
+              {register ? "Log in" : "Sign up"}
             </button>
           </p>
-          <div className="admin-hint">Demo admin: admin@noma.mx · admin123</div>
         </form>
       </section>
     </div>

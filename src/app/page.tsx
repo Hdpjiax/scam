@@ -12,7 +12,7 @@ export default async function Page() {
       .from("products")
       .select("*")
       .order("id", { ascending: true });
-    
+
     dbProducts = (data || []).map((product: any, index: number) =>
       normalizeProduct(product, index),
     );
@@ -42,7 +42,7 @@ export default async function Page() {
       author_name: "Valeria M.",
       author_avatar: "https://i.pravatar.cc/150?u=a042581f4e29026704d",
       rating: 5,
-      content: "La calidad de los materiales es excepcional. Llevaba tiempo buscando piezas de decoración que realmente aportaran calma al espacio, y NŌMA logró exactamente eso. El envío fue súper rápido y el empaque muy cuidadoso.",
+      content: "The quality of the materials is exceptional. I had been looking for decorative pieces that really brought calm to the space for a long time, and NŌMA achieved exactly that. The shipping was super fast and the packaging very careful.",
       is_verified_purchase: true,
     },
     {
@@ -50,7 +50,7 @@ export default async function Page() {
       author_name: "Carlos T.",
       author_avatar: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
       rating: 5,
-      content: "Compré una lámpara para mi estudio y cambió completamente la atmósfera. La luz es súper cálida y el diseño es una escultura en sí mismo.",
+      content: "I bought a lamp for my studio and it completely changed the atmosphere. The light is super warm and the design is a sculpture in itself.",
       is_verified_purchase: true,
     },
     {
@@ -58,7 +58,7 @@ export default async function Page() {
       author_name: "Sofía R.",
       author_avatar: "https://i.pravatar.cc/150?u=a042581f4e29026028d",
       rating: 5,
-      content: "El difusor ultrasónico no solo huele espectacular, sino que estéticamente es minimalista y hermoso. Excelente servicio postventa.",
+      content: "The ultrasonic diffuser not only smells great, but aesthetically it is minimalist and beautiful. Excellent after-sales service.",
       is_verified_purchase: true,
     }
   ];

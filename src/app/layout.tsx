@@ -7,8 +7,8 @@ import { StoreProvider } from "../providers/StoreProvider";
 import "../styles.css";
 
 export const metadata: Metadata = {
-  title: "NŌMA Casa Viva",
-  description: "Diseño, tecnología y objetos para habitar mejor.",
+  title: "NŌMA Home living",
+  description: "Design & tech objects for a better living.",
 };
 
 export const viewport: Viewport = {
@@ -24,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es">
+    <html lang="en">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link

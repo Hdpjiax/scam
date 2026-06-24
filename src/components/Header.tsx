@@ -73,15 +73,30 @@ export default function Header({
         <TransitionLink className="brand" href="/" aria-label="NŌMA, home">
           NŌMA<span>living spaces</span>
         </TransitionLink>
-        <nav aria-label="Main navigation">
-          {navCategories.map((category) => (
-            <TransitionLink
-              key={category.slug}
-              href={`/categoria/${category.slug}`}
-            >
-              {category.name}
-            </TransitionLink>
-          ))}
+        <nav aria-label="Main navigation" className="main-nav">
+          <div className="nav-item-dropdown">
+            <span className="nav-trigger">Collection</span>
+            <div className="mega-menu">
+              <div className="mega-menu-content">
+                {categories.map((category) => (
+                  <TransitionLink
+                    key={category.slug}
+                    href={`/categoria/${category.slug}`}
+                    className="mega-menu-card"
+                  >
+                    <div className="mega-menu-img-wrap">
+                      <img src={category.image} alt={category.name} />
+                    </div>
+                    <div>
+                      <h3>{category.name}</h3>
+                      <p>{category.title}</p>
+                    </div>
+                  </TransitionLink>
+                ))}
+              </div>
+            </div>
+          </div>
+          <TransitionLink href="/reviews">Reviews</TransitionLink>
         </nav>
         <div className="actions">
           <button
@@ -143,7 +158,7 @@ export default function Header({
         </div>
         <p>Find your next piece</p>
         <nav aria-label="Mobile menu">
-          {navCategories.map((category, index) => (
+          {categories.map((category, index) => (
             <Link
               href={`/categoria/${category.slug}`}
               onClick={() => setMenu(false)}
