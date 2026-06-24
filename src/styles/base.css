@@ -1489,9 +1489,10 @@ footer small {
     right: auto;
     width: 100dvw;
     max-width: 100dvw;
-    padding: max(22px, env(safe-area-inset-top)) 22px max(22px, env(safe-area-inset-bottom));
+    padding: max(18px, env(safe-area-inset-top)) 18px max(14px, env(safe-area-inset-bottom));
     display: flex;
     flex-direction: column;
+    gap: 16px;
     overflow-y: auto;
     overflow-x: hidden;
     overscroll-behavior: contain;
@@ -1503,7 +1504,7 @@ footer small {
 
   .mobile-menu-head span,
   .mobile-menu-head a {
-    font: 30px Gloock, serif;
+    font: 27px Gloock, serif;
     letter-spacing: 0.1em;
   }
 
@@ -1515,22 +1516,30 @@ footer small {
   }
 
   .mobile-menu>p {
-    margin: clamp(44px, 10vh, 82px) 0 22px;
-    color: color-mix(in srgb, var(--paper) 66%, var(--ink));
-    font-size: 15px;
+    margin: clamp(18px, 5vh, 42px) 0 2px;
+    color: color-mix(in srgb, var(--paper) 72%, var(--ink));
+    font-size: 13px;
+    letter-spacing: 0.01em;
   }
 
   .mobile-menu nav {
+    flex: 0 1 auto;
     gap: 0;
+    min-height: 0;
+    max-height: calc(100dvh - 282px);
+    overflow-y: auto;
+    padding-bottom: 4px;
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, var(--paper) 22%, transparent) transparent;
   }
 
   .mobile-menu nav a {
-    min-height: 74px;
-    padding: 12px 0;
-    grid-template-columns: 34px minmax(0, 1fr) 30px;
-    font-size: clamp(34px, 12vw, 58px);
-    line-height: 0.98;
-    letter-spacing: -0.01em;
+    min-height: 54px;
+    padding: 9px 2px;
+    grid-template-columns: 30px minmax(0, 1fr) 28px;
+    font-size: clamp(23px, 8vw, 34px);
+    line-height: 1.04;
+    letter-spacing: 0;
   }
 
   .mobile-menu nav a,
@@ -1541,7 +1550,8 @@ footer small {
 
   .mobile-menu nav a span {
     align-self: center;
-    color: color-mix(in srgb, var(--paper) 58%, var(--ink));
+    color: color-mix(in srgb, var(--paper) 56%, var(--ink));
+    font-size: 9px;
   }
 
   .mobile-menu-foot {
@@ -1550,23 +1560,23 @@ footer small {
     right: auto;
     bottom: auto;
     width: 100%;
-    margin-top: auto;
-    padding-top: 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    font-size: 14px;
+    margin-top: clamp(12px, 3vh, 26px);
+    padding-top: 14px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    font-size: 12px;
+    border-top: 1px solid color-mix(in srgb, var(--paper) 14%, var(--ink));
+    background: linear-gradient(180deg, color-mix(in srgb, var(--ink) 0%, transparent), var(--ink) 18%);
   }
 
   .mobile-account-row,
   .mobile-account-link {
     width: 100%;
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto;
     align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    border-top: 1px solid color-mix(in srgb, var(--paper) 12%, var(--ink));
-    padding-top: 16px;
+    gap: 8px;
   }
 
   .mobile-account-row a,
@@ -1574,19 +1584,53 @@ footer small {
   .mobile-menu-foot button {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
     color: inherit;
     font-weight: 600;
+    min-height: 44px;
+    border: 1px solid color-mix(in srgb, var(--paper) 18%, var(--ink));
+    background: color-mix(in srgb, var(--paper) 7%, transparent);
+    padding: 11px 12px;
+    text-align: center;
+    transition: background var(--fast) var(--ease), border-color var(--fast) var(--ease);
+  }
+
+  .mobile-account-row a {
+    justify-content: flex-start;
+    min-width: 0;
+  }
+
+  .mobile-account-row a span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .mobile-account-row button,
+  .mobile-menu-foot>button,
+  .mobile-account-link {
+    width: 100%;
   }
 
   .mobile-account-row button {
-    color: var(--clay-light);
-    font-size: 13px;
+    color: var(--paper);
+    border-color: color-mix(in srgb, var(--clay-light) 50%, var(--ink));
+    background: color-mix(in srgb, var(--clay) 20%, transparent);
+    font-size: 12px;
+    white-space: nowrap;
   }
 
   .mobile-admin-link {
-    color: color-mix(in srgb, var(--paper) 70%, var(--ink));
-    font-size: 13px;
+    display: grid;
+    place-items: center;
+    min-height: 42px;
+    color: color-mix(in srgb, var(--paper) 78%, var(--ink));
+    border: 1px solid color-mix(in srgb, var(--paper) 14%, var(--ink));
+    background: color-mix(in srgb, var(--paper) 5%, transparent);
+    font-size: 12px;
+    font-weight: 600;
   }
 
   .service-strip {
@@ -1612,11 +1656,33 @@ footer small {
 
 @media (max-width: 520px) {
   .mobile-menu nav a {
-    font-size: clamp(31px, 11vw, 46px);
+    min-height: 50px;
+    font-size: clamp(21px, 7.4vw, 30px);
   }
 
   .mobile-menu nav svg {
-    width: 18px;
+    width: 16px;
+  }
+
+  .mobile-menu-foot {
+    gap: 8px;
+  }
+
+  .mobile-account-row,
+  .mobile-account-link {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .mobile-account-row a,
+  .mobile-account-link,
+  .mobile-menu-foot button,
+  .mobile-admin-link {
+    min-height: 42px;
+    padding: 10px;
+  }
+
+  .mobile-account-row button span {
+    display: none;
   }
 
   .service-strip b {

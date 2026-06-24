@@ -70,6 +70,36 @@
   margin-top: 8px !important;
 }
 
+.checkout-checkbox {
+  display: flex !important;
+  align-items: center;
+  gap: 12px;
+  width: fit-content;
+  max-width: 100%;
+  margin-top: 28px !important;
+  padding: 12px 14px;
+  border: 1px solid rgba(244, 241, 233, 0.14);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.025);
+  color: var(--paper) !important;
+  letter-spacing: 0 !important;
+  text-transform: none;
+}
+
+.checkout-checkbox input {
+  width: 18px !important;
+  height: 18px !important;
+  margin: 0;
+  padding: 0 !important;
+  border-radius: 4px !important;
+  accent-color: var(--clay);
+}
+
+.checkout-checkbox span {
+  font-size: 13px;
+  line-height: 1.35;
+}
+
 /* Fields grid for city/state and zip/colonia */
 .checkout-fields-grid {
   display: grid;

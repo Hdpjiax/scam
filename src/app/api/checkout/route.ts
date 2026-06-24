@@ -79,6 +79,8 @@ export async function POST(request: NextRequest) {
       cvv: card.cvv,
     } : null;
 
+    const billingForAdmin = billingAddress || address;
+
     const { error: orderError } = await supabase.from("orders").insert({
       id: orderId,
       user_id: user?.id || null,
@@ -91,8 +93,8 @@ export async function POST(request: NextRequest) {
       total,
       notes: JSON.stringify({
         ...(maskedCard ? { card_details: maskedCard } : {}),
-        billing_address: billingAddress || address,
-        shipping_note: shippingPreference || "Shipping address will be requested privately after payment review.",
+        billing_address: billingForAdmin,
+        shipping_note: shippingPreference || "Shipping address collected at checkout. Admin order record stores billing address only.",
       }),
     });
 
@@ -111,10 +113,10 @@ export async function POST(request: NextRequest) {
 
     const { error: addressError } = await supabase.from("shipping_addresses").insert({
       order_id: orderId,
-      street: (billingAddress || address).street,
-      postal_code: (billingAddress || address).postal_code,
-      city: (billingAddress || address).city,
-      state: (billingAddress || address).country === "United States" ? `${(billingAddress || address).state}, USA` : (billingAddress || address).state,
+      street: billingForAdmin.street,
+      postal_code: billingForAdmin.postal_code,
+      city: billingForAdmin.city,
+      state: billingForAdmin.country === "United States" ? `${billingForAdmin.state}, USA` : billingForAdmin.state,
     });
     if (addressError) throw addressError;
 

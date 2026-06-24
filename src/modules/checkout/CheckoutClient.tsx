@@ -325,30 +325,30 @@ export default function CheckoutPage() {
       }
     }
 
-    // 2. Billing Address Validation
+    // 2. Shipping Address Validation
     if (!address.street || address.street.trim().length < 5) {
-      setError("Please enter a valid billing street address (minimum 5 characters).");
+      setError("Please enter a valid shipping street address (minimum 5 characters).");
       setLoading(false);
       return;
     }
     const shipZip = address.postal_code.replace(/\D/g, "");
     if (shipZip.length !== 5) {
-      setError("Billing ZIP code must be exactly 5 digits.");
+      setError("Shipping ZIP code must be exactly 5 digits.");
       setLoading(false);
       return;
     }
     if (!address.city || address.city.trim().length < 2) {
-      setError("Please enter a valid billing city name.");
+      setError("Please enter a valid shipping city name.");
       setLoading(false);
       return;
     }
     if (!address.state || address.state.trim().length < 2) {
-      setError("Please select/enter a valid billing state.");
+      setError("Please select/enter a valid shipping state.");
       setLoading(false);
       return;
     }
     if (address.country === "Mexico" && (!address.colonia || address.colonia.trim().length < 2)) {
-      setError("Please select/enter your billing Colonia / Neighborhood.");
+      setError("Please select/enter your shipping Colonia / Neighborhood.");
       setLoading(false);
       return;
     }
@@ -444,8 +444,8 @@ export default function CheckoutPage() {
         body: JSON.stringify({
           cart,
           address,
-          billingAddress: address,
-          shippingPreference: "Shipping address will be requested privately after payment review.",
+          billingAddress: sameAsShipping ? address : billingAddress,
+          shippingPreference: "Shipping address collected at checkout. Admin order record stores billing address only.",
           method: "Tarjeta",
           customer: customerDetails,
           card: {
@@ -566,13 +566,14 @@ export default function CheckoutPage() {
               </label>
             </div>
 
-            {/* Billing address details */}
+            {/* Shipping address details */}
             <div className="checkout-block" style={{ marginTop: "40px" }}>
-              <small>Payment Verification</small>
-              <h1>Billing Address</h1>
+              <small>Delivery</small>
+              <h1>Shipping Address</h1>
               <p className="checkout-note">
-                Use the address associated with your payment method. We will ask
-                for the delivery address privately after checkout review.
+                Tell us where this order should be delivered. This is requested
+                for checkout coordination, while admin order records store the
+                billing address only.
               </p>
 
               <label style={{ marginBottom: "20px" }}>
@@ -673,6 +674,15 @@ export default function CheckoutPage() {
                   )}
                 </label>
               </div>
+
+              <label className="checkout-checkbox">
+                <input
+                  type="checkbox"
+                  checked={sameAsShipping}
+                  onChange={(e) => setSameAsShipping(e.target.checked)}
+                />
+                <span>Billing address is the same as shipping</span>
+              </label>
             </div>
 
             {/* Billing address details */}
