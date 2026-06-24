@@ -98,7 +98,7 @@ export const normalizeProduct = (product: any, index = 0): Product => ({
     product.image ||
     product.images?.[0] ||
     categories.find((category) => category.name === product.category)?.image ||
-    "/assets/hero-casa-noma.png",
+    "/assets/hero-casa-noma-1600.webp",
   imageHover: product.imageHover || product.images?.[1] || undefined,
   stock: product.stock ?? 12,
   sku: product.sku ?? `NOM-${String(index + 1).padStart(4, "0")}`,

@@ -325,7 +325,7 @@
 .account-art {
   background:
     linear-gradient(transparent, var(--shadow)),
-    url("/assets/hero-casa-noma.png") center/cover;
+    url("/assets/hero-casa-noma-1600.webp") center/cover;
   padding: 7vw;
   display: flex;
   align-items: flex-end;
@@ -517,7 +517,7 @@
   min-height: 100vh;
   background:
     linear-gradient(var(--shadow), var(--ink)),
-    url("/assets/hero-casa-noma.png") center/cover;
+    url("/assets/hero-casa-noma-1600.webp") center/cover;
   display: grid;
   place-items: center;
   text-align: center;
@@ -595,4 +595,3 @@
   color: var(--ink);
   transform: translateY(-2px);
 }
-

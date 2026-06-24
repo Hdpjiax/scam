@@ -36,11 +36,20 @@ export default function ShopClient({
   const { addToCart, setCartOpen, setWishlistOpen } = useStore();
   const [q, setQ] = useState("");
   const [limit, setLimit] = useState(8);
-  const [light, setLight] = useState({ x: 50, y: 40 });
   const [toast, setToast] = useState("");
+  const [shouldLoadHeroVideo, setShouldLoadHeroVideo] = useState(false);
+  const heroRef = useRef<HTMLElement>(null);
+  const heroRectRef = useRef<DOMRect | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const desktopViewport = window.matchMedia("(min-width: 768px)");
+    setShouldLoadHeroVideo(desktopViewport.matches && !reduceMotion.matches);
+  }, []);
+
+  useEffect(() => {
+    if (!shouldLoadHeroVideo) return;
     const video = videoRef.current;
     if (!video) return;
 
@@ -58,7 +67,7 @@ export default function ShopClient({
 
     observer.observe(video);
     return () => observer.disconnect();
-  }, []);
+  }, [shouldLoadHeroVideo]);
 
   const categoryStoriesRef = useRef<HTMLElement>(null);
   useRevealGroup(categoryStoriesRef, ".category-story", 90);
@@ -81,25 +90,32 @@ export default function ShopClient({
     window.setTimeout(() => setToast(""), 2200);
   };
 
-  const heroStyle = {
-    "--light-x": `${light.x}%`,
-    "--light-y": `${light.y}%`,
-  } as CSSProperties;
-
   return (
     <>
       <Header onCart={() => setCartOpen(true)} onWishlist={() => setWishlistOpen(true)} onSearch={setQ} />
       <main>
         <AdModal />
         <section
+          ref={heroRef}
           className="hero"
-          style={heroStyle}
+          style={{ "--light-x": "50%", "--light-y": "40%" } as CSSProperties}
+          onPointerEnter={(e) => {
+            heroRectRef.current = e.currentTarget.getBoundingClientRect();
+          }}
           onPointerMove={(e) => {
-            const r = e.currentTarget.getBoundingClientRect();
-            setLight({
-              x: ((e.clientX - r.left) / r.width) * 100,
-              y: ((e.clientY - r.top) / r.height) * 100,
-            });
+            const r = heroRectRef.current;
+            if (!r) return;
+            e.currentTarget.style.setProperty(
+              "--light-x",
+              `${((e.clientX - r.left) / r.width) * 100}%`,
+            );
+            e.currentTarget.style.setProperty(
+              "--light-y",
+              `${((e.clientY - r.top) / r.height) * 100}%`,
+            );
+          }}
+          onPointerLeave={() => {
+            heroRectRef.current = null;
           }}
         >
           <video
@@ -109,13 +125,16 @@ export default function ShopClient({
             muted
             loop
             playsInline
-            poster="/assets/hero-casa-noma.png"
+            preload="none"
+            poster="/assets/hero-casa-noma-900.webp"
             aria-hidden="true"
           >
-            <source
-              src="/assets/Tarea-112543727-2-1.mp4"
-              type="video/mp4"
-            />
+            {shouldLoadHeroVideo && (
+              <source
+                src="/assets/Tarea-112543727-2-1.mp4"
+                type="video/mp4"
+              />
+            )}
           </video>
           <div className="hero-video-overlay" />
           <div className="hero-light" />

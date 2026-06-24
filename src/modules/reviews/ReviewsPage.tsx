@@ -48,7 +48,7 @@ const fallbackReviews: ReviewRow[] = products.flatMap((product) =>
 );
 
 const reviewProductImage = (review: ReviewRow) =>
-  review.products?.images?.[0] || review.products?.image || "/assets/hero-casa-noma.png";
+  review.products?.images?.[0] || review.products?.image || "/assets/hero-casa-noma-1600.webp";
 
 export default function ReviewsPage() {
   const [reviews, setReviews] = useState<ReviewRow[]>(fallbackReviews);

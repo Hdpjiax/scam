@@ -7,6 +7,20 @@ import TransitionLink from "./TransitionLink";
 import { useStore } from "../providers/StoreProvider";
 import { colorName } from "../modules/catalog/color-names";
 
+const optimizeCatalogImage = (src: string, width = 420) => {
+  try {
+    const url = new URL(src);
+    if (url.hostname !== "images.unsplash.com") return src;
+    url.searchParams.set("auto", "format");
+    url.searchParams.set("fit", "crop");
+    url.searchParams.set("w", String(width));
+    url.searchParams.set("q", "65");
+    return url.toString();
+  } catch {
+    return src;
+  }
+};
+
 export default function ProductCard({
   p,
   onAdd,
@@ -21,6 +35,7 @@ export default function ProductCard({
   const { toggleWishlist, isInWishlist, addToCart } = useStore();
   const [added, setAdded] = useState(false);
   const [showQuickColors, setShowQuickColors] = useState(false);
+  const [loadHoverImage, setLoadHoverImage] = useState(false);
   const fav = p ? isInWishlist(p.id) : false;
 
   if (loading || !p) {
@@ -73,6 +88,8 @@ export default function ProductCard({
   const productUrl = `/producto/${p.id}`;
   const hoverImage = p.images?.[1] || p.imageHover || p.image;
   const sameHoverImage = hoverImage === p.image;
+  const primaryImage = optimizeCatalogImage(p.image);
+  const optimizedHoverImage = optimizeCatalogImage(hoverImage);
 
   const handleAdd = (e: any) => {
     e.stopPropagation();
@@ -92,7 +109,11 @@ export default function ProductCard({
   } as CSSProperties;
 
   return (
-    <article className={`product${preview ? " product-preview" : ""}`}>
+    <article
+      className={`product${preview ? " product-preview" : ""}`}
+      onMouseEnter={() => setLoadHoverImage(true)}
+      onFocus={() => setLoadHoverImage(true)}
+    >
       <div className="photo">
         <span className="product-index" aria-hidden="true">
           {String(p.id).padStart(2, "0")}
@@ -120,7 +141,7 @@ export default function ProductCard({
           <img
             className="photo-primary"
             loading={preview ? "eager" : "lazy"}
-            src={p.image}
+            src={primaryImage}
             alt={p.name}
             data-fly-source={preview ? undefined : p.id}
             style={imageTransitionStyle}
@@ -130,7 +151,7 @@ export default function ProductCard({
               "photo-hover" + (sameHoverImage ? " photo-hover-alt" : "")
             }
             loading="lazy"
-            src={hoverImage}
+            src={loadHoverImage || preview ? optimizedHoverImage : undefined}
             alt=""
             aria-hidden="true"
           />

@@ -447,7 +447,7 @@ h3 {
 .hero {
   height: calc(100svh - 106px);
   min-height: 620px;
-  background: url("/assets/hero-casa-noma.png") center/cover;
+  background: url("/assets/hero-casa-noma-1600.webp") center/cover;
   position: relative;
   display: flex;
   align-items: flex-end;

@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     siteName: "NŌMA",
     images: [
       {
-        url: "/assets/hero-casa-noma.png",
+        url: "/assets/hero-casa-noma-1600.webp",
         width: 1200,
         height: 630,
         alt: "NŌMA Home Living",
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "NŌMA | Home Living",
     description: "Minimalist design & smart tech objects for a premium home living experience.",
-    images: ["/assets/hero-casa-noma.png"],
+    images: ["/assets/hero-casa-noma-1600.webp"],
   },
 };
 
@@ -63,6 +63,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <link
+          rel="preload"
+          as="image"
+          href="/assets/hero-casa-noma-900.webp"
+          fetchPriority="high"
+        />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"
