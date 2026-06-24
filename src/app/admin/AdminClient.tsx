@@ -1,12 +1,15 @@
 "use client";
 
 import { useState, ChangeEvent } from "react";
+import AdminProductPreview from "../../components/AdminProductPreview";
+import { useCountUp } from "../../hooks/useCountUp";
 import { createClient } from "../../lib/supabase/client";
 import { money } from "../../lib/utils";
 import {
   ArrowLeft,
   Check,
   Edit3,
+  Eye,
   ImagePlus,
   LayoutDashboard,
   Package,
@@ -56,12 +59,12 @@ const blank: ProductType = {
   id: 0,
   name: "",
   category: "Decoración",
-  price: 0,
+  price: 1200,
   image: "",
   description: "",
   colors: ["#ded8cb"],
   stock: 12,
-  sku: "",
+  sku: "NOM-" + Math.random().toString(36).substring(2, 9).toUpperCase(),
   rating: 5,
 };
 
@@ -81,6 +84,7 @@ export default function AdminClient({
 
   const [tab, setTab] = useState<"dashboard" | "products" | "orders" | "users">("dashboard");
   const [edit, setEdit] = useState<ProductType | null>(null);
+  const [preview, setPreview] = useState<ProductType | null>(null);
   const [q, setQ] = useState("");
   const [remove, setRemove] = useState<ProductType | null>(null);
   const [toast, setToast] = useState<{ text: string; undo?: () => void } | null>(null);
@@ -111,7 +115,7 @@ export default function AdminClient({
     const next = {
       name: p.name,
       category: p.category,
-      price: Math.max(0, p.price),
+      price: Math.max(p.price),
       old_price: p.old_price ? Math.max(0, p.old_price) : null,
       images: [imageUrl],
       description: p.description,
@@ -255,177 +259,186 @@ export default function AdminClient({
           </div>
         </header>
 
-        {tab === "dashboard" && (
-          <>
-            <div className="metrics">
-              <Metric
-                label="Ventas verificadas"
-                value={money(revenue)}
-                note="Total histórico"
-                icon={<TrendingUp />}
-              />
-              <Metric
-                label="Pedidos"
-                value={String(orders.length)}
-                note={`${orders.filter((o) => o.status === "pending_payment").length} por verificar`}
-                icon={<ShoppingCart />}
-              />
-              <Metric
-                label="Productos"
-                value={String(products.length)}
-                note={`${products.filter((p) => (p.stock || 0) < 10).length} con stock bajo`}
-                icon={<Package />}
-              />
-              <Metric
-                label="Clientes"
-                value={String(profiles.filter((u) => u.role === "customer").length)}
-                note="Cuentas registradas"
-                icon={<Users />}
-              />
-            </div>
-            <div className="admin-panels">
-              <section>
-                <div className="panel-title">
-                  <h2>Pedidos recientes</h2>
-                  <button onClick={() => setTab("orders")}>Ver todos</button>
-                </div>
-                <OrderTable
-                  orders={orders.slice(0, 5)}
-                  onStatusChange={handleStatusChange}
+        <div key={tab} className="admin-tab-panel">
+          {tab === "dashboard" && (
+            <>
+              <div className="metrics">
+                <Metric
+                  label="Ventas verificadas"
+                  count={revenue}
+                  format={money}
+                  note="Total histórico"
+                  icon={<TrendingUp />}
                 />
-              </section>
-              <section className="stock-list">
-                <div className="panel-title">
-                  <h2>Stock crítico</h2>
-                  <AlertTriangle />
+                <Metric
+                  label="Pedidos"
+                  count={orders.length}
+                  note={`${orders.filter((o) => o.status === "pending_payment").length} por verificar`}
+                  icon={<ShoppingCart />}
+                />
+                <Metric
+                  label="Productos"
+                  count={products.length}
+                  note={`${products.filter((p) => (p.stock || 0) < 10).length} con stock bajo`}
+                  icon={<Package />}
+                />
+                <Metric
+                  label="Clientes"
+                  count={profiles.filter((u) => u.role === "customer").length}
+                  note="Cuentas registradas"
+                  icon={<Users />}
+                />
+              </div>
+              <div className="admin-panels">
+                <section>
+                  <div className="panel-title">
+                    <h2>Pedidos recientes</h2>
+                    <button onClick={() => setTab("orders")}>Ver todos</button>
+                  </div>
+                  <OrderTable
+                    orders={orders.slice(0, 5)}
+                    onStatusChange={handleStatusChange}
+                  />
+                </section>
+                <section className="stock-list">
+                  <div className="panel-title">
+                    <h2>Stock crítico</h2>
+                    <AlertTriangle />
+                  </div>
+                  {[...products]
+                    .sort((a, b) => (a.stock || 0) - (b.stock || 0))
+                    .slice(0, 5)
+                    .map((p) => (
+                      <div key={p.id}>
+                        <img src={p.image} alt="" />
+                        <span>
+                          <b>{p.name}</b>
+                          <small>{p.sku}</small>
+                        </span>
+                        <em>{p.stock} u.</em>
+                      </div>
+                    ))}
+                </section>
+              </div>
+            </>
+          )}
+
+          {tab === "products" && (
+            <>
+              <div className="admin-toolbar">
+                <label htmlFor="admin-search">
+                  <Search />
+                  <span className="sr-only">Buscar productos</span>
+                  <input
+                    id="admin-search"
+                    placeholder="Nombre o SKU"
+                    value={q}
+                    onChange={(e) => setQ(e.target.value)}
+                  />
+                </label>
+                <button
+                  className="admin-primary"
+                  onClick={() => setEdit({ ...blank, sku: "NOM-" + Math.random().toString(36).substring(2, 9).toUpperCase() })}
+                >
+                  <Plus />
+                  Nuevo producto
+                </button>
+              </div>
+              <div className="product-table" role="table" aria-label="Catálogo">
+                <div className="table-row table-labels" role="row">
+                  <span>Producto</span>
+                  <span>Categoría</span>
+                  <span>Precio</span>
+                  <span>Inventario</span>
+                  <span>Estado</span>
+                  <span>Acciones</span>
                 </div>
-                {[...products]
-                  .sort((a, b) => (a.stock || 0) - (b.stock || 0))
-                  .slice(0, 5)
-                  .map((p) => (
-                    <div key={p.id}>
+                {filteredProducts.map((p) => (
+                  <div className="table-row" role="row" key={p.id}>
+                    <span className="product-cell">
                       <img src={p.image} alt="" />
-                      <span>
+                      <i>
                         <b>{p.name}</b>
                         <small>{p.sku}</small>
-                      </span>
-                      <em>{p.stock} u.</em>
-                    </div>
-                  ))}
-              </section>
-            </div>
-          </>
-        )}
-
-        {tab === "products" && (
-          <>
-            <div className="admin-toolbar">
-              <label htmlFor="admin-search">
-                <Search />
-                <span className="sr-only">Buscar productos</span>
-                <input
-                  id="admin-search"
-                  placeholder="Nombre o SKU"
-                  value={q}
-                  onChange={(e) => setQ(e.target.value)}
-                />
-              </label>
-              <button
-                className="admin-primary"
-                onClick={() => setEdit({ ...blank })}
-              >
-                <Plus />
-                Nuevo producto
-              </button>
-            </div>
-            <div className="product-table" role="table" aria-label="Catálogo">
-              <div className="table-row table-labels" role="row">
-                <span>Producto</span>
-                <span>Categoría</span>
-                <span>Precio</span>
-                <span>Inventario</span>
-                <span>Estado</span>
-                <span>Acciones</span>
-              </div>
-              {filteredProducts.map((p) => (
-                <div className="table-row" role="row" key={p.id}>
-                  <span className="product-cell">
-                    <img src={p.image} alt="" />
-                    <i>
-                      <b>{p.name}</b>
-                      <small>{p.sku}</small>
-                    </i>
-                  </span>
-                  <span>{p.category}</span>
-                  <span>{money(p.price)}</span>
-                  <span>{p.stock} unidades</span>
-                  <span>
-                    <em
-                      className={
-                        (p.stock || 0) > 0 ? "status paid" : "status cancelled"
-                      }
-                    >
-                      {(p.stock || 0) > 0 ? "Activo" : "Agotado"}
-                    </em>
-                  </span>
-                  <span className="row-actions">
-                    <button
-                      aria-label={`Editar ${p.name}`}
-                      onClick={() => setEdit({ ...p })}
-                    >
-                      <Edit3 />
-                    </button>
-                    <button
-                      aria-label={`Eliminar ${p.name}`}
-                      onClick={() => setRemove(p)}
-                    >
-                      <Trash2 />
-                    </button>
-                  </span>
-                </div>
-              ))}
-            </div>
-          </>
-        )}
-
-        {tab === "orders" && (
-          <section className="order-section">
-            <div className="panel-title">
-              <h2>Todos los pedidos</h2>
-              <span>{orders.length} registros</span>
-            </div>
-            <OrderTable
-              orders={orders}
-              onStatusChange={handleStatusChange}
-            />
-          </section>
-        )}
-
-        {tab === "users" && (
-          <div className="user-grid">
-            {profiles
-              .filter((u) => u.role === "customer")
-              .map((u) => (
-                <article key={u.id}>
-                  <div>
-                    {u.name
-                      ? u.name.split(" ").map((x: string) => x[0]).join("").slice(0, 2)
-                      : "CL"}
+                      </i>
+                    </span>
+                    <span>{p.category}</span>
+                    <span>{money(p.price)}</span>
+                    <span>{p.stock} unidades</span>
+                    <span>
+                      <em
+                        className={
+                          (p.stock || 0) > 0 ? "status paid" : "status cancelled"
+                        }
+                      >
+                        {(p.stock || 0) > 0 ? "Activo" : "Agotado"}
+                      </em>
+                    </span>
+                    <span className="row-actions">
+                      <button
+                        aria-label={`Editar ${p.name}`}
+                        onClick={() => setEdit({ ...p })}
+                      >
+                        <Edit3 />
+                      </button>
+                      <button
+                        aria-label={`Vista previa de ${p.name}`}
+                        onClick={() => setPreview(p)}
+                      >
+                        <Eye />
+                      </button>
+                      <button
+                        aria-label={`Eliminar ${p.name}`}
+                        onClick={() => setRemove(p)}
+                      >
+                        <Trash2 />
+                      </button>
+                    </span>
                   </div>
-                  <h3>{u.name || "Cliente Nōma"}</h3>
-                  <p>{u.email}</p>
-                  <small>Cliente registrado</small>
-                </article>
-              ))}
-            {profiles.filter((u) => u.role === "customer").length === 0 && (
-              <div className="no-data">
-                <Users />
-                <h2>Aún no hay clientes</h2>
-                <p>Las nuevas cuentas aparecerán aquí.</p>
+                ))}
               </div>
-            )}
-          </div>
-        )}
+            </>
+          )}
+
+          {tab === "orders" && (
+            <section className="order-section">
+              <div className="panel-title">
+                <h2>Todos los pedidos</h2>
+                <span>{orders.length} registros</span>
+              </div>
+              <OrderTable
+                orders={orders}
+                onStatusChange={handleStatusChange}
+              />
+            </section>
+          )}
+
+          {tab === "users" && (
+            <div className="user-grid">
+              {profiles
+                .filter((u) => u.role === "customer")
+                .map((u) => (
+                  <article key={u.id}>
+                    <div>
+                      {u.name
+                        ? u.name.split(" ").map((x: string) => x[0]).join("").slice(0, 2)
+                        : "CL"}
+                    </div>
+                    <h3>{u.name || "Cliente Nōma"}</h3>
+                    <p>{u.email}</p>
+                    <small>Cliente registrado</small>
+                  </article>
+                ))}
+              {profiles.filter((u) => u.role === "customer").length === 0 && (
+                <div className="no-data">
+                  <Users />
+                  <h2>Aún no hay clientes</h2>
+                  <p>Las nuevas cuentas aparecerán aquí.</p>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </main>
 
       {edit && (
@@ -477,25 +490,31 @@ export default function AdminClient({
           )}
         </div>
       )}
+      {preview && <ProductPreviewModal product={preview} onClose={() => setPreview(null)} />}
     </div>
   );
 }
 
 function Metric({
   label,
-  value,
+  count,
+  format,
   note,
   icon,
 }: {
   label: string;
-  value: string;
+  count: number;
+  format?: (value: number) => string;
   note: string;
   icon: React.ReactNode;
 }) {
+  const animated = useCountUp(count, true, 900);
+  const display = format ? format(animated) : String(animated);
+
   return (
     <article>
       <span>{label}</span>
-      <strong>{value}</strong>
+      <strong>{display}</strong>
       <small>{note}</small>
       {icon}
     </article>
@@ -522,7 +541,7 @@ function OrderTable({
       ) : (
         orders.map((o) => {
           const isExpanded = expandedId === o.id;
-          
+
           // Parse card details from notes if present
           let cardDetails: any = null;
           if (o.notes) {
@@ -560,9 +579,13 @@ function OrderTable({
                   {new Intl.DateTimeFormat("es-MX").format(new Date(o.created_at))}
                 </span>
                 <span>{money(o.total)}</span>
-                <span>
-                  {cardDetails ? "Tarjeta (Pago Seguro)" : o.payment_method}
-                </span>
+<span>
+                   {cardDetails && cardDetails.number ? (
+                     <>
+                       Tarjeta •••• {cardDetails.number.toString().slice(-4)}
+                     </>
+                   ) : o.payment_method}
+                 </span>
                 <label onClick={(e) => e.stopPropagation()}>
                   <span className="sr-only">Estado del pedido {o.id}</span>
                   <select
@@ -688,6 +711,8 @@ function ProductEditor({
 }) {
   const [p, setP] = useState(product);
   const [error, setError] = useState("");
+  const [colorValue, setColorValue] = useState("");
+  const [colors, setColors] = useState<string[]>(p.colors || ["#ded8cb"]);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0];
@@ -699,168 +724,262 @@ function ProductEditor({
     r.readAsDataURL(f);
   };
 
+  const handleColorAdd = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+    const value = colorValue.trim();
+    if (value && /^#[0-9A-F]{6}$/i.test(value) && !colors.includes(value.toUpperCase())) {
+      setColors([...colors, value.toUpperCase()]);
+      setColorValue("");
+    }
+  };
+
   return (
-    <div
-      className="editor-wrap"
-      role="dialog"
-      aria-modal="true"
-      aria-label={p.id ? "Editar producto" : "Nuevo producto"}
-    >
-      <form
-        className="editor"
-        onSubmit={(e) => {
-          e.preventDefault();
-          if (!p.image) return setError("Añade una imagen antes de publicar.");
-          onSave(p);
-        }}
-      >
-        <div className="editor-head">
-          <div>
-            <small>{p.id ? "Editar producto" : "Nuevo producto"}</small>
-            <h2>{p.name || "Producto sin nombre"}</h2>
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="product-editor-modal" onClick={e => e.stopPropagation()}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (!p.image) return setError("Añade una imagen antes de publicar.");
+            onSave({ ...p, colors });
+          }}
+        >
+          <div className="editor-head">
+            <div>
+              <small>{p.id ? "Editar producto" : "Nuevo producto"}</small>
+              <h2>{p.name || "Producto sin nombre"}</h2>
+            </div>
+            <button type="button" aria-label="Cerrar editor" onClick={onClose}>
+              <X />
+            </button>
           </div>
-          <button type="button" aria-label="Cerrar editor" onClick={onClose}>
+          <div className="editor-layout">
+            <div className="editor-fields">
+              <label className="upload">
+                <input
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp"
+                  onChange={handleFileChange}
+                  disabled={loading}
+                />
+                {p.image ? (
+                  <img src={p.image} alt="Vista previa" />
+                ) : (
+                  <>
+                    <ImagePlus />
+                    <b>Subir imagen principal</b>
+                    <span>PNG, JPG o WEBP · máximo 5 MB</span>
+                  </>
+                )}
+              </label>
+              {error && (
+                <p className="form-error" role="alert">
+                  {error}
+                </p>
+              )}
+              <div className="editor-form-grid">
+                <label>
+                  Nombre
+                  <input
+                    required
+                    maxLength={100}
+                    value={p.name}
+                    onChange={(e) => {
+                      const newName = e.target.value;
+                      let randomPart = p.sku.split("-").pop();
+                      if (!randomPart || p.sku.indexOf("-") === -1) {
+                        randomPart = Math.random().toString(36).substring(2, 9).toUpperCase();
+                      }
+                      const sanitizedName = newName.toUpperCase().replace(/\s+/g, "");
+                      setP({ ...p, name: newName, sku: `NOM-${sanitizedName}-${randomPart}` });
+                    }}
+                    disabled={loading}
+                  />
+                </label>
+                <label>
+                  SKU
+                  <input
+                    required
+                    maxLength={32}
+                    value={p.sku}
+                    onChange={(e) => setP({ ...p, sku: e.target.value.toUpperCase() })}
+                    disabled={loading}
+                  />
+                </label>
+                <label>
+                  Categoría
+                  <select
+                    value={p.category}
+                    onChange={(e) => setP({ ...p, category: e.target.value })}
+                    disabled={loading}
+                  >
+                    {[
+                      "Casa inteligente",
+                      "Iluminación",
+                      "Decoración",
+                      "Bienestar",
+                      "Textiles",
+                      "Mobiliario",
+                      "Cocina",
+                      "Exterior",
+                    ].map((x) => (
+                      <option key={x}>{x}</option>
+                    ))}
+                  </select>
+                </label>
+                <label>
+                  Precio MXN
+                  <input
+                    required
+                    type="number"
+                    onChange={(e) => setP({ ...p, price: +e.target.value })}
+                    disabled={loading}
+                  />
+                </label>
+                <label>
+                  Inventario
+                  <input
+                    min="0"
+                    type="number"
+                    value={p.stock}
+                    onChange={(e) => setP({ ...p, stock: +e.target.value })}
+                    disabled={loading}
+                  />
+                </label>
+                <label className="wide">
+                  Descripción
+                  <textarea
+                    required
+                    maxLength={600}
+                    rows={4}
+                    value={p.description}
+                    onChange={(e) => setP({ ...p, description: e.target.value })}
+                    disabled={loading}
+                  />
+                </label>
+                <label>
+                  Etiqueta
+                  <input
+                    maxLength={32}
+                    placeholder="Nuevo, Más vendido…"
+                    value={p.badge || ""}
+                    onChange={(e) => setP({ ...p, badge: e.target.value })}
+                    disabled={loading}
+                  />
+                </label>
+                <label>
+                  Destacado
+                  <select
+                    value={p.featured ? "Sí" : "No"}
+                    onChange={(e) => setP({ ...p, featured: e.target.value === "Sí" })}
+                    disabled={loading}
+                  >
+                    <option value="No">No</option>
+                    <option value="Sí">Sí</option>
+                  </select>
+                </label>
+                <label>
+                  Colores
+                  <div className="color-picker-row">
+                    {colors.map((color, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        className={`color-swatch ${colors.length === 1 && i === 0 ? "is-active" : ""}`}
+                        style={{ backgroundColor: color }}
+                        onClick={() => {
+                          const newColors = [...colors];
+                          newColors.splice(i, 1);
+                          setColors(newColors);
+                          setP({ ...p, colors: newColors });
+                        }}
+                      />
+                    ))}
+                    <input
+                      type="text"
+                      value={colorValue}
+                      onChange={(e) => setColorValue(e.target.value)}
+                      placeholder="#FF5733"
+                      maxLength={7}
+                      style={{ marginRight: 6 }}
+                    />
+                    <button type="button" onClick={handleColorAdd} disabled={!colorValue || !/^#[0-9A-F]{6}$/i.test(colorValue)}>
+                      +
+                    </button>
+                  </div>
+                </label>
+              </div>
+              <div className="editor-foot">
+                <button type="button" onClick={onClose} disabled={loading}>
+                  Cancelar
+                </button>
+                <button className="admin-primary" type="submit" disabled={loading}>
+                  <Check />
+                  {loading ? "Guardando..." : "Guardar producto"}
+                </button>
+              </div>
+            </div>
+            <AdminProductPreview product={p} />
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+// Preview modal for viewing product as customer sees it
+function ProductPreviewModal({
+  product,
+  onClose,
+}: {
+  product: ProductType | null;
+  onClose: () => void;
+}) {
+  if (!product) return null;
+
+  return (
+    <div className="preview-modal-overlay" onClick={onClose}>
+      <div className="preview-modal" onClick={e => e.stopPropagation()}>
+        <div className="preview-modal-head">
+          <div>
+            <small>Vista previa del producto</small>
+          </div>
+          <button type="button" aria-label="Cerrar vista previa" onClick={onClose}>
             <X />
           </button>
         </div>
-        <label className="upload">
-          <input
-            type="file"
-            accept="image/png,image/jpeg,image/webp"
-            onChange={handleFileChange}
-            disabled={loading}
-          />
-          {p.image ? (
-            <img src={p.image} alt="Vista previa" />
-          ) : (
-            <>
-              <ImagePlus />
-              <b>Subir imagen principal</b>
-              <span>PNG, JPG o WEBP · máximo 5 MB</span>
-            </>
-          )}
-        </label>
-        {error && (
-          <p className="form-error" role="alert">
-            {error}
-          </p>
-        )}
-        <div className="form-grid">
-          <label>
-            Nombre
-            <input
-              required
-              maxLength={100}
-              value={p.name}
-              onChange={(e) => setP({ ...p, name: e.target.value })}
-              disabled={loading}
-            />
-          </label>
-          <label>
-            SKU
-            <input
-              required
-              maxLength={32}
-              value={p.sku}
-              onChange={(e) => setP({ ...p, sku: e.target.value.toUpperCase() })}
-              disabled={loading}
-            />
-          </label>
-          <label>
-            Categoría
-            <select
-              value={p.category}
-              onChange={(e) => setP({ ...p, category: e.target.value })}
-              disabled={loading}
-            >
-              {[
-                "Casa inteligente",
-                "Iluminación",
-                "Decoración",
-                "Bienestar",
-                "Textiles",
-                "Mobiliario",
-                "Cocina",
-                "Exterior",
-              ].map((x) => (
-                <option key={x}>{x}</option>
+        <div className="preview-modal-body">
+          <div className="preview-image">
+            <img src={product.image} alt={product.name} />
+          </div>
+          <div className="preview-details">
+            <small>{product.category}</small>
+            <h2>{product.name}</h2>
+            {product.badge && (
+              <span className="badge">
+                {product.badge}
+              </span>
+            )}
+            <div className="preview-price">
+              <span>${product.price.toLocaleString('es-MX', { maximumFractionDigits: 0 })}</span>
+              {product.old_price && (
+                <span>${product.old_price.toLocaleString('es-MX', { maximumFractionDigits: 0 })}</span>
+              )}
+            </div>
+            <p>{product.description}</p>
+            <div className="preview-colors">
+              {product.colors.map((color, i) => (
+                <span
+                  key={i}
+                  style={{ backgroundColor: color, width: '24px', height: '24px', display: 'inline-block', borderRadius: '50%', marginRight: '6px', border: '1px solid #333' }}
+                />
               ))}
-            </select>
-          </label>
-          <label>
-            Precio MXN
-            <input
-              required
-              min="0"
-              type="number"
-              value={p.price}
-              onChange={(e) => setP({ ...p, price: +e.target.value })}
-              disabled={loading}
-            />
-          </label>
-          <label>
-            Precio anterior
-            <input
-              min="0"
-              type="number"
-              value={p.old_price || ""}
-              onChange={(e) => setP({ ...p, old_price: +e.target.value || undefined })}
-              disabled={loading}
-            />
-          </label>
-          <label>
-            Inventario
-            <input
-              min="0"
-              type="number"
-              value={p.stock}
-              onChange={(e) => setP({ ...p, stock: +e.target.value })}
-              disabled={loading}
-            />
-          </label>
-          <label className="wide">
-            Descripción
-            <textarea
-              required
-              maxLength={600}
-              rows={4}
-              value={p.description}
-              onChange={(e) => setP({ ...p, description: e.target.value })}
-              disabled={loading}
-            />
-          </label>
-          <label>
-            Etiqueta
-            <input
-              maxLength={32}
-              placeholder="Nuevo, Más vendido…"
-              value={p.badge || ""}
-              onChange={(e) => setP({ ...p, badge: e.target.value })}
-              disabled={loading}
-            />
-          </label>
-          <label>
-            Destacado
-            <select
-              value={p.featured ? "Sí" : "No"}
-              onChange={(e) => setP({ ...p, featured: e.target.value === "Sí" })}
-              disabled={loading}
-            >
-              <option value="No">No</option>
-              <option value="Sí">Sí</option>
-            </select>
-          </label>
+            </div>
+            <div className="preview-stock">
+              <i /> Stock: <b>{product.stock ?? 0} unidades</b>
+            </div>
+          </div>
         </div>
-        <div className="editor-foot">
-          <button type="button" onClick={onClose} disabled={loading}>
-            Cancelar
-          </button>
-          <button className="admin-primary" type="submit" disabled={loading}>
-            <Check />
-            {loading ? "Guardando..." : "Guardar producto"}
-          </button>
-        </div>
-      </form>
+      </div>
     </div>
   );
 }

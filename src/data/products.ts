@@ -5,6 +5,7 @@ export type Product = {
   price: number;
   oldPrice?: number;
   image: string;
+  imageHover?: string;
   badge?: string;
   description: string;
   colors: string[];
@@ -35,6 +36,8 @@ export const products: Product[] = [
     badge: "Nuevo",
     image:
       "https://images.unsplash.com/photo-1545454675-3531b543be5d?auto=format&fit=crop&w=900&q=85",
+    imageHover:
+      "https://images.unsplash.com/photo-1545454675-3531b543be5d?auto=format&fit=crop&w=900&q=85&crop=focalpoint&fp-y=0.35",
     description:
       "Sonido envolvente y control doméstico en una pieza escultórica de tacto textil.",
     colors: ["#e8e1d5", "#2d2b29"],

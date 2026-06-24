@@ -1,7 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { CSSProperties, useMemo, useState } from "react";
 import Link from "next/link";
+
 import {
   ArrowLeft,
   Check,
@@ -73,7 +74,14 @@ export default function ProductPageClient({
           <div className="pdp-gallery">
             <div className="pdp-main-img">
               {p.badge && <span>{p.badge}</span>}
-              <img src={p.image} alt={p.name} />
+              <img
+                src={p.image}
+                alt={p.name}
+                data-fly-source={p.id}
+                style={
+                  { viewTransitionName: `product-${p.id}` } as CSSProperties
+                }
+              />
             </div>
             <div className="pdp-secondary">
               <img src={p.image} alt={`Detalle de ${p.name}`} />
@@ -137,7 +145,11 @@ export default function ProductPageClient({
                   <Plus />
                 </button>
               </div>
-              <button disabled={isOut} className={added ? "added" : ""} onClick={handleAdd}>
+              <button
+                disabled={isOut}
+                className={added ? "added" : ""}
+                onClick={handleAdd}
+              >
                 {isOut ? "Agotado" : added ? "Agregado" : `Añadir / ${selectedTotal}`}
               </button>
               <button

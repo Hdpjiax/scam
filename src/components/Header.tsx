@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import TransitionLink from "./TransitionLink";
 import {
   ArrowUpRight,
   Heart,
@@ -69,14 +70,17 @@ export default function Header({
         >
           <Menu />
         </button>
-        <Link className="brand" href="/" aria-label="NŌMA, inicio">
+        <TransitionLink className="brand" href="/" aria-label="NŌMA, inicio">
           NŌMA<span>casa viva</span>
-        </Link>
+        </TransitionLink>
         <nav aria-label="Navegación principal">
           {navCategories.map((category) => (
-            <Link key={category.slug} href={`/categoria/${category.slug}`}>
+            <TransitionLink
+              key={category.slug}
+              href={`/categoria/${category.slug}`}
+            >
               {category.name}
-            </Link>
+            </TransitionLink>
           ))}
         </nav>
         <div className="actions">

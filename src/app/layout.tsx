@@ -1,4 +1,8 @@
 import type { Metadata, Viewport } from "next";
+import AmbientLayer from "../components/AmbientLayer";
+import FlyToCart from "../components/FlyToCart";
+import LampCursor from "../components/LampCursor";
+import ScrollProgress from "../components/ScrollProgress";
 import { StoreProvider } from "../providers/StoreProvider";
 import "../styles.css";
 
@@ -34,7 +38,13 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <StoreProvider>{children}</StoreProvider>
+        <StoreProvider>
+          <AmbientLayer />
+          <ScrollProgress />
+          <LampCursor />
+          <FlyToCart />
+          {children}
+        </StoreProvider>
       </body>
     </html>
   );

@@ -1,6 +1,7 @@
 "use client";
 
-import { CSSProperties, useEffect, useMemo, useState } from "react";
+import { CSSProperties, useEffect, useMemo, useRef, useState } from "react";
+import { useRevealGroup } from "../hooks/useRevealGroup";
 import Link from "next/link";
 import {
   ArrowDown,
@@ -13,6 +14,8 @@ import {
 } from "lucide-react";
 import Header from "../components/Header";
 import ProductCard from "../components/ProductCard";
+import ScrollReveal from "../components/ScrollReveal";
+import TransitionLink from "../components/TransitionLink";
 import { Cart } from "../components/Drawers";
 import { useStore } from "../providers/StoreProvider";
 import { Product } from "../data/products";
@@ -29,6 +32,9 @@ export default function ShopClient({
   const [limit, setLimit] = useState(8);
   const [light, setLight] = useState({ x: 50, y: 40 });
   const [toast, setToast] = useState("");
+
+  const categoryStoriesRef = useRef<HTMLElement>(null);
+  useRevealGroup(categoryStoriesRef, ".category-story", 90);
 
   useEffect(() => setLimit(8), [q]);
 
@@ -69,6 +75,20 @@ export default function ShopClient({
             });
           }}
         >
+          <video
+            className="hero-video"
+            autoPlay
+            muted
+            loop
+            playsInline
+            poster="/assets/hero-casa-noma.png"
+            aria-hidden="true"
+          >
+            <source
+              src="https://videos.pexels.com/video-files/7578552/7578552-hd_1920_1080_25fps.mp4"
+              type="video/mp4"
+            />
+          </video>
           <div className="hero-light" />
           <div className="hero-copy">
             <p className="collection-code">NŌMA / COLECCIÓN 02</p>
@@ -95,19 +115,23 @@ export default function ShopClient({
           </div>
         </section>
 
-        <section className="world-intro" id="atmósferas">
+        <ScrollReveal className="world-intro" id="atmósferas">
           <p>No vendemos objetos aislados.</p>
           <h2>
             Creamos <em>atmósferas</em>
             <br />
             para vivir mejor.
           </h2>
-        </section>
+        </ScrollReveal>
 
-        <section className="category-stories" aria-label="Comprar por atmósfera">
+        <section
+          ref={categoryStoriesRef}
+          className="category-stories"
+          aria-label="Comprar por atmósfera"
+        >
           {categories.slice(0, 5).map((category, index) => (
-            <Link
-              className="category-story"
+            <TransitionLink
+              className="category-story reveal-on-scroll"
               href={`/categoria/${category.slug}`}
               key={category.slug}
               style={
@@ -123,12 +147,12 @@ export default function ShopClient({
               <b>
                 Ver colección <ArrowRight />
               </b>
-            </Link>
+            </TransitionLink>
           ))}
         </section>
 
         <section className="catalog" id="catalogo">
-          <div className="section-top">
+          <ScrollReveal className="section-top">
             <div>
               <p>Objetos seleccionados</p>
               <h2>
@@ -141,7 +165,7 @@ export default function ShopClient({
               Una curaduría seleccionada de tecnología, luz, materia y bienestar.
               Las piezas más excepcionales para tu hogar.
             </p>
-          </div>
+          </ScrollReveal>
 
           <div className="catalog-count" aria-live="polite">
             Mostrando {Math.min(limit, list.length)} de {list.length} piezas destacadas
@@ -168,15 +192,18 @@ export default function ShopClient({
           )}
 
           {limit < list.length && (
-            <button className="load-more" onClick={() => setLimit(limit + 8)}>
+            <button
+              className="load-more"
+              onClick={() => setLimit(limit + 8)}
+            >
               Descubrir más <span>{list.length - limit} piezas</span>
             </button>
           )}
         </section>
 
         <section className="story">
-          <div className="story-image" />
-          <div className="story-copy">
+          <ScrollReveal className="story-image" />
+          <ScrollReveal className="story-copy" delay={120}>
             <p>Nuestra forma de pensar</p>
             <h2>
               Menos ruido.
@@ -187,13 +214,13 @@ export default function ShopClient({
               La tecnología debe desaparecer en la experiencia. Cada objeto
               merece un lugar, una función y una historia.
             </p>
-            <Link href={`/categoria/${categorySlug("Casa inteligente")}`}>
+            <TransitionLink href={`/categoria/${categorySlug("Casa inteligente")}`}>
               Conoce NŌMA <ArrowRight />
-            </Link>
-          </div>
+            </TransitionLink>
+          </ScrollReveal>
         </section>
 
-        <section className="values" id="principios">
+        <ScrollReveal className="values" id="principios">
           <div>
             <Sparkles />
             <h3>Curaduría humana</h3>
@@ -214,9 +241,9 @@ export default function ShopClient({
             <h3>Estamos cerca</h3>
             <p>Atención personal de lunes a sábado.</p>
           </div>
-        </section>
+        </ScrollReveal>
 
-        <section className="newsletter">
+        <ScrollReveal className="newsletter">
           <p>Cartas desde casa</p>
           <h2>
             Una idea buena.
@@ -231,11 +258,11 @@ export default function ShopClient({
               required
               placeholder="tu@email.com"
             />
-            <button>
+            <button type="submit">
               Suscribirme <ArrowRight />
             </button>
           </form>
-        </section>
+        </ScrollReveal>
       </main>
 
       <footer>
