@@ -702,7 +702,7 @@ li {
 .category-story h2 {
   max-width: 720px;
   margin: 14px 0;
-  font: clamp(2.35rem, 5vw, 5.35rem) / 0.98 Gloock, serif;
+  font: clamp(2.35rem, 5vw, 5.35rem) / 0.98 var(--font-gloock), serif;
   letter-spacing: -0.035em;
 }
 
@@ -760,7 +760,7 @@ li {
 
 .category-hero h1 {
   margin: 18px 0;
-  font: clamp(3.2rem, 7vw, 6rem) / 0.94 Gloock, serif;
+  font: clamp(3.2rem, 7vw, 6rem) / 0.94 var(--font-gloock), serif;
   letter-spacing: -0.04em;
 }
 
@@ -1330,7 +1330,7 @@ li {
 .visual-card-number {
   font-size: 21px;
   letter-spacing: 0.14em;
-  font-family: Manrope, Arial, sans-serif;
+  font-family: var(--font-manrope), Arial, sans-serif;
   font-weight: 600;
   margin: 20px 0 10px;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
@@ -1394,7 +1394,7 @@ li {
 }
 
 .visual-card-logo-symbol {
-  font-family: Gloock, serif;
+  font-family: var(--font-gloock), serif;
   font-size: 22px;
   letter-spacing: 0.1em;
   color: var(--paper);
@@ -1402,7 +1402,7 @@ li {
 
 .visual-card-logo-symbol span {
   font-size: 8px;
-  font-family: "Manrope", sans-serif;
+  font-family: var(--font-manrope), sans-serif;
   letter-spacing: 0.2em;
   display: block;
   text-transform: uppercase;
@@ -2124,4 +2124,3 @@ li {
     transform: none;
   }
 }
-

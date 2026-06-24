@@ -20,12 +20,12 @@
 }
 
 .admin-logo {
-  font: 30px Gloock;
+  font: 30px var(--font-gloock);
   padding: 0 14px 32px;
 }
 
 .admin-logo span {
-  font: 10px "Manrope";
+  font: 10px var(--font-manrope);
   letter-spacing: 0.15em;
 }
 
@@ -82,7 +82,7 @@
 }
 
 .admin-head h1 {
-  font: 48px Gloock;
+  font: 48px var(--font-gloock);
   margin: 6px 0;
   letter-spacing: -0.02em;
 }
@@ -132,7 +132,7 @@
 }
 
 .metrics strong {
-  font: 40px Gloock;
+  font: 40px var(--font-gloock);
   margin: 18px 0 8px;
   letter-spacing: -0.02em;
 }
@@ -172,7 +172,7 @@
 }
 
 .panel-title h2 {
-  font: 28px Gloock;
+  font: 28px var(--font-gloock);
   margin: 0;
 }
 
@@ -527,7 +527,7 @@
 }
 
 .product-editor-modal .editor-head h2 {
-  font: 32px Gloock;
+  font: 32px var(--font-gloock);
   margin: 4px 0 0;
 }
 
@@ -795,7 +795,7 @@
 }
 
 .confirm-modal h2 {
-  font: 28px Gloock;
+  font: 28px var(--font-gloock);
   margin: 8px 0;
 }
 
@@ -938,7 +938,7 @@
 }
 
 .preview-modal-body .preview-details h2 {
-  font: 28px Gloock;
+  font: 28px var(--font-gloock);
   margin: 6px 0 12px;
   color: var(--paper);
 }
@@ -1060,7 +1060,7 @@
 }
 
 .access-denied h1 {
-  font: 55px Gloock;
+  font: 55px var(--font-gloock);
 }
 
 .access-denied a {
@@ -1073,4 +1073,3 @@
 .form-error {
   color: var(--clay);
 }
-

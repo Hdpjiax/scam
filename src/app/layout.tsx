@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Gloock, Manrope } from "next/font/google";
 import AmbientLayer from "../components/AmbientLayer";
 import FlyToCart from "../components/FlyToCart";
 import LampCursor from "../components/LampCursor";
@@ -55,29 +56,33 @@ export const viewport: Viewport = {
 
 import GlobalDrawers from "../components/GlobalDrawers";
 
+const manrope = Manrope({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
+  variable: "--font-manrope",
+});
+
+const gloock = Gloock({
+  subsets: ["latin"],
+  weight: "400",
+  display: "swap",
+  variable: "--font-gloock",
+});
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${manrope.variable} ${gloock.variable}`}>
       <head>
         <link
           rel="preload"
           as="image"
           href="/assets/hero-casa-noma-900.webp"
           fetchPriority="high"
-        />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Gloock&family=Manrope:wght@400;500;600;700;800&display=swap"
-          rel="stylesheet"
         />
       </head>
       <body>

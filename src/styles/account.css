@@ -53,7 +53,7 @@
 
 .account-popover strong {
   margin-top: 8px;
-  font: 18px Gloock, serif;
+  font: 18px var(--font-gloock), serif;
 }
 
 .account-popover span {
@@ -103,7 +103,7 @@
 .account-brand span {
   display: block;
   margin-top: 6px;
-  font: 7px Manrope, sans-serif;
+  font: 7px var(--font-manrope), sans-serif;
   letter-spacing: 0.28em;
   text-transform: uppercase;
 }
@@ -182,7 +182,7 @@
 .account-page form h2,
 .session-card h2 {
   margin: 10px 0 26px;
-  font: clamp(2.2rem, 4vw, 3.1rem)/1 Gloock, serif;
+  font: clamp(2.2rem, 4vw, 3.1rem)/1 var(--font-gloock), serif;
 }
 
 .account-page input {
