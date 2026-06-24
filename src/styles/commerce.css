@@ -1,0 +1,599 @@
+/* Product, account and checkout */
+.pdp,
+.account-page,
+.checkout-page {
+  min-height: 100vh;
+  background: var(--ink);
+}
+
+.pdp-top {
+  height: var(--header);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: var(--page);
+  border-bottom: 1px solid color-mix(in srgb, var(--paper) 15%, var(--ink));
+}
+
+.pdp-top>a {
+  display: flex;
+  gap: 8px;
+}
+
+.pdp>main {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  animation: pdpMainIn 700ms var(--ease) both;
+}
+
+@keyframes pdpMainIn {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.pdp-gallery {
+  display: grid;
+  grid-template-columns: 1fr 0.42fr;
+  gap: 2px;
+  height: calc(100svh - var(--header));
+}
+
+.pdp-gallery>* {
+  animation: gallerySlideIn 800ms var(--ease) both;
+}
+
+.pdp-gallery>*:nth-child(1) {
+  animation-delay: 100ms;
+}
+
+.pdp-gallery>*:nth-child(2) {
+  animation-delay: 300ms;
+}
+
+@keyframes gallerySlideIn {
+  0% {
+    opacity: 0;
+    transform: translateX(-20px);
+    clip-path: inset(0 0 0 10%);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+    clip-path: inset(0);
+  }
+}
+
+.pdp-gallery img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 600ms var(--ease), filter 600ms var(--ease);
+}
+
+.pdp-gallery:hover img {
+  filter: contrast(1.02) brightness(1.02);
+}
+
+.pdp-main-img {
+  position: relative;
+  overflow: hidden;
+}
+
+.pdp-main-img:hover img {
+  transform: scale(1.02);
+}
+
+.pdp-main-img>span {
+  position: absolute;
+  z-index: 2;
+  top: 18px;
+  left: 18px;
+  background: var(--paper);
+  color: var(--ink);
+  padding: 8px;
+  animation: badgePulse 3s ease-in-out infinite;
+}
+
+@keyframes badgePulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--clay) 0%, transparent);
+  }
+
+  50% {
+    box-shadow: 0 0 0 8px color-mix(in srgb, var(--clay) 20%, transparent);
+  }
+}
+
+.pdp-secondary {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 2px;
+  overflow: hidden;
+}
+
+.pdp-secondary img {
+  filter: saturate(0.55);
+  transition: filter 600ms var(--ease), transform 600ms var(--ease);
+}
+
+.pdp-secondary:hover img {
+  filter: saturate(0.8);
+  transform: scale(1.04);
+}
+
+.material-shot {
+  background: radial-gradient(circle, var(--surface), var(--copy));
+  transition: opacity 600ms var(--ease);
+  position: relative;
+  overflow: hidden;
+}
+
+.material-shot:before {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.06), transparent 40%);
+  animation: materialShift 8s ease-in-out infinite alternate;
+}
+
+@keyframes materialShift {
+  0% {
+    transform: translate(-10%, -10%);
+  }
+
+  100% {
+    transform: translate(10%, 10%);
+  }
+}
+
+.pdp-info {
+  padding: 7vh 5vw;
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: auto;
+}
+
+.pdp-info h1 {
+  font: clamp(3.2rem, 6vw, 5.5rem)/0.95 Gloock;
+  margin: 18px 0;
+}
+
+.rating svg {
+  width: 12px;
+  fill: currentColor;
+}
+
+.pdp-price {
+  font-size: 18px;
+  margin: 18px 0;
+}
+
+.pdp-info>p {
+  color: color-mix(in srgb, var(--paper) 70%, var(--ink));
+}
+
+.pdp-colors {
+  margin: 25px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pdp-colors label {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.pdp-colors label b {
+  color: #d1b894;
+  margin-left: 4px;
+  font-weight: 600;
+}
+
+.pdp-colors-list {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.pdp-colors button {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 3px solid var(--ink);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+  cursor: pointer;
+}
+
+.pdp-colors button:hover {
+  transform: scale(1.12);
+  box-shadow: 0 0 0 2px var(--paper);
+}
+
+.pdp-colors button.active {
+  transform: scale(1.22);
+  box-shadow: 0 0 0 2px #d1b894;
+}
+
+.stock {
+  display: flex;
+  gap: 8px;
+  font-size: 10px;
+}
+
+.stock i {
+  width: 8px;
+  height: 8px;
+  background: var(--clay);
+  border-radius: 999px;
+}
+
+.pdp-buy {
+  display: grid;
+  grid-template-columns: 110px 1fr 50px;
+  gap: 8px;
+  margin: 25px 0;
+}
+
+.pdp-buy>div {
+  display: flex;
+  border: 1px solid var(--copy);
+}
+
+.pdp-buy button {
+  border: 0;
+  background: var(--paper);
+  color: var(--ink);
+  min-height: 50px;
+}
+
+.pdp-buy>div button,
+.pdp-buy>button:last-child {
+  background: none;
+  color: var(--paper);
+}
+
+.pdp-buy span {
+  margin: auto;
+}
+
+.pdp-benefits {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  border-block: 1px solid color-mix(in srgb, var(--paper) 15%, var(--ink));
+  padding: 20px 0;
+}
+
+.pdp-benefits div {
+  display: flex;
+  gap: 7px;
+}
+
+.pdp-benefits svg {
+  width: 18px;
+}
+
+.pdp-benefits span {
+  display: flex;
+  flex-direction: column;
+  font-size: 8px;
+}
+
+.pdp-info details {
+  border-bottom: 1px solid color-mix(in srgb, var(--paper) 15%, var(--ink));
+  padding: 16px;
+}
+
+.pdp-story {
+  padding: 140px var(--page);
+  background: var(--mineral);
+}
+
+.pdp-story h2 {
+  font: clamp(3rem, 6vw, 5.5rem)/0.98 Gloock;
+}
+
+.account-page {
+  padding: 25px;
+}
+
+.account-brand {
+  position: absolute;
+  z-index: 3;
+  font: 28px Gloock;
+}
+
+.account-page>section {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  min-height: calc(100vh - 50px);
+}
+
+.account-art {
+  background:
+    linear-gradient(transparent, var(--shadow)),
+    url("/assets/hero-casa-noma.png") center/cover;
+  padding: 7vw;
+  display: flex;
+  align-items: flex-end;
+}
+
+.account-art h1 {
+  font: clamp(3rem, 6vw, 5.5rem)/0.98 Gloock;
+}
+
+.account-page form {
+  max-width: 430px;
+  width: 72%;
+  margin: auto;
+}
+
+.account-page form h2,
+.checkout-block h1 {
+  font: 42px Gloock;
+}
+
+.account-page form>label,
+.checkout-block label {
+  display: block;
+  font-size: 10px;
+  text-transform: uppercase;
+  margin: 18px 0;
+}
+
+.account-page input,
+.checkout-form input,
+.checkout-form select {
+  display: block;
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid var(--copy);
+  background: none;
+  color: inherit;
+  padding: 13px 0;
+}
+
+.password {
+  display: flex;
+  border-bottom: 1px solid var(--copy);
+}
+
+.password input {
+  border: 0;
+}
+
+.password button {
+  border: 0;
+  background: none;
+  color: inherit;
+}
+
+.account-submit,
+.continue {
+  width: 100%;
+  background: var(--paper);
+  color: var(--ink);
+  border: 0;
+  padding: 17px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.admin-hint {
+  background: var(--mineral);
+  padding: 12px;
+  text-align: center;
+  font-size: 10px;
+}
+
+.checkout-page>header {
+  height: var(--header);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: var(--page);
+}
+
+.checkout-page>header>* {
+  width: 33%;
+  display: flex;
+  justify-content: center;
+  font-size: 10px;
+}
+
+.checkout-page>main {
+  display: grid;
+  grid-template-columns: 1.35fr 0.65fr;
+}
+
+.checkout-form {
+  padding: 55px 9vw;
+}
+
+.checkout-steps {
+  display: flex;
+  align-items: center;
+  margin-bottom: 55px;
+}
+
+.checkout-steps span {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--copy);
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  position: relative;
+}
+
+.checkout-steps span.on {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.checkout-steps i {
+  position: absolute;
+  top: 38px;
+}
+
+.checkout-steps hr {
+  width: 90px;
+  border: 0;
+  border-top: 1px solid var(--copy);
+}
+
+.two,
+.payment-methods {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.payment-methods button {
+  padding: 20px;
+  background: none;
+  color: inherit;
+  border: 1px solid var(--copy);
+  display: flex;
+  flex-direction: column;
+  min-height: 100px;
+}
+
+.payment-methods button.on {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.signed-checkout,
+.safe-card,
+.bank-data {
+  background: var(--mineral);
+  padding: 20px;
+}
+
+.order-summary {
+  background: var(--paper);
+  color: var(--ink);
+  padding: 55px 4vw;
+}
+
+.summary-line {
+  display: grid;
+  grid-template-columns: 70px 1fr auto;
+  gap: 12px;
+  padding: 15px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.summary-line img {
+  width: 70px;
+  height: 80px;
+  object-fit: cover;
+}
+
+.summary-line span {
+  display: flex;
+  flex-direction: column;
+}
+
+.summary-totals>* {
+  display: flex;
+  justify-content: space-between;
+}
+
+.checkout-success {
+  min-height: 100vh;
+  background:
+    linear-gradient(var(--shadow), var(--ink)),
+    url("/assets/hero-casa-noma.png") center/cover;
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+
+.checkout-success h1 {
+  font: clamp(3.2rem, 6vw, 5.5rem)/0.98 Gloock;
+  animation: checkoutTitleIn 800ms var(--ease) both;
+  animation-delay: 300ms;
+}
+
+@keyframes checkoutTitleIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+    filter: blur(8px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+.checkout-success>div>* {
+  opacity: 0;
+  animation: checkoutFadeIn 600ms var(--ease) both;
+}
+
+.checkout-success>div> :nth-child(1) {
+  animation-delay: 100ms;
+}
+
+.checkout-success>div> :nth-child(2) {
+  animation-delay: 200ms;
+}
+
+.checkout-success>div> :nth-child(3) {
+  animation-delay: 500ms;
+}
+
+.checkout-success>div> :nth-child(4) {
+  animation-delay: 700ms;
+}
+
+.checkout-success>div> :nth-child(5) {
+  animation-delay: 900ms;
+}
+
+@keyframes checkoutFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.checkout-success a {
+  border: 1px solid var(--paper);
+  padding: 15px;
+  display: inline-block;
+  transition:
+    background var(--fast) var(--ease),
+    color var(--fast) var(--ease),
+    transform var(--fast) var(--ease);
+}
+
+.checkout-success a:hover {
+  background: var(--paper);
+  color: var(--ink);
+  transform: translateY(-2px);
+}
+

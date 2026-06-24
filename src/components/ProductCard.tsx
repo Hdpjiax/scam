@@ -5,6 +5,7 @@ import { money } from "../lib/utils";
 import { categorySlug } from "../lib/catalog";
 import TransitionLink from "./TransitionLink";
 import { useStore } from "../providers/StoreProvider";
+import { colorName } from "../modules/catalog/color-names";
 
 export default function ProductCard({
   p,
@@ -72,49 +73,6 @@ export default function ProductCard({
   const productUrl = `/producto/${p.id}`;
   const hoverImage = p.images?.[1] || p.imageHover || p.image;
   const sameHoverImage = hoverImage === p.image;
-
-  const colorName = (hex: string) => {
-    const map: Record<string, string> = {
-      "#d8c7ad": "Natural",
-      "#292723": "Charcoal",
-      "#87907c": "Sage",
-      "#e8e1d5": "Sand",
-      "#2d2b29": "Basalt",
-      "#e6dfd0": "Alabaster",
-      "#b6a58d": "Oatmeal",
-      "#9b6c4e": "Clay",
-      "#ded1bf": "Cream",
-      "#222220": "Obsidian",
-      "#ccb78f": "Bronze",
-      "#b77b55": "Terracotta",
-      "#ddd5c8": "Linen",
-      "#f2efe8": "Bone",
-      "#6c4933": "Walnut",
-      "#b39b7c": "Ash",
-      "#ded8cb": "Parchment",
-      "#8a7967": "Taupe",
-      "#edeae3": "Chalk",
-      "#252525": "Midnight Black",
-      "#f3f1ec": "Pebble",
-      "#20211f": "Slate",
-      "#ded2bd": "Warm Linen",
-      "#899082": "Olive",
-      "#cab99e": "Mist",
-      "#a66f52": "Copper",
-      "#e1d4c1": "Off-White",
-      "#1e1f1d": "Ink Black",
-      "#d7d0c4": "Ivory",
-      "#a85e40": "Rust",
-      "#d6c2a7": "Warm Sand",
-      "#171815": "Eclipse Black",
-      "#d7aa67": "Solar Gold",
-      "#b89163": "Oak",
-      "#664a35": "Dark Oak",
-      "#eeece5": "Cloud",
-      "#9ca099": "Mist Grey"
-    };
-    return map[hex.toLowerCase()] || hex;
-  };
 
   const handleAdd = (e: any) => {
     e.stopPropagation();

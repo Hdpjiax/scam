@@ -1,0 +1,242 @@
+/* ===== CURSOR BOMBILLA ===== */
+:root {
+  --lamp-x: -200px;
+  --lamp-y: -200px;
+  --lamp-nx: 50%;
+  --lamp-ny: 50%;
+}
+
+html.lamp-cursor-on,
+html.lamp-cursor-on *,
+html.lamp-cursor-on *::before,
+html.lamp-cursor-on *::after {
+  cursor: auto;
+}
+
+html.lamp-cursor-on.lamp-cursor-paused,
+html.lamp-cursor-on.lamp-cursor-paused * {
+  cursor: auto;
+}
+
+.lamp-cursor {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 99999;
+  pointer-events: none;
+  transform: translate(var(--lamp-x), var(--lamp-y)) translate(-50%, -50%);
+  will-change: transform;
+  opacity: 0;
+  transition: opacity 220ms var(--ease);
+}
+
+.lamp-cursor.show {
+  opacity: 1;
+}
+
+.lamp-pool {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 220px;
+  height: 220px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%,
+      rgba(255, 236, 198, 0.18),
+      rgba(157, 80, 55, 0.05) 45%,
+      transparent 75%);
+  filter: blur(20px);
+  opacity: 0.8;
+  transition:
+    opacity var(--fast) var(--ease),
+    transform var(--fast) var(--ease);
+}
+
+.lamp-cursor.pressing .lamp-pool {
+  opacity: 0.95;
+  transform: translate(-50%, -50%) scale(1.08);
+}
+
+.scroll-progress {
+  position: fixed;
+  inset: 0 auto auto 0;
+  z-index: 120;
+  width: 100%;
+  height: 2px;
+  background: rgba(244, 241, 233, 0.08);
+  pointer-events: none;
+}
+
+.scroll-progress i {
+  display: block;
+  height: 100%;
+  width: 100%;
+  transform-origin: left;
+  background: linear-gradient(90deg, var(--clay), #e8c9a0);
+  box-shadow: 0 0 12px rgba(157, 80, 55, 0.45);
+  transition: transform 80ms linear;
+}
+
+.ambient-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 9994;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.ambient-grain {
+  position: absolute;
+  inset: -50%;
+  opacity: 0.045;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grainShift 8s steps(6) infinite;
+}
+
+@keyframes grainShift {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  100% {
+    transform: translate(-4%, -3%);
+  }
+}
+
+.ambient-motes span {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(244, 241, 233, 0.35);
+  box-shadow: 0 0 8px rgba(255, 236, 200, 0.4);
+  animation: moteFloat 14s ease-in-out infinite;
+  animation-delay: calc(var(--i) * -1.3s);
+  left: calc(8% + (var(--i) * 8.5%));
+  top: calc(12% + (var(--i) * 7%));
+}
+
+@keyframes moteFloat {
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.15;
+  }
+
+  35% {
+    transform: translate(18px, -32px) scale(1.3);
+    opacity: 0.55;
+  }
+
+  70% {
+    transform: translate(-12px, -58px) scale(0.8);
+    opacity: 0.25;
+  }
+}
+
+html.lamp-cursor-on .category-story {
+  background-position:
+    calc(50% + (var(--lamp-nx) - 50%) * 0.42) calc(50% + (var(--lamp-ny) - 50%) * 0.28);
+  transition:
+    background-position 120ms linear,
+    transform var(--scene) var(--ease);
+}
+
+html.lamp-cursor-on .story-image {
+  background-position:
+    calc(50% + (var(--lamp-nx) - 50%) * 0.2) calc(50% + (var(--lamp-ny) - 50%) * 0.15);
+  transition: background-position 140ms linear;
+}
+
+.reveal-on-scroll.is-visible h1,
+.reveal-on-scroll.is-visible h2 {
+  animation: titleLampShimmer 1.4s var(--ease) both;
+}
+
+@keyframes titleLampShimmer {
+  0% {
+    text-shadow: 0 0 0 transparent;
+  }
+
+  45% {
+    text-shadow: 0 0 36px color-mix(in srgb, var(--clay) 28%, transparent);
+  }
+
+  100% {
+    text-shadow: 0 0 0 transparent;
+  }
+}
+
+.catalog .product:hover .photo-hover {
+  box-shadow: inset 0 0 80px rgba(255, 236, 200, 0.12);
+}
+
+/* Premium Product Card Hover Image Swapping */
+.photo-primary,
+.photo-hover {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: 
+    transform var(--scene) var(--ease), 
+    opacity var(--scene) var(--ease), 
+    filter var(--scene) var(--ease) !important;
+}
+
+.photo-hover {
+  opacity: 0;
+  transform: scale(1.02);
+}
+
+.product:hover .photo-primary {
+  opacity: 0;
+  transform: scale(1.06);
+}
+
+.product:hover .photo-hover:not(.photo-hover-alt) {
+  opacity: 1;
+  transform: scale(1.06);
+}
+
+/* Fallback if hover image is same as primary */
+.product:hover .photo-hover.photo-hover-alt {
+  opacity: 0;
+}
+.product:hover .photo-primary {
+  opacity: 1;
+}
+
+
+@media (pointer: coarse),
+(max-width: 1020px) {
+
+  .lamp-cursor,
+  .ambient-layer {
+    display: none !important;
+  }
+
+  html.lamp-cursor-on,
+  html.lamp-cursor-on * {
+    cursor: auto !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .lamp-cursor,
+  .ambient-layer,
+  .scroll-progress {
+    display: none !important;
+  }
+
+  html.lamp-cursor-on,
+  html.lamp-cursor-on * {
+    cursor: auto !important;
+  }
+
+}
+

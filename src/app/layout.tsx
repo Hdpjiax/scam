@@ -5,6 +5,13 @@ import LampCursor from "../components/LampCursor";
 import ScrollProgress from "../components/ScrollProgress";
 import { StoreProvider } from "../providers/StoreProvider";
 import "../styles.css";
+import "../styles/base.css";
+import "../styles/commerce.css";
+import "../styles/admin.css";
+import "../styles/motion.css";
+import "../styles/ambience.css";
+import "../styles/checkout-forms.css";
+import "../styles/account.css";
 
 export const metadata: Metadata = {
   title: "NŌMA Home living",
