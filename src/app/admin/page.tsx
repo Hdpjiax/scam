@@ -10,7 +10,7 @@ export default async function Page() {
   const { data: products } = await supabase
     .from("products")
     .select("*")
-    .order("id", { ascending: true });
+    .order("created_at", { ascending: true });
 
   // Obtener pedidos
   const { data: orders } = await supabase

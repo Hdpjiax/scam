@@ -42,6 +42,8 @@ type StoreContextType = {
   setCartOpen: (open: boolean) => void;
   wishlistOpen: boolean;
   setWishlistOpen: (open: boolean) => void;
+  ordersOpen: boolean;
+  setOrdersOpen: (open: boolean) => void;
 };
 
 const StoreContext = createContext<StoreContextType | null>(null);
@@ -56,47 +58,71 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [cartPulse, setCartPulse] = useState(0);
   const [cartOpen, setCartOpen] = useState(false);
   const [wishlistOpen, setWishlistOpen] = useState(false);
+  const [ordersOpen, setOrdersOpen] = useState(false);
 
   const [wishlist, setWishlist] = useState<Product[]>([]);
 
-  // Cargar carrito inicial desde localStorage en el cliente
+  const [activeUserId, setActiveUserId] = useState<string | null>(null);
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  // Sync / load cart and wishlist based on user authentication status
   useEffect(() => {
+    if (loading) return;
+
+    const currentUserId = user ? user.id : "guest";
+    const cartKey = user ? `noma-cart-v1-${user.id}` : "noma-cart-v1-guest";
+    const wishKey = user ? `noma-wishlist-v1-${user.id}` : "noma-wishlist-v1-guest";
+
+    let loadedCart = [];
+    let loadedWish = [];
+
     try {
-      const storedCart = localStorage.getItem("noma-cart-v1");
-      if (storedCart) {
-        setCart(JSON.parse(storedCart));
-      }
+      const storedCart = localStorage.getItem(cartKey);
+      if (storedCart) loadedCart = JSON.parse(storedCart);
     } catch (e) {
-      console.error("Error al cargar el carrito", e);
+      console.error("Error loading cart", e);
     }
 
     try {
-      const storedWish = localStorage.getItem("noma-wishlist-v1");
-      if (storedWish) {
-        setWishlist(JSON.parse(storedWish));
-      }
+      const storedWish = localStorage.getItem(wishKey);
+      if (storedWish) loadedWish = JSON.parse(storedWish);
     } catch (e) {
       console.error("Error loading wishlist", e);
     }
-  }, []);
 
-  // Guardar carrito en localStorage cuando cambie
+    setCart(loadedCart);
+    setWishlist(loadedWish);
+    setActiveUserId(currentUserId);
+    setIsInitialized(true);
+  }, [user, loading]);
+
+  // Save cart
   useEffect(() => {
+    if (!isInitialized) return;
+    const currentUserId = user ? user.id : "guest";
+    if (activeUserId !== currentUserId) return;
+
+    const cartKey = user ? `noma-cart-v1-${user.id}` : "noma-cart-v1-guest";
     if (cart.length > 0) {
-      localStorage.setItem("noma-cart-v1", JSON.stringify(cart));
+      localStorage.setItem(cartKey, JSON.stringify(cart));
     } else {
-      localStorage.removeItem("noma-cart-v1");
+      localStorage.removeItem(cartKey);
     }
-  }, [cart]);
+  }, [cart, user, isInitialized, activeUserId]);
 
-  // Guardar wishlist
+  // Save wishlist
   useEffect(() => {
+    if (!isInitialized) return;
+    const currentUserId = user ? user.id : "guest";
+    if (activeUserId !== currentUserId) return;
+
+    const wishKey = user ? `noma-wishlist-v1-${user.id}` : "noma-wishlist-v1-guest";
     if (wishlist.length > 0) {
-      localStorage.setItem("noma-wishlist-v1", JSON.stringify(wishlist));
+      localStorage.setItem(wishKey, JSON.stringify(wishlist));
     } else {
-      localStorage.removeItem("noma-wishlist-v1");
+      localStorage.removeItem(wishKey);
     }
-  }, [wishlist]);
+  }, [wishlist, user, isInitialized, activeUserId]);
 
   const toggleWishlist = (product: Product) => {
     setWishlist((prev) => {
@@ -241,6 +267,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         setCartOpen,
         wishlistOpen,
         setWishlistOpen,
+        ordersOpen,
+        setOrdersOpen,
       }}
     >
       {children}

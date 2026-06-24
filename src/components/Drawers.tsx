@@ -1,1 +1,1 @@
-export { Cart, Wishlist } from "../modules/cart/components/Drawers";
+export { Cart, Wishlist, Orders } from "../modules/cart/components/Drawers";

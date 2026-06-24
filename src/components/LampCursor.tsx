@@ -47,8 +47,8 @@ export default function LampCursor() {
     };
 
     const tick = () => {
-      current.current.x = lerp(current.current.x, target.current.x, 0.18);
-      current.current.y = lerp(current.current.y, target.current.y, 0.18);
+      current.current.x = lerp(current.current.x, target.current.x, 0.38);
+      current.current.y = lerp(current.current.y, target.current.y, 0.38);
       setVars(current.current.x, current.current.y);
       frame.current = requestAnimationFrame(tick);
     };

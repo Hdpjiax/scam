@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, useEffect } from "react";
 import AdminProductPreview from "../../components/AdminProductPreview";
 import { useCountUp } from "../../hooks/useCountUp";
 import { createClient } from "../../lib/supabase/client";
@@ -22,6 +22,9 @@ import {
   TrendingUp,
   AlertTriangle,
   Star,
+  ChevronUp,
+  ChevronDown,
+  SlidersHorizontal,
 } from "lucide-react";
 import Link from "next/link";
 import { Metric, OrderTable, ProductEditor, ProductPreviewModal, ReviewEditor } from "./AdminClient.parts";
@@ -41,6 +44,7 @@ type ProductType = {
   rating?: number;
   badge?: string | null;
   featured?: boolean;
+  created_at?: string;
 };
 
 type OrderType = {
@@ -113,11 +117,254 @@ export default function AdminClient({
   const [toast, setToast] = useState<{ text: string; undo?: () => void } | null>(null);
   const [loading, setLoading] = useState(false);
 
+  const [adminUsers, setAdminUsers] = useState<any[]>([]);
+  const [loadingUsers, setLoadingUsers] = useState(false);
+  const [userQuery, setUserQuery] = useState("");
+  const [editingUser, setEditingUser] = useState<any | null>(null);
+  const [userForm, setUserForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    role: "customer",
+    password: "",
+  });
+  const [userFormError, setUserFormError] = useState("");
+
+  const fetchAdminUsers = async () => {
+    setLoadingUsers(true);
+    try {
+      const res = await fetch("/api/admin/users");
+      const data = await res.json();
+      if (data.users) {
+        setAdminUsers(data.users);
+      } else {
+        console.error("Failed to load users:", data.error);
+      }
+    } catch (err) {
+      console.error("Error fetching users:", err);
+    } finally {
+      setLoadingUsers(false);
+    }
+  };
+
+  useEffect(() => {
+    if (tab === "users") {
+      fetchAdminUsers();
+    }
+  }, [tab]);
+
+  const handleSaveUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingUser) return;
+    setLoading(true);
+    setUserFormError("");
+
+    try {
+      const res = await fetch("/api/admin/users", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: editingUser.id,
+          name: userForm.name,
+          email: userForm.email,
+          phone: userForm.phone,
+          role: userForm.role,
+          password: userForm.password || undefined,
+        }),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        notify("User updated successfully.");
+        setEditingUser(null);
+        fetchAdminUsers();
+      } else {
+        setUserFormError(data.error || "Failed to update user.");
+      }
+    } catch (err: any) {
+      setUserFormError(err.message || "An error occurred.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const [isOrganizing, setIsOrganizing] = useState(false);
+  const [organizeList, setOrganizeList] = useState<ProductType[]>([]);
+  const [organizeSection, setOrganizeSection] = useState<string>("homepage");
+  const [localRankInputs, setLocalRankInputs] = useState<Record<number, string>>({});
+  const [organizeSearchQuery, setOrganizeSearchQuery] = useState("");
+  const [layoutConfig, setLayoutConfig] = useState<{ homepage: number[]; category_orders: Record<string, number[]> }>(() => {
+    const found = initialProducts.find(p => p.sku === 'NOM-LAYOUT');
+    if (found && found.description) {
+      try {
+        return JSON.parse(found.description);
+      } catch (e) {
+        console.error("Failed parsing initial layout config:", e);
+      }
+    }
+    return { homepage: [], category_orders: {} };
+  });
+
+  // Update organize list when section or layout changes
+  useEffect(() => {
+    if (!isOrganizing) {
+      setOrganizeSearchQuery("");
+      return;
+    }
+    setOrganizeSearchQuery("");
+    
+    let list: ProductType[] = [];
+    if (organizeSection === "homepage") {
+      list = products.filter(p => p.featured && p.sku !== 'NOM-LAYOUT');
+      const order = layoutConfig.homepage || [];
+      list.sort((a, b) => {
+        const idxA = order.indexOf(a.id);
+        const idxB = order.indexOf(b.id);
+        if (idxA === -1 && idxB === -1) return 0;
+        if (idxA === -1) return 1;
+        if (idxB === -1) return -1;
+        return idxA - idxB;
+      });
+    } else {
+      list = products.filter(p => p.category === organizeSection && p.sku !== 'NOM-LAYOUT');
+      const order = layoutConfig.category_orders?.[organizeSection] || [];
+      list.sort((a, b) => {
+        const idxA = order.indexOf(a.id);
+        const idxB = order.indexOf(b.id);
+        if (idxA === -1 && idxB === -1) return 0;
+        if (idxA === -1) return 1;
+        if (idxB === -1) return -1;
+        return idxA - idxB;
+      });
+    }
+    setOrganizeList(list);
+    setLocalRankInputs({});
+  }, [organizeSection, layoutConfig, products, isOrganizing]);
+
+  const handleRankChange = (productId: number, currentIdx: number) => {
+    const inputVal = localRankInputs[productId];
+    if (inputVal === undefined || inputVal === "") return;
+    
+    let targetIdx = parseInt(inputVal, 10) - 1;
+    if (isNaN(targetIdx)) return;
+    
+    if (targetIdx < 0) targetIdx = 0;
+    if (targetIdx >= organizeList.length) targetIdx = organizeList.length - 1;
+    
+    if (targetIdx === currentIdx) return;
+    
+    const newList = [...organizeList];
+    const [removed] = newList.splice(currentIdx, 1);
+    newList.splice(targetIdx, 0, removed);
+    
+    setOrganizeList(newList);
+    setLocalRankInputs({});
+  };
+
+  const handleAddToHomepage = (prodId: number) => {
+    const prod = products.find(p => p.id === prodId);
+    if (!prod) return;
+    if (organizeList.some(p => p.id === prodId)) return;
+    setOrganizeList([...organizeList, { ...prod, featured: true }]);
+  };
+
+  const handleRemoveFromHomepage = (prodId: number) => {
+    setOrganizeList(organizeList.filter(p => p.id !== prodId));
+  };
+
+  const handleSaveOrder = async (orderedList: ProductType[]) => {
+    setLoading(true);
+    const nextConfig = { ...layoutConfig };
+    const newOrder = orderedList.map(p => p.id);
+    
+    if (organizeSection === "homepage") {
+      nextConfig.homepage = newOrder;
+    } else {
+      nextConfig.category_orders = {
+        ...(nextConfig.category_orders || {}),
+        [organizeSection]: newOrder
+      };
+    }
+    
+    const layoutProduct = products.find(p => p.sku === 'NOM-LAYOUT');
+    let success = true;
+    
+    if (layoutProduct) {
+      const { error } = await supabase
+        .from("products")
+        .update({ description: JSON.stringify(nextConfig) })
+        .eq("id", layoutProduct.id);
+      if (error) {
+        console.error("Error updating system layout config", error);
+        success = false;
+      }
+    } else {
+      const maxId = products.reduce((max, x) => Math.max(max, x.id), 0);
+      const nextId = maxId + 1;
+      const { error } = await supabase
+        .from("products")
+        .insert({
+          id: nextId,
+          name: 'System Layout Config',
+          slug: 'layout-config',
+          category: 'System',
+          sku: 'NOM-LAYOUT',
+          description: JSON.stringify(nextConfig),
+          price: 0,
+          stock: 0,
+          images: [],
+          colors: [],
+          featured: false
+        });
+      if (error) {
+        console.error("Error creating system layout config", error);
+        success = false;
+      }
+    }
+
+    if (organizeSection === "homepage" && success) {
+      const prevFeaturedIds = products.filter(p => p.featured && p.sku !== 'NOM-LAYOUT').map(p => p.id);
+      const newFeaturedIds = orderedList.map(p => p.id);
+
+      const toEnable = newFeaturedIds.filter(id => !prevFeaturedIds.includes(id));
+      const toDisable = prevFeaturedIds.filter(id => !newFeaturedIds.includes(id));
+
+      for (const id of toEnable) {
+        const { error } = await supabase.from("products").update({ featured: true }).eq("id", id);
+        if (error) console.error("Error setting featured: true for ID", id, error);
+      }
+      for (const id of toDisable) {
+        const { error } = await supabase.from("products").update({ featured: false }).eq("id", id);
+        if (error) console.error("Error setting featured: false for ID", id, error);
+      }
+    }
+
+    if (success) {
+      const { data: updatedProducts } = await supabase
+        .from("products")
+        .select("*")
+        .order("created_at", { ascending: true });
+      if (updatedProducts) {
+        setProducts(updatedProducts.map((p: any) => ({
+          ...p,
+          image: p.images?.[0] || "",
+        })));
+      }
+      setLayoutConfig(nextConfig);
+      notify("Layout display order saved successfully.");
+      setIsOrganizing(false);
+    } else {
+      notify("Failed to save layout order.");
+    }
+    setLoading(false);
+  };
+
   const revenue = orders
     .filter((o) => o.status === "paid" || o.status === "processing" || o.status === "shipped" || o.status === "delivered")
     .reduce((a, o) => a + o.total, 0);
 
   const filteredProducts = products.filter((p) => {
+    if (p.sku === 'NOM-LAYOUT') return false;
     const matchesSearch = (p.name + p.sku).toLowerCase().includes(q.toLowerCase());
     const matchesCategory = catFilter === "All" || p.category === catFilter;
     const matchesStock = stockFilter === "All" || 
@@ -300,8 +547,32 @@ export default function AdminClient({
     setLoading(false);
   };
 
+  const [shippingOrderPrompt, setShippingOrderPrompt] = useState<{ orderId: string; status: string } | null>(null);
+  const [shippingCarrier, setShippingCarrier] = useState("");
+  const [shippingTrackingNumber, setShippingTrackingNumber] = useState("");
+
   const handleStatusChange = async (orderId: string, s: string) => {
     const old = [...orders];
+
+    if (s === "cancelled") {
+      setOrders(orders.filter((o) => o.id !== orderId));
+      const { error } = await supabase.from("orders").delete().eq("id", orderId);
+      if (error) {
+        setOrders(old);
+        notify("Error deleting order.");
+      } else {
+        notify(`Order #${orderId} was cancelled and deleted.`);
+      }
+      return;
+    }
+
+    if (s === "processing") {
+      setShippingOrderPrompt({ orderId, status: s });
+      setShippingCarrier("");
+      setShippingTrackingNumber("");
+      return;
+    }
+
     setOrders(orders.map((o) => (o.id === orderId ? { ...o, status: s } : o)));
 
     const { error } = await supabase.from("orders").update({ status: s }).eq("id", orderId);
@@ -393,8 +664,8 @@ export default function AdminClient({
                 />
                 <Metric
                   label="Products"
-                  count={products.length}
-                  note={`${products.filter((p) => (p.stock || 0) < 10).length} low stock`}
+                  count={products.filter(p => p.sku !== 'NOM-LAYOUT').length}
+                  note={`${products.filter((p) => p.sku !== 'NOM-LAYOUT' && (p.stock || 0) < 10).length} low stock`}
                   icon={<Package />}
                 />
                 <Metric
@@ -420,12 +691,13 @@ export default function AdminClient({
                     <h2>Critical Stock</h2>
                     <AlertTriangle />
                   </div>
-                  {[...products]
+                  {products
+                    .filter(p => p.sku !== 'NOM-LAYOUT')
                     .sort((a, b) => (a.stock || 0) - (b.stock || 0))
                     .slice(0, 5)
                     .map((p) => (
                       <div key={p.id}>
-                        <img src={p.image} alt="" />
+                        <img src={p.image || undefined} alt="" />
                         <span>
                           <b>{p.name}</b>
                           <small>{p.sku}</small>
@@ -492,159 +764,466 @@ export default function AdminClient({
                 </select>
 
                 <button
+                  className="admin-secondary"
+                  onClick={() => setIsOrganizing(!isOrganizing)}
+                  style={{
+                    background: isOrganizing ? "var(--clay)" : "var(--mineral)",
+                    color: isOrganizing ? "var(--paper)" : "var(--copy)",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    padding: "10px 14px",
+                    borderRadius: "4px",
+                    fontSize: "12px",
+                    cursor: "pointer",
+                    border: "1px solid var(--copy)",
+                    marginLeft: "auto"
+                  }}
+                >
+                  <SlidersHorizontal size={14} />
+                  {isOrganizing ? "Exit Organizing" : "Organize Layout"}
+                </button>
+
+                <button
                   className="admin-primary"
                   onClick={() => setEdit({ ...blank, sku: "NOM-" + Math.random().toString(36).substring(2, 9).toUpperCase() })}
-                  style={{ marginLeft: "auto" }}
+                  disabled={isOrganizing}
                 >
                   <Plus />
                   New product
                 </button>
               </div>
-              <div className="product-table" role="table" aria-label="Catalog">
-                <div className="table-row table-labels" role="row">
-                  <span>Product</span>
-                  <span>Category</span>
-                  <span>Price</span>
-                  <span>Inventory</span>
-                  <span>Status</span>
-                  <span>Actions</span>
-                </div>
-                {filteredProducts.map((p) => {
-                  const productReviews = reviews.filter((r) => Number(r.product_id) === p.id);
-                  const avgRating = productReviews.length
-                    ? (productReviews.reduce((sum, r) => sum + r.rating, 0) / productReviews.length).toFixed(1)
-                    : null;
-                  const isExpanded = expandedProductId === p.id;
+              {isOrganizing ? (
+                <div className="admin-organize-panel" style={{
+                  background: "rgba(255, 255, 255, 0.02)",
+                  padding: "24px",
+                  borderRadius: "8px",
+                  border: "1px solid rgba(255, 255, 255, 0.05)",
+                  marginTop: "20px"
+                }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+                    <div>
+                      <h2 style={{ fontSize: "16px", color: "var(--paper)", margin: 0, fontWeight: "600", textTransform: "uppercase", letterSpacing: "0.05em" }}>Organize Display Order</h2>
+                      <p style={{ margin: "5px 0 0", fontSize: "12px", opacity: 0.7 }}>
+                        Rearrange products by section. Changes will apply independently to Homepage ("Principal") and Categories.
+                      </p>
+                    </div>
+                    <div style={{ display: "flex", gap: "10px" }}>
+                      <button
+                        type="button"
+                        onClick={() => setIsOrganizing(false)}
+                        style={{
+                          background: "var(--mineral)",
+                          color: "var(--copy)",
+                          border: "1px solid var(--copy)",
+                          padding: "8px 16px",
+                          borderRadius: "4px",
+                          fontSize: "12px",
+                          cursor: "pointer"
+                        }}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleSaveOrder(organizeList)}
+                        disabled={loading}
+                        style={{
+                          background: "var(--clay)",
+                          color: "var(--paper)",
+                          border: "none",
+                          padding: "8px 16px",
+                          borderRadius: "4px",
+                          fontSize: "12px",
+                          fontWeight: "600",
+                          cursor: loading ? "not-allowed" : "pointer"
+                        }}
+                      >
+                        {loading ? "Saving Order..." : "Save Layout Order"}
+                      </button>
+                    </div>
+                  </div>
 
-                  return (
-                    <div
-                      key={p.id}
-                      className="product-item-wrapper"
+                  <div style={{ display: "flex", gap: "16px", alignItems: "center", marginBottom: "20px" }}>
+                    <span style={{ fontSize: "13px", color: "var(--paper)", fontWeight: "600", textTransform: "uppercase" }}>Layout Section:</span>
+                    <select
+                      value={organizeSection}
+                      onChange={(e) => setOrganizeSection(e.target.value)}
                       style={{
-                        background: isExpanded ? "rgba(255, 255, 255, 0.02)" : "transparent",
-                        borderBottom: "1px solid rgba(255, 255, 255, 0.05)",
+                        background: "var(--mineral)",
+                        color: "var(--paper)",
+                        border: "1px solid var(--copy)",
+                        padding: "8px 12px",
+                        borderRadius: "4px",
+                        fontSize: "12px",
+                        cursor: "pointer",
                       }}
                     >
-                      <div className="table-row" role="row" style={{ borderBottom: "none" }}>
-                        <span className="product-cell">
-                          <img src={p.image} alt="" />
-                          <i>
-                            <b>{p.name}</b>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
-                              <small>{p.sku}</small>
-                              {avgRating && (
-                                <button 
-                                  style={{ 
-                                    background: 'none', 
-                                    border: 'none', 
-                                    padding: 0,
-                                    display: 'inline-flex', 
-                                    alignItems: 'center', 
-                                    gap: '2px', 
-                                    fontSize: '11px', 
-                                    color: 'var(--clay)', 
-                                    cursor: 'pointer' 
-                                  }}
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setExpandedProductId(isExpanded ? null : p.id);
-                                  }}
-                                  title="View reviews"
-                                >
-                                  • <Star size={10} fill="var(--clay)" stroke="none" /> {avgRating} ({productReviews.length})
-                                </button>
-                              )}
-                            </div>
-                          </i>
-                        </span>
-                        <span>{p.category}</span>
-                        <span>{money(p.price)}</span>
-                        <span>{p.stock} units</span>
-                        <span>
-                          <em
-                            className={
-                              (p.stock || 0) > 0 ? "status paid" : "status cancelled"
-                            }
+                      <option value="homepage">Principal (Homepage)</option>
+                      <option value="Smart Home">Category: Smart Home</option>
+                      <option value="Lighting">Category: Lighting</option>
+                      <option value="Furniture">Category: Furniture</option>
+                      <option value="Decor">Category: Decor</option>
+                      <option value="Kitchen">Category: Kitchen</option>
+                      <option value="Wellness">Category: Wellness</option>
+                      <option value="Textiles">Category: Textiles</option>
+                      <option value="Outdoor">Category: Outdoor</option>
+                    </select>
+                  </div>
+
+                  {organizeSection === "homepage" && (
+                    <div style={{ display: "flex", gap: "12px", alignItems: "center", marginBottom: "20px", background: "rgba(255, 255, 255, 0.03)", padding: "12px 16px", borderRadius: "6px", border: "1px solid rgba(255,255,255,0.05)" }}>
+                      <span style={{ fontSize: "13px", opacity: 0.8, whiteSpace: "nowrap" }}>Add Product to Homepage:</span>
+                      <div style={{ position: "relative", flex: 1, maxWidth: "350px" }}>
+                        <input
+                          type="text"
+                          placeholder="Search by name, SKU or category..."
+                          value={organizeSearchQuery}
+                          onChange={(e) => setOrganizeSearchQuery(e.target.value)}
+                          style={{
+                            width: "100%",
+                            background: "var(--mineral)",
+                            color: "var(--paper)",
+                            border: "1px solid var(--copy)",
+                            padding: "8px 12px",
+                            borderRadius: "4px",
+                            fontSize: "12px",
+                            outline: "none"
+                          }}
+                        />
+                        {organizeSearchQuery && (
+                          <button
+                            type="button"
+                            onClick={() => setOrganizeSearchQuery("")}
+                            style={{
+                              position: "absolute",
+                              right: "10px",
+                              top: "50%",
+                              transform: "translateY(-50%)",
+                              background: "none",
+                              border: "none",
+                              color: "var(--paper)",
+                              opacity: 0.6,
+                              cursor: "pointer",
+                              fontSize: "12px"
+                            }}
                           >
-                            {(p.stock || 0) > 0 ? "Active" : "Out of stock"}
-                          </em>
+                            ✕
+                          </button>
+                        )}
+                        
+                        {/* Search Results Dropdown */}
+                        {organizeSearchQuery.trim() !== "" && (
+                          <div style={{
+                            position: "absolute",
+                            top: "100%",
+                            left: 0,
+                            right: 0,
+                            maxHeight: "250px",
+                            overflowY: "auto",
+                            background: "#1a1a1a",
+                            border: "1px solid rgba(255,255,255,0.15)",
+                            borderRadius: "4px",
+                            boxShadow: "0 8px 24px rgba(0,0,0,0.8)",
+                            zIndex: 999,
+                            marginTop: "6px"
+                          }}>
+                            {(() => {
+                              const filtered = products.filter(p => {
+                                if (p.sku === 'NOM-LAYOUT') return false;
+                                if (organizeList.some(item => item.id === p.id)) return false;
+                                const q = organizeSearchQuery.toLowerCase();
+                                return (
+                                  p.name.toLowerCase().includes(q) ||
+                                  (p.sku && p.sku.toLowerCase().includes(q)) ||
+                                  (p.category && p.category.toLowerCase().includes(q))
+                                );
+                              });
+                              
+                              if (filtered.length === 0) {
+                                return (
+                                  <div style={{ padding: "10px 12px", fontSize: "12px", color: "var(--paper)", opacity: 0.5 }}>
+                                    No products found
+                                  </div>
+                                );
+                              }
+                              
+                              return filtered.map(p => (
+                                <div
+                                  key={p.id}
+                                  onClick={() => {
+                                    handleAddToHomepage(p.id);
+                                    setOrganizeSearchQuery("");
+                                  }}
+                                  style={{
+                                    padding: "8px 12px",
+                                    fontSize: "12px",
+                                    color: "var(--paper)",
+                                    cursor: "pointer",
+                                    borderBottom: "1px solid rgba(255,255,255,0.05)",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "space-between",
+                                    transition: "background 0.2s"
+                                  }}
+                                  onMouseEnter={(e) => {
+                                    e.currentTarget.style.background = "rgba(255,255,255,0.08)";
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    e.currentTarget.style.background = "transparent";
+                                  }}
+                                >
+                                  <div>
+                                    <strong style={{ display: "block" }}>{p.name}</strong>
+                                    <span style={{ fontSize: "10px", opacity: 0.6 }}>{p.category} | {p.sku}</span>
+                                  </div>
+                                  <span style={{ fontSize: "10px", background: "rgba(255,255,255,0.1)", padding: "2px 6px", borderRadius: "3px", whiteSpace: "nowrap" }}>
+                                    Add
+                                  </span>
+                                </div>
+                              ));
+                            })()}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  <div style={{ display: "flex", flexDirection: "column", gap: "10px", maxHeight: "50vh", overflowY: "auto", paddingRight: "10px" }}>
+                    {organizeList.map((p, idx) => (
+                      <div
+                        key={p.id}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "16px",
+                          padding: "12px 16px",
+                          background: "rgba(255,255,255,0.03)",
+                          border: "1px solid rgba(255,255,255,0.05)",
+                          borderRadius: "6px"
+                        }}
+                      >
+                        <span style={{ fontSize: "13px", fontWeight: "600", width: "30px", opacity: 0.5, color: "var(--paper)" }}>
+                          #{idx + 1}
                         </span>
-                        <span className="row-actions">
-                          {productReviews.length > 0 && (
+                        <img
+                          src={p.image || undefined}
+                          alt={p.name}
+                          style={{ width: "40px", height: "40px", objectFit: "cover", borderRadius: "4px" }}
+                        />
+                        <div style={{ flex: 1 }}>
+                          <strong style={{ fontSize: "13px", color: "var(--paper)", display: "block" }}>{p.name}</strong>
+                          <span style={{ fontSize: "11px", opacity: 0.6, color: "var(--paper)" }}>{p.category} | {p.sku}</span>
+                        </div>
+                        
+                        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                          <span style={{ fontSize: "11px", opacity: 0.6 }}>Position:</span>
+                          <input
+                            type="number"
+                            min="1"
+                            max={organizeList.length}
+                            value={localRankInputs[p.id] !== undefined ? localRankInputs[p.id] : idx + 1}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              setLocalRankInputs(prev => ({ ...prev, [p.id]: val }));
+                            }}
+                            onBlur={() => handleRankChange(p.id, idx)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') {
+                                handleRankChange(p.id, idx);
+                              }
+                            }}
+                            style={{
+                              width: "60px",
+                              background: "rgba(255,255,255,0.05)",
+                              border: "1px solid rgba(255,255,255,0.1)",
+                              color: "#fff",
+                              textAlign: "center",
+                              borderRadius: "4px",
+                              padding: "6px 8px",
+                              fontSize: "13px"
+                            }}
+                          />
+                          
+                          {organizeSection === "homepage" && (
                             <button
-                              aria-label={`View reviews for ${p.name}`}
-                              onClick={() => setExpandedProductId(isExpanded ? null : p.id)}
+                              type="button"
+                              onClick={() => handleRemoveFromHomepage(p.id)}
+                              title="Remove from Homepage"
+                              style={{
+                                background: "rgba(224, 108, 117, 0.1)",
+                                border: "1px solid rgba(224, 108, 117, 0.2)",
+                                color: "#e06c75",
+                                width: "32px",
+                                height: "32px",
+                                borderRadius: "4px",
+                                cursor: "pointer",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                marginLeft: "8px"
+                              }}
                             >
-                              <Star size={18} fill={isExpanded ? "var(--clay)" : "none"} stroke={isExpanded ? "var(--clay)" : "currentColor"} />
+                              <Trash2 size={16} />
                             </button>
                           )}
-                          <button
-                            aria-label={`Edit ${p.name}`}
-                            onClick={() => setEdit({ ...p })}
-                          >
-                            <Edit3 />
-                          </button>
-                          <button
-                            aria-label={`Preview ${p.name}`}
-                            onClick={() => setPreview(p)}
-                          >
-                            <Eye />
-                          </button>
-                          <button
-                            aria-label={`Delete ${p.name}`}
-                            onClick={() => setRemove(p)}
-                          >
-                            <Trash2 />
-                          </button>
-                        </span>
-                      </div>
-
-                      {isExpanded && productReviews.length > 0 && (
-                        <div 
-                          className="product-reviews-expanded"
-                          style={{
-                            padding: "16px 24px 24px 80px",
-                            background: "rgba(0, 0, 0, 0.15)",
-                            borderTop: "1px dashed rgba(255, 255, 255, 0.05)",
-                            animation: "orderExpand 300ms var(--ease) both",
-                          }}
-                        >
-                          <h4 style={{ margin: "0 0 12px 0", fontSize: "13px", textTransform: "uppercase", color: "var(--clay)", letterSpacing: "0.05em" }}>
-                            Product Reviews ({productReviews.length})
-                          </h4>
-                          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                            {productReviews.map((r) => (
-                              <div key={r.id} style={{ display: "flex", gap: "12px", borderBottom: "1px solid rgba(255,255,255,0.03)", paddingBottom: "10px" }}>
-                                <img 
-                                  src={r.author_avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(r.author_name)}&background=random`} 
-                                  alt={r.author_name} 
-                                  style={{ width: "32px", height: "32px", borderRadius: "50%", objectFit: "cover" }}
-                                />
-                                <div style={{ flex: 1 }}>
-                                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                                    <strong style={{ fontSize: "13px" }}>{r.author_name}</strong>
-                                    <div style={{ display: "flex", gap: "2px" }}>
-                                      {[...Array(5)].map((_, idx) => (
-                                        <Star
-                                          key={idx}
-                                          size={12}
-                                          fill={idx < r.rating ? "var(--clay)" : "none"}
-                                          stroke={idx < r.rating ? "var(--clay)" : "var(--copy)"}
-                                        />
-                                      ))}
-                                    </div>
-                                  </div>
-                                  <p style={{ margin: "4px 0 0 0", fontSize: "12px", opacity: 0.85, lineHeight: "1.5" }}>{r.content}</p>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
                         </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
+                      </div>
+                    ))}
+                    {organizeList.length === 0 && (
+                      <div style={{ padding: "40px 20px", textAlign: "center", opacity: 0.5 }}>
+                        <p>No products in this section.</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <div className="product-table" role="table" aria-label="Catalog">
+                  <div className="table-row table-labels" role="row">
+                    <span>Product</span>
+                    <span>Category</span>
+                    <span>Price</span>
+                    <span>Inventory</span>
+                    <span>Status</span>
+                    <span>Actions</span>
+                  </div>
+                  {filteredProducts.map((p) => {
+                    const productReviews = reviews.filter((r) => Number(r.product_id) === p.id);
+                    const avgRating = productReviews.length
+                      ? (productReviews.reduce((sum, r) => sum + r.rating, 0) / productReviews.length).toFixed(1)
+                      : null;
+                    const isExpanded = expandedProductId === p.id;
+
+                    return (
+                      <div
+                        key={p.id}
+                        className="product-item-wrapper"
+                        style={{
+                          background: isExpanded ? "rgba(255, 255, 255, 0.02)" : "transparent",
+                          borderBottom: "1px solid rgba(255, 255, 255, 0.05)",
+                        }}
+                      >
+                        <div className="table-row" role="row" style={{ borderBottom: "none" }}>
+                          <span className="product-cell">
+                            <img src={p.image || undefined} alt="" />
+                            <i>
+                              <b>{p.name}</b>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
+                                <small>{p.sku}</small>
+                                {avgRating && (
+                                  <button 
+                                    style={{ 
+                                      background: 'none', 
+                                      border: 'none', 
+                                      padding: 0,
+                                      display: 'inline-flex', 
+                                      alignItems: 'center', 
+                                      gap: '2px', 
+                                      fontSize: '11px', 
+                                      color: 'var(--clay)', 
+                                      cursor: 'pointer' 
+                                    }}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setExpandedProductId(isExpanded ? null : p.id);
+                                    }}
+                                    title="View reviews"
+                                  >
+                                    • <Star size={10} fill="var(--clay)" stroke="none" /> {avgRating} ({productReviews.length})
+                                  </button>
+                                )}
+                              </div>
+                            </i>
+                          </span>
+                          <span>{p.category}</span>
+                          <span>{money(p.price)}</span>
+                          <span>{p.stock} units</span>
+                          <span>
+                            <em
+                              className={
+                                (p.stock || 0) > 0 ? "status paid" : "status cancelled"
+                              }
+                            >
+                              {(p.stock || 0) > 0 ? "Active" : "Out of stock"}
+                            </em>
+                          </span>
+                          <span className="row-actions">
+                            {productReviews.length > 0 && (
+                              <button
+                                aria-label={`View reviews for ${p.name}`}
+                                onClick={() => setExpandedProductId(isExpanded ? null : p.id)}
+                              >
+                                <Star size={18} fill={isExpanded ? "var(--clay)" : "none"} stroke={isExpanded ? "var(--clay)" : "currentColor"} />
+                              </button>
+                            )}
+                            <button
+                              aria-label={`Edit ${p.name}`}
+                              onClick={() => setEdit({ ...p })}
+                            >
+                              <Edit3 />
+                            </button>
+                            <button
+                              aria-label={`Preview ${p.name}`}
+                              onClick={() => setPreview(p)}
+                            >
+                              <Eye />
+                            </button>
+                            <button
+                              aria-label={`Delete ${p.name}`}
+                              onClick={() => setRemove(p)}
+                            >
+                              <Trash2 />
+                            </button>
+                          </span>
+                        </div>
+
+                        {isExpanded && productReviews.length > 0 && (
+                          <div 
+                            className="product-reviews-expanded"
+                            style={{
+                              padding: "16px 24px 24px 80px",
+                              background: "rgba(0, 0, 0, 0.15)",
+                              borderTop: "1px dashed rgba(255, 255, 255, 0.05)",
+                              animation: "orderExpand 300ms var(--ease) both",
+                            }}
+                          >
+                            <h4 style={{ margin: "0 0 12px 0", fontSize: "13px", textTransform: "uppercase", color: "var(--clay)", letterSpacing: "0.05em" }}>
+                              Product Reviews ({productReviews.length})
+                            </h4>
+                            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                              {productReviews.map((r) => (
+                                <div key={r.id} style={{ display: "flex", gap: "12px", borderBottom: "1px solid rgba(255,255,255,0.03)", paddingBottom: "10px" }}>
+                                  <img 
+                                    src={r.author_avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(r.author_name)}&background=random`} 
+                                    alt={r.author_name} 
+                                    style={{ width: "32px", height: "32px", borderRadius: "50%", objectFit: "cover" }}
+                                  />
+                                  <div style={{ flex: 1 }}>
+                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                                      <strong style={{ fontSize: "13px" }}>{r.author_name}</strong>
+                                      <div style={{ display: "flex", gap: "2px" }}>
+                                        {[...Array(5)].map((_, idx) => (
+                                          <Star
+                                            key={idx}
+                                            size={12}
+                                            fill={idx < r.rating ? "var(--clay)" : "none"}
+                                            stroke={idx < r.rating ? "var(--clay)" : "var(--copy)"}
+                                          />
+                                        ))}
+                                      </div>
+                                    </div>
+                                    <p style={{ margin: "4px 0 0 0", fontSize: "12px", opacity: 0.85, lineHeight: "1.5" }}>{r.content}</p>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </>
           )}
 
@@ -699,26 +1278,100 @@ export default function AdminClient({
           )}
 
           {tab === "users" && (
-            <div className="user-grid">
-              {profiles
-                .filter((u) => u.role === "customer")
-                .map((u) => (
-                  <article key={u.id}>
-                    <div>
-                      {u.name
-                        ? u.name.split(" ").map((x: string) => x[0]).join("").slice(0, 2)
-                        : "CU"}
+            <div className="admin-users-panel">
+              <div className="admin-toolbar" style={{ display: "flex", gap: "16px", flexWrap: "wrap", alignItems: "center", marginBottom: "24px", background: "none", padding: 0 }}>
+                <label htmlFor="user-search" style={{ margin: 0, width: "auto", flex: "1 1 200px", background: "var(--mineral)", display: "flex", alignItems: "center", gap: "8px", padding: "8px 12px" }}>
+                  <Search size={16} />
+                  <span className="sr-only">Search users</span>
+                  <input
+                    id="user-search"
+                    placeholder="Search by name, email or phone..."
+                    value={userQuery}
+                    onChange={(e) => setUserQuery(e.target.value)}
+                    style={{ background: "none", border: "none", outline: "none", color: "inherit", width: "100%" }}
+                  />
+                </label>
+              </div>
+
+              {loadingUsers ? (
+                <div style={{ textAlign: "center", padding: "40px", color: "var(--paper)" }}>
+                  <p>Loading users...</p>
+                </div>
+              ) : (
+                <div className="product-table" role="table" aria-label="Customers">
+                  <div className="table-row table-labels" role="row" style={{ gridTemplateColumns: "1.5fr 1.5fr 1fr 1fr 1fr" }}>
+                    <span>User</span>
+                    <span>Email</span>
+                    <span>Phone</span>
+                    <span>Role</span>
+                    <span style={{ textAlign: "right" }}>Actions</span>
+                  </div>
+
+                  {adminUsers
+                    .filter((u) => {
+                      const searchStr = `${u.name || ""} ${u.email || ""} ${u.phone || ""}`.toLowerCase();
+                      return searchStr.includes(userQuery.toLowerCase());
+                    })
+                    .map((u) => (
+                      <div key={u.id} className="table-row" role="row" style={{ gridTemplateColumns: "1.5fr 1.5fr 1fr 1fr 1fr" }}>
+                        <span className="product-cell">
+                          <div style={{
+                            width: "32px",
+                            height: "32px",
+                            borderRadius: "50%",
+                            background: "var(--clay)",
+                            color: "#ffffff",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            fontWeight: "600",
+                            fontSize: "12px",
+                            marginRight: "10px"
+                          }}>
+                            {u.name
+                              ? u.name.split(" ").map((x: string) => x[0]).join("").slice(0, 2).toUpperCase()
+                              : "CU"}
+                          </div>
+                          <b>{u.name || "Nōma Customer"}</b>
+                        </span>
+                        <span>{u.email}</span>
+                        <span>{u.phone || <span style={{ opacity: 0.4 }}>—</span>}</span>
+                        <span>
+                          <em className={`status ${u.role === "admin" ? "paid" : "pending"}`}>
+                            {u.role}
+                          </em>
+                        </span>
+                        <span className="row-actions" style={{ justifyContent: "flex-end" }}>
+                          <button
+                            aria-label={`Edit ${u.name || u.email}`}
+                            onClick={() => {
+                              setEditingUser(u);
+                              setUserForm({
+                                name: u.name || "",
+                                email: u.email || "",
+                                phone: u.phone || "",
+                                role: u.role || "customer",
+                                password: "",
+                              });
+                              setUserFormError("");
+                            }}
+                          >
+                            <Edit3 size={18} />
+                          </button>
+                        </span>
+                      </div>
+                    ))}
+
+                  {adminUsers.filter((u) => {
+                    const searchStr = `${u.name || ""} ${u.email || ""} ${u.phone || ""}`.toLowerCase();
+                    return searchStr.includes(userQuery.toLowerCase());
+                  }).length === 0 && (
+                    <div className="no-data">
+                      <Users />
+                      <h2>No customers found</h2>
+                      <p>Try refining your search query.</p>
                     </div>
-                    <h3>{u.name || "Nōma Customer"}</h3>
-                    <p>{u.email}</p>
-                    <small>Registered Customer</small>
-                  </article>
-                ))}
-              {profiles.filter((u) => u.role === "customer").length === 0 && (
-                <div className="no-data">
-                  <Users />
-                  <h2>No customers yet</h2>
-                  <p>New accounts will appear here.</p>
+                  )}
                 </div>
               )}
             </div>
@@ -877,6 +1530,244 @@ export default function AdminClient({
                 {loading ? "Deleting..." : "Delete review"}
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {editingUser && (
+        <div className="modal-overlay" onClick={() => setEditingUser(null)}>
+          <div className="product-editor-modal" style={{ width: "min(480px, 96vw)" }} onClick={e => e.stopPropagation()}>
+            <form onSubmit={handleSaveUser}>
+              <div className="editor-head">
+                <div>
+                  <small>Edit Customer Profile</small>
+                  <h2>{editingUser.name || editingUser.email}</h2>
+                </div>
+                <button type="button" aria-label="Close editor" onClick={() => setEditingUser(null)}>
+                  <X />
+                </button>
+              </div>
+
+              <div className="editor-layout" style={{ display: "block" }}>
+                <div className="editor-fields" style={{ width: "100%", padding: 0 }}>
+                  {userFormError && (
+                    <p className="form-error" role="alert" style={{ marginBottom: "20px", color: "#e06c75" }}>
+                      {userFormError}
+                    </p>
+                  )}
+                  
+                  <div className="editor-form-grid" style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+                    <label style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                      Name
+                      <input
+                        required
+                        value={userForm.name}
+                        onChange={(e) => setUserForm({ ...userForm, name: e.target.value })}
+                        disabled={loading}
+                      />
+                    </label>
+
+                    <label style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                      Email
+                      <input
+                        required
+                        type="email"
+                        value={userForm.email}
+                        onChange={(e) => setUserForm({ ...userForm, email: e.target.value })}
+                        disabled={loading}
+                      />
+                    </label>
+
+                    <label style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                      Phone
+                      <input
+                        value={userForm.phone}
+                        onChange={(e) => setUserForm({ ...userForm, phone: e.target.value })}
+                        disabled={loading}
+                      />
+                    </label>
+
+                    <label style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                      Role
+                      <select
+                        value={userForm.role}
+                        onChange={(e) => setUserForm({ ...userForm, role: e.target.value })}
+                        disabled={loading}
+                      >
+                        <option value="customer">customer</option>
+                        <option value="admin">admin</option>
+                      </select>
+                    </label>
+
+                    <label style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                      New Password (leave empty to keep unchanged)
+                      <input
+                        type="password"
+                        placeholder="••••••••"
+                        value={userForm.password}
+                        onChange={(e) => setUserForm({ ...userForm, password: e.target.value })}
+                        disabled={loading}
+                      />
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div className="editor-actions" style={{ display: "flex", justifyContent: "flex-end", gap: "12px", marginTop: "24px" }}>
+                <button
+                  type="button"
+                  onClick={() => setEditingUser(null)}
+                  disabled={loading}
+                  style={{
+                    background: "var(--mineral)",
+                    color: "var(--copy)",
+                    border: "1px solid var(--copy)",
+                    padding: "10px 20px",
+                    borderRadius: "4px",
+                    cursor: "pointer",
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  style={{
+                    background: "var(--clay)",
+                    color: "var(--paper)",
+                    border: "none",
+                    padding: "10px 20px",
+                    borderRadius: "4px",
+                    cursor: loading ? "not-allowed" : "pointer",
+                    fontWeight: "600",
+                  }}
+                >
+                  {loading ? "Saving..." : "Save changes"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {shippingOrderPrompt && (
+        <div className="modal-overlay" onClick={() => setShippingOrderPrompt(null)}>
+          <div className="product-editor-modal" style={{ width: "min(420px, 96vw)" }} onClick={e => e.stopPropagation()}>
+            <form onSubmit={async (e) => {
+              e.preventDefault();
+              setLoading(true);
+              const { orderId, status } = shippingOrderPrompt;
+              
+              const targetOrder = orders.find(o => o.id === orderId);
+              let notesJson: any = {};
+              if (targetOrder && targetOrder.notes) {
+                try {
+                  notesJson = JSON.parse(targetOrder.notes);
+                } catch (err) {
+                  notesJson = { notes: targetOrder.notes };
+                }
+              }
+              
+              const updatedNotes = JSON.stringify({
+                ...notesJson,
+                shipping_carrier: shippingCarrier,
+                shipping_tracking_number: shippingTrackingNumber,
+              });
+
+              const { error } = await supabase
+                .from("orders")
+                .update({
+                  status,
+                  notes: updatedNotes
+                })
+                .eq("id", orderId);
+
+              if (error) {
+                console.error("Error updating order tracking details:", error);
+                notify("Error updating order shipping details.");
+              } else {
+                setOrders(orders.map(o => o.id === orderId ? { ...o, status, notes: updatedNotes } : o));
+                notify(`Order #${orderId} set to processing with shipping guide.`);
+              }
+              
+              setLoading(false);
+              setShippingOrderPrompt(null);
+            }}>
+              <div className="editor-head">
+                <div>
+                  <small>Shipping Details</small>
+                  <h2>Order #{shippingOrderPrompt.orderId}</h2>
+                </div>
+                <button type="button" aria-label="Close" onClick={() => setShippingOrderPrompt(null)}>
+                  <X />
+                </button>
+              </div>
+
+              <div className="editor-layout" style={{ display: "block" }}>
+                <div className="editor-fields" style={{ width: "100%", padding: 0 }}>
+                  <p style={{ fontSize: "12px", opacity: 0.7, marginBottom: "16px" }}>
+                    Please enter the shipping carrier and tracking guide number for this order.
+                  </p>
+                  
+                  <div className="editor-form-grid" style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+                    <label style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                      Shipping Carrier (Paquetería)
+                      <input
+                        required
+                        placeholder="e.g. DHL, FedEx, Estafeta, UPS"
+                        value={shippingCarrier}
+                        onChange={(e) => setShippingCarrier(e.target.value)}
+                        disabled={loading}
+                      />
+                    </label>
+
+                    <label style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                      Tracking Number (Guía de Envío)
+                      <input
+                        required
+                        placeholder="e.g. 1234567890"
+                        value={shippingTrackingNumber}
+                        onChange={(e) => setShippingTrackingNumber(e.target.value)}
+                        disabled={loading}
+                      />
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div className="editor-actions" style={{ display: "flex", justifyContent: "flex-end", gap: "12px", marginTop: "24px" }}>
+                <button
+                  type="button"
+                  onClick={() => setShippingOrderPrompt(null)}
+                  disabled={loading}
+                  style={{
+                    background: "var(--mineral)",
+                    color: "var(--copy)",
+                    border: "1px solid var(--copy)",
+                    padding: "10px 20px",
+                    borderRadius: "4px",
+                    cursor: "pointer",
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  style={{
+                    background: "var(--clay)",
+                    color: "var(--paper)",
+                    border: "none",
+                    padding: "10px 20px",
+                    borderRadius: "4px",
+                    cursor: loading ? "not-allowed" : "pointer",
+                    fontWeight: "600",
+                  }}
+                >
+                  {loading ? "Processing..." : "Set Processing"}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

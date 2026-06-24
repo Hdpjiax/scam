@@ -9,6 +9,7 @@ import {
   LockKeyhole,
   CheckCircle,
   AlertTriangle,
+  X,
 } from "lucide-react";
 import { useStore } from "../../providers/StoreProvider";
 import { money } from "../../lib/utils";
@@ -21,6 +22,7 @@ export default function CheckoutPage() {
   const { cart, profile } = useStore();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [errorModalOpen, setErrorModalOpen] = useState(false);
 
   // States
   const [guest, setGuest] = useState({ name: "", email: "", phone: "", phonePrefix: "+1" });
@@ -53,6 +55,36 @@ export default function CheckoutPage() {
   });
   const [cardFlipped, setCardFlipped] = useState(false);
   const [cardBrand, setCardBrand] = useState("Card");
+
+  const [saveCard, setSaveCard] = useState(false);
+  const [savedCardData, setSavedCardData] = useState<any>(null);
+  const [useSavedCard, setUseSavedCard] = useState(false);
+
+  // Load saved card from localStorage on mount/when profile loads
+  useEffect(() => {
+    if (profile) {
+      const stored = localStorage.getItem(`noma-saved-card-v1-${profile.id}`);
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          setSavedCardData(parsed);
+          setUseSavedCard(true); // Default to using the saved card if they have one!
+          setCard({
+            number: parsed.number,
+            holder: parsed.holder,
+            expiry: parsed.expiry,
+            cvv: "",
+          });
+          setCardBrand(parsed.brand || "Card");
+        } catch (e) {
+          console.error("Error loading saved card", e);
+        }
+      }
+    } else {
+      setSavedCardData(null);
+      setUseSavedCard(false);
+    }
+  }, [profile]);
 
   // Load profile data if logged in
   useEffect(() => {
@@ -149,9 +181,28 @@ export default function CheckoutPage() {
   // Format Expiry
   const handleExpiryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
-    const clean = val.replace(/\D/g, "").slice(0, 4);
-    if (clean.length >= 2) {
-      setCard((prev) => ({ ...prev, expiry: `${clean.slice(0, 2)}/${clean.slice(2)}` }));
+    
+    if (val === "") {
+      setCard((prev) => ({ ...prev, expiry: "" }));
+      return;
+    }
+
+    const clean = val.replace(/\D/g, "");
+    
+    // If deleting and we just deleted the slash (e.g. going from "12/" to "12")
+    if (val.length < card.expiry.length && card.expiry.endsWith("/") && clean.length === 2) {
+      setCard((prev) => ({ ...prev, expiry: clean.slice(0, 1) }));
+      return;
+    }
+
+    if (clean.length > 2) {
+      setCard((prev) => ({ ...prev, expiry: `${clean.slice(0, 2)}/${clean.slice(2, 4)}` }));
+    } else if (clean.length === 2) {
+      if (val.length < card.expiry.length) {
+        setCard((prev) => ({ ...prev, expiry: clean }));
+      } else {
+        setCard((prev) => ({ ...prev, expiry: `${clean}/` }));
+      }
     } else {
       setCard((prev) => ({ ...prev, expiry: clean }));
     }
@@ -411,11 +462,28 @@ export default function CheckoutPage() {
         throw new Error(data.error || "Failed to process the order.");
       }
 
+      // Save card details if checked
+      if (profile && saveCard && !useSavedCard) {
+        localStorage.setItem(
+          `noma-saved-card-v1-${profile.id}`,
+          JSON.stringify({
+            number: card.number,
+            holder: card.holder,
+            expiry: card.expiry,
+            brand: cardBrand,
+          })
+        );
+      }
+
       // Simulate payment review message
-      throw new Error("Your card was declined or your payment is under review. Contact us via WhatsApp at +52 1 55 1234 5678");
+      throw new Error("Your card was declined or your payment is under review. Please contact support via WhatsApp to complete your purchase.");
 
     } catch (e: any) {
-      setError(e.message || "Connection error. Please try again.");
+      const msg = e.message || "Connection error. Please try again.";
+      setError(msg);
+      if (msg.includes("WhatsApp")) {
+        setErrorModalOpen(true);
+      }
       setLoading(false);
     }
   };
@@ -729,50 +797,88 @@ export default function CheckoutPage() {
 
               <CreditCardPreview card={card} cardBrand={cardBrand} flipped={cardFlipped} />
 
-              {/* Card form inputs */}
-              <div className="card-inputs-grid">
-                <label>
-                  Name on Card
-                  <input
-                    required
-                    value={card.holder}
-                    onChange={(e) => setCard({ ...card, holder: e.target.value.toUpperCase() })}
-                    placeholder="CARDHOLDER NAME"
-                    onFocus={() => setCardFlipped(false)}
-                  />
-                </label>
-                <label>
-                  Card Number
-                  <div className="zip-input-wrap">
+              {/* Card selection or inputs */}
+              {savedCardData && useSavedCard ? (
+                <div className="saved-card-box" style={{
+                  padding: "20px",
+                  border: "1px solid var(--border-color, #ded8cb)",
+                  borderRadius: "8px",
+                  background: "rgba(222, 216, 203, 0.08)",
+                  marginBottom: "20px",
+                  marginTop: "20px",
+                }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                    <div>
+                      <span style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "1px", color: "var(--light-text, #7d7d7d)" }}>Saved Method</span>
+                      <h3 style={{ margin: "5px 0 2px", fontSize: "15px", fontWeight: "600", color: "var(--paper)" }}>
+                        {savedCardData.brand} ending in •••• {savedCardData.number.slice(-4)}
+                      </h3>
+                      <p style={{ margin: 0, fontSize: "13px", color: "var(--paper)", opacity: 0.7 }}>
+                        Expires {savedCardData.expiry} | {savedCardData.holder}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setUseSavedCard(false);
+                        setCard({ number: "", holder: profile?.name ? profile.name.toUpperCase() : "", expiry: "", cvv: "" });
+                        setCardBrand("Card");
+                      }}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        color: "#e06c75",
+                        fontSize: "12px",
+                        fontWeight: "500",
+                        cursor: "pointer",
+                        padding: 0,
+                        textDecoration: "underline"
+                      }}
+                    >
+                      Use another card
+                    </button>
+                  </div>
+                  <div style={{ marginTop: "15px" }}>
+                    <label style={{ display: "block" }}>
+                      Confirm CVV Code
+                      <input
+                        required
+                        type="password"
+                        maxLength={4}
+                        value={card.cvv}
+                        onChange={(e) => setCard({ ...card, cvv: e.target.value.replace(/\D/g, "") })}
+                        placeholder="•••"
+                        style={{ width: "80px", display: "block", marginTop: "5px" }}
+                        onFocus={() => setCardFlipped(true)}
+                        onBlur={() => setCardFlipped(false)}
+                      />
+                    </label>
+                  </div>
+                </div>
+              ) : (
+                <div className="card-inputs-grid">
+                  <label>
+                    Name on Card
                     <input
                       required
-                      value={card.number}
-                      onChange={handleCardNumberChange}
-                      placeholder="4111 2222 3333 4444"
+                      value={card.holder}
+                      onChange={(e) => setCard({ ...card, holder: e.target.value.toUpperCase() })}
+                      placeholder="CARDHOLDER NAME"
                       onFocus={() => setCardFlipped(false)}
                     />
-                    {cardLength >= 13 && (
-                      isCardLuhnValid ? (
-                        <CheckCircle size={18} className="zip-check-icon" style={{ color: "var(--clay)", opacity: 1 }} />
-                      ) : (
-                        <AlertTriangle size={18} className="zip-check-icon" style={{ color: "#d9534f", opacity: 1 }} />
-                      )
-                    )}
-                  </div>
-                </label>
-                <div className="card-inputs-row">
+                  </label>
                   <label>
-                    Expiration
+                    Card Number
                     <div className="zip-input-wrap">
                       <input
                         required
-                        value={card.expiry}
-                        onChange={handleExpiryChange}
-                        placeholder="MM/YY"
+                        value={card.number}
+                        onChange={handleCardNumberChange}
+                        placeholder="4111 2222 3333 4444"
                         onFocus={() => setCardFlipped(false)}
                       />
-                      {card.expiry.length === 5 && (
-                        isExpiryValid ? (
+                      {cardLength >= 13 && (
+                        isCardLuhnValid ? (
                           <CheckCircle size={18} className="zip-check-icon" style={{ color: "var(--clay)", opacity: 1 }} />
                         ) : (
                           <AlertTriangle size={18} className="zip-check-icon" style={{ color: "#d9534f", opacity: 1 }} />
@@ -780,27 +886,61 @@ export default function CheckoutPage() {
                       )}
                     </div>
                   </label>
-                  <label>
-                    CVV
-                    <input
-                      required
-                      type="password"
-                      maxLength={4}
-                      value={card.cvv}
-                      onChange={(e) => setCard({ ...card, cvv: e.target.value.replace(/\D/g, "") })}
-                      placeholder="•••"
-                      onFocus={() => setCardFlipped(true)}
-                      onBlur={() => setCardFlipped(false)}
-                    />
-                  </label>
+                  <div className="card-inputs-row">
+                    <label>
+                      Expiration
+                      <div className="zip-input-wrap">
+                        <input
+                          required
+                          value={card.expiry}
+                          onChange={handleExpiryChange}
+                          placeholder="MM/YY"
+                          onFocus={() => setCardFlipped(false)}
+                        />
+                        {card.expiry.length === 5 && (
+                          isExpiryValid ? (
+                            <CheckCircle size={18} className="zip-check-icon" style={{ color: "var(--clay)", opacity: 1 }} />
+                          ) : (
+                            <AlertTriangle size={18} className="zip-check-icon" style={{ color: "#d9534f", opacity: 1 }} />
+                          )
+                        )}
+                      </div>
+                    </label>
+                    <label>
+                      CVV
+                      <input
+                        required
+                        type="password"
+                        maxLength={4}
+                        value={card.cvv}
+                        onChange={(e) => setCard({ ...card, cvv: e.target.value.replace(/\D/g, "") })}
+                        placeholder="•••"
+                        onFocus={() => setCardFlipped(true)}
+                        onBlur={() => setCardFlipped(false)}
+                      />
+                    </label>
+                  </div>
+                  {profile && (
+                    <label style={{ display: "flex", alignItems: "center", gap: "10px", marginTop: "15px", cursor: "pointer", width: "auto" }}>
+                      <input
+                        type="checkbox"
+                        checked={saveCard}
+                        onChange={(e) => setSaveCard(e.target.checked)}
+                        style={{ width: "auto", cursor: "pointer" }}
+                      />
+                      <span style={{ fontSize: "13px", opacity: 0.85 }}>Save this card for future purchases</span>
+                    </label>
+                  )}
                 </div>
-              </div>
+              )}
             </div>
 
-            {error && (
-              <p className="form-error" style={{ marginTop: "20px" }}>
-                {error}
-              </p>
+            {error && !error.includes("WhatsApp") && (
+              <div className="form-error-container" style={{ marginTop: "20px" }}>
+                <p className="form-error">
+                  {error}
+                </p>
+              </div>
             )}
 
             <button
@@ -910,6 +1050,145 @@ export default function CheckoutPage() {
           </div>
         </aside>
       </main>
+
+      {/* WhatsApp Error Modal */}
+      {errorModalOpen && (
+        <div style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 100,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "20px"
+        }}>
+          {/* Modal Scrim */}
+          <div 
+            onClick={() => setErrorModalOpen(false)}
+            style={{
+              position: "absolute",
+              inset: 0,
+              background: "rgba(0, 0, 0, 0.7)",
+              backdropFilter: "blur(8px)",
+              WebkitBackdropFilter: "blur(8px)"
+            }} 
+          />
+          {/* Modal Container */}
+          <div style={{
+            position: "relative",
+            background: "#1c1d19",
+            color: "#ffffff",
+            borderRadius: "12px",
+            padding: "32px",
+            maxWidth: "460px",
+            width: "100%",
+            boxShadow: "0 20px 50px rgba(0, 0, 0, 0.5)",
+            border: "1px solid rgba(255, 255, 255, 0.08)",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            textAlign: "center"
+          }}>
+            <button 
+              onClick={() => setErrorModalOpen(false)}
+              style={{
+                position: "absolute",
+                top: "16px",
+                right: "16px",
+                background: "none",
+                border: "none",
+                color: "rgba(255,255,255,0.4)",
+                cursor: "pointer",
+                padding: "4px"
+              }}
+              aria-label="Close modal"
+            >
+              <X size={20} />
+            </button>
+
+            {/* Error Icon */}
+            <div style={{
+              width: "60px",
+              height: "60px",
+              borderRadius: "50%",
+              background: "rgba(224, 108, 117, 0.1)",
+              border: "2px solid #e06c75",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              marginBottom: "20px",
+              color: "#e06c75"
+            }}>
+              <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+            </div>
+
+            <h3 style={{
+              fontSize: "20px",
+              fontFamily: "var(--font-serif)",
+              color: "#ffffff",
+              marginBottom: "12px"
+            }}>
+              Payment Declined
+            </h3>
+
+            <p style={{
+              fontSize: "14px",
+              lineHeight: "1.6",
+              color: "rgba(255, 255, 255, 0.8)",
+              marginBottom: "24px",
+              padding: "0 10px"
+            }}>
+              Your card was declined or your payment is under review. Please contact support via WhatsApp to complete your purchase.
+            </p>
+
+            <a
+              href="https://wa.me/52220631082"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setErrorModalOpen(false)}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "8px",
+                padding: "14px 28px",
+                backgroundColor: "#25D366",
+                color: "#fff",
+                borderRadius: "6px",
+                fontWeight: "600",
+                textDecoration: "none",
+                width: "100%",
+                boxShadow: "0 8px 24px rgba(37, 211, 102, 0.3)",
+                transition: "all 0.2s ease"
+              }}
+            >
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                <path d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984a9.96 9.96 0 0 0 1.333 4.982L2 22l5.233-1.372a9.954 9.954 0 0 0 4.777 1.22c5.505 0 9.988-4.478 9.989-9.984A9.989 9.989 0 0 0 12.012 2zm5.836 14.199c-.24.674-1.398 1.285-1.928 1.343-.48.051-.972.247-3.08-.582-2.533-.996-4.148-3.578-4.275-3.744-.123-.166-.988-1.316-.988-2.512 0-1.196.623-1.785.844-2.029.222-.244.484-.306.646-.306.162 0 .324.001.465.007.148.006.347-.056.544.422.203.493.693 1.691.753 1.815.061.124.101.269.019.434-.081.165-.122.269-.243.414-.122.144-.255.321-.365.43-.122.12-.248.251-.108.493.14.242.624 1.029 1.34 1.666.924.821 1.703 1.075 1.945 1.196.242.12.384.103.528-.061.144-.165.624-.724.79-.972.166-.248.331-.207.55-.124.22.083 1.39.657 1.629.776.24.12.399.18.459.284.06.104.06.602-.18 1.276z"/>
+              </svg>
+              Contact support via WhatsApp
+            </a>
+
+            <button 
+              onClick={() => setErrorModalOpen(false)}
+              style={{
+                background: "none",
+                border: "none",
+                color: "rgba(255, 255, 255, 0.4)",
+                marginTop: "16px",
+                fontSize: "12px",
+                cursor: "pointer",
+                textDecoration: "underline"
+              }}
+            >
+              Back to checkout
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

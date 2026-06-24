@@ -194,7 +194,41 @@ export function OrderTable({
                         </p>
                         {o.notes && (
                           <div style={{ marginTop: "12px", padding: "10px", background: "rgba(255,255,255,0.05)", borderRadius: "4px" }}>
-                            <strong>Notes:</strong> {o.notes}
+                            {(() => {
+                              try {
+                                const parsed = JSON.parse(o.notes);
+                                return (
+                                  <div style={{ display: "flex", flexDirection: "column", gap: "4px", fontSize: "12px" }}>
+                                    {parsed.shipping_carrier && (
+                                      <div>
+                                        <strong>Carrier:</strong> {parsed.shipping_carrier}
+                                      </div>
+                                    )}
+                                    {parsed.shipping_tracking_number && (
+                                      <div>
+                                        <strong>Tracking Guide:</strong> {parsed.shipping_tracking_number}
+                                      </div>
+                                    )}
+                                    {parsed.notes && (
+                                      <div>
+                                        <strong>Notes:</strong> {parsed.notes}
+                                      </div>
+                                    )}
+                                    {!parsed.shipping_carrier && !parsed.shipping_tracking_number && !parsed.notes && (
+                                      <div>
+                                        <strong>Metadata:</strong> {JSON.stringify(parsed)}
+                                      </div>
+                                    )}
+                                  </div>
+                                );
+                              } catch (e) {
+                                return (
+                                  <div>
+                                    <strong>Notes:</strong> {o.notes}
+                                  </div>
+                                );
+                              }
+                            })()}
                           </div>
                         )}
                       </div>

@@ -11,11 +11,34 @@ export default async function Page() {
     const { data } = await supabase
       .from("products")
       .select("*")
-      .order("id", { ascending: true });
+      .order("created_at", { ascending: true });
 
-    dbProducts = (data || []).map((product: any, index: number) =>
+    const layoutProduct = data?.find(p => p.sku === 'NOM-LAYOUT');
+    let layoutConfig = { homepage: [] as number[], category_orders: {} as any };
+    if (layoutProduct && layoutProduct.description) {
+      try {
+        layoutConfig = JSON.parse(layoutProduct.description);
+      } catch (e) {
+        console.error("Failed parsing homepage layout config", e);
+      }
+    }
+
+    const regularData = data?.filter(p => p.sku !== 'NOM-LAYOUT') || [];
+
+    dbProducts = regularData.map((product: any, index: number) =>
       normalizeProduct(product, index),
     );
+
+    if (layoutConfig.homepage && layoutConfig.homepage.length > 0) {
+      dbProducts.sort((a, b) => {
+        const idxA = layoutConfig.homepage.indexOf(a.id);
+        const idxB = layoutConfig.homepage.indexOf(b.id);
+        if (idxA === -1 && idxB === -1) return 0;
+        if (idxA === -1) return 1;
+        if (idxB === -1) return -1;
+        return idxA - idxB;
+      });
+    }
   } catch (e) {
     console.error("Could not fetch Supabase products. Using local seed.", e);
   }

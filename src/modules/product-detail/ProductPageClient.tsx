@@ -1,6 +1,7 @@
 "use client";
 
 import { CSSProperties, useMemo, useState } from "react";
+import { createClient } from "../../lib/supabase/client";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -27,23 +28,64 @@ export default function ProductPageClient({
   initialProduct: Product | null;
   initialReviews?: any[];
 }) {
-  const { cart, addToCart, toggleWishlist, isInWishlist, setCartOpen } = useStore();
+  const { cart, addToCart, toggleWishlist, isInWishlist, setCartOpen, profile } = useStore();
+  const supabase = createClient();
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
 
   const cartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
 
-  const productReviews = useMemo(() => {
+  const [reviews, setReviews] = useState<any[]>(() => {
     if (initialReviews.length > 0) return initialReviews;
     if (initialProduct?.reviews?.length) return initialProduct.reviews;
     return FALLBACK_REVIEWS_POOL;
-  }, [initialProduct, initialReviews]);
+  });
+
+  const [newRating, setNewRating] = useState(5);
+  const [newTitle, setNewTitle] = useState("");
+  const [newContent, setNewContent] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+
+  const handleReviewSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!profile) return;
+    setSubmitting(true);
+    setSubmitError("");
+
+    try {
+      const { data, error } = await supabase
+        .from("reviews")
+        .insert({
+          product_id: p.id,
+          author_name: profile.name,
+          author_avatar: `https://i.pravatar.cc/150?u=${encodeURIComponent(profile.name)}`,
+          rating: newRating,
+          content: newTitle ? `**${newTitle.trim()}**\n\n${newContent}` : newContent,
+          is_verified_purchase: true,
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      setReviews((prev) => [data, ...prev]);
+      setNewTitle("");
+      setNewContent("");
+      setNewRating(5);
+    } catch (err: any) {
+      console.error("Error submitting review", err);
+      setSubmitError(err.message || "Failed to submit review. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   const averageRating = useMemo(() => {
-    if (productReviews.length === 0) return 5.0;
-    const sum = productReviews.reduce((acc, r) => acc + r.rating, 0);
-    return (sum / productReviews.length).toFixed(1);
-  }, [productReviews]);
+    if (reviews.length === 0) return 5.0;
+    const sum = reviews.reduce((acc, r) => acc + r.rating, 0);
+    return (sum / reviews.length).toFixed(1);
+  }, [reviews]);
 
   const [selectedColor, setSelectedColor] = useState(() => {
     return initialProduct?.colors?.[0] || "";
@@ -190,7 +232,7 @@ export default function ProductPageClient({
                 ))}
               </div>
               <span>
-                {averageRating} ({p.reviewCount || productReviews.length} Reviews)
+                {averageRating} ({reviews.length} Reviews)
               </span>
             </a>
 
@@ -350,55 +392,189 @@ export default function ProductPageClient({
             </div>
 
             <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
-              {productReviews.map((r, i) => (
-                <div 
-                  key={r.id || i} 
-                  style={{ 
-                    padding: "24px", 
-                    background: "rgba(255, 255, 255, 0.03)", 
-                    backdropFilter: "blur(8px)",
-                    borderRadius: "8px", 
-                    border: "1px solid rgba(255, 255, 255, 0.06)" 
-                  }}
-                >
-                  <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "16px" }}>
-                    <img 
-                      src={r.author_avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(r.author_name)}&background=random`} 
-                      alt={r.author_name} 
-                      style={{ width: "40px", height: "40px", borderRadius: "50%", objectFit: "cover" }}
-                    />
-                    <div style={{ flex: 1 }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                        <strong style={{ fontSize: "14px", color: "#ffffff" }}>{r.author_name}</strong>
-                        {r.is_verified_purchase && (
-                          <span style={{ fontSize: "10px", color: "#d1b894", background: "rgba(209, 184, 148, 0.08)", border: "1px solid rgba(209, 184, 148, 0.3)", padding: "2px 8px", borderRadius: "99px", display: "inline-flex", alignItems: "center", gap: "3px" }}>
-                            <Sparkles size={8} /> Verified Buyer
-                          </span>
-                        )}
-                      </div>
-                      <div style={{ display: "flex", gap: "2px", marginTop: "4px" }}>
-                        {[...Array(5)].map((_, idx) => (
-                          <Star
-                            key={idx}
-                            size={12}
-                            fill={idx < r.rating ? "#d1b894" : "none"}
-                            stroke="#d1b894"
-                          />
-                        ))}
+              {reviews.map((r, i) => {
+                const hasMarkdownTitle = typeof r.content === "string" && r.content.startsWith("**") && r.content.includes("\n\n");
+                const displayTitle = r.title || (hasMarkdownTitle ? r.content.split("\n\n")[0].replace(/\*\*/g, "") : "");
+                const displayContent = hasMarkdownTitle ? r.content.substring(r.content.indexOf("\n\n") + 2) : r.content;
+                return (
+                  <div 
+                    key={r.id || i} 
+                    style={{ 
+                      padding: "24px", 
+                      background: "rgba(255, 255, 255, 0.03)", 
+                      backdropFilter: "blur(8px)",
+                      borderRadius: "8px", 
+                      border: "1px solid rgba(255, 255, 255, 0.06)" 
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "16px" }}>
+                      <img 
+                        src={r.author_avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(r.author_name)}&background=random`} 
+                        alt={r.author_name} 
+                        style={{ width: "40px", height: "40px", borderRadius: "50%", objectFit: "cover" }}
+                      />
+                      <div style={{ flex: 1 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                          <strong style={{ fontSize: "14px", color: "#ffffff" }}>{r.author_name}</strong>
+                          {r.is_verified_purchase && (
+                            <span style={{ fontSize: "10px", color: "#d1b894", background: "rgba(209, 184, 148, 0.08)", border: "1px solid rgba(209, 184, 148, 0.3)", padding: "2px 8px", borderRadius: "99px", display: "inline-flex", alignItems: "center", gap: "3px" }}>
+                              <Sparkles size={8} /> Verified Buyer
+                            </span>
+                          )}
+                        </div>
+                        <div style={{ display: "flex", gap: "2px", marginTop: "4px" }}>
+                          {[...Array(5)].map((_, idx) => (
+                            <Star
+                              key={idx}
+                              size={12}
+                              fill={idx < r.rating ? "#d1b894" : "none"}
+                              stroke="#d1b894"
+                            />
+                          ))}
+                        </div>
                       </div>
                     </div>
+                    {displayTitle && (
+                      <h3 style={{ margin: "0 0 8px", fontSize: "16px", color: "#ffffff" }}>
+                        {displayTitle}
+                      </h3>
+                    )}
+                    <p style={{ margin: 0, fontSize: "14px", lineHeight: "1.6", color: "#ffffff", opacity: 0.95 }}>
+                      {displayContent}
+                    </p>
                   </div>
-                  {r.title && (
-                    <h3 style={{ margin: "0 0 8px", fontSize: "16px", color: "#ffffff" }}>
-                      {r.title}
-                    </h3>
-                  )}
-                  <p style={{ margin: 0, fontSize: "14px", lineHeight: "1.6", color: "#ffffff", opacity: 0.95 }}>
-                    {r.content}
-                  </p>
-                </div>
-              ))}
+                );
+              })}
             </div>
+
+            {/* Review Form */}
+            {profile ? (
+              <form onSubmit={handleReviewSubmit} style={{
+                marginTop: "40px",
+                padding: "30px",
+                background: "rgba(255, 255, 255, 0.02)",
+                border: "1px solid rgba(255, 255, 255, 0.05)",
+                borderRadius: "8px"
+              }}>
+                <h3 style={{ fontSize: "16px", color: "var(--paper)", margin: "0 0 16px 0", fontFamily: "var(--font-serif)" }}>
+                  Write a Review
+                </h3>
+                
+                <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "20px" }}>
+                  <span style={{ fontSize: "13px", opacity: 0.8, color: "var(--paper)" }}>Your Rating:</span>
+                  <div style={{ display: "flex", gap: "4px" }}>
+                    {[1, 2, 3, 4, 5].map((stars) => (
+                      <button
+                        type="button"
+                        key={stars}
+                        onClick={() => setNewRating(stars)}
+                        style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }}
+                      >
+                        <Star
+                          size={20}
+                          fill={stars <= newRating ? "#d1b894" : "none"}
+                          stroke="#d1b894"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <label style={{ display: "block", marginBottom: "15px", color: "var(--paper)", fontSize: "13px" }}>
+                  Review Title
+                  <input
+                    type="text"
+                    required
+                    placeholder="Summarize your experience"
+                    value={newTitle}
+                    onChange={(e) => setNewTitle(e.target.value)}
+                    style={{
+                      width: "100%",
+                      padding: "10px 14px",
+                      background: "rgba(255,255,255,0.03)",
+                      border: "1px solid rgba(255,255,255,0.1)",
+                      borderRadius: "4px",
+                      color: "#fff",
+                      fontSize: "13px",
+                      marginTop: "5px"
+                    }}
+                  />
+                </label>
+
+                <label style={{ display: "block", marginBottom: "20px", color: "var(--paper)", fontSize: "13px" }}>
+                  Review Comments
+                  <textarea
+                    required
+                    rows={4}
+                    placeholder="What did you like or dislike about this piece?"
+                    value={newContent}
+                    onChange={(e) => setNewContent(e.target.value)}
+                    style={{
+                      width: "100%",
+                      padding: "10px 14px",
+                      background: "rgba(255,255,255,0.03)",
+                      border: "1px solid rgba(255,255,255,0.1)",
+                      borderRadius: "4px",
+                      color: "#fff",
+                      fontSize: "13px",
+                      marginTop: "5px",
+                      resize: "vertical"
+                    }}
+                  />
+                </label>
+
+                {submitError && (
+                  <p style={{ color: "#e06c75", fontSize: "13px", margin: "0 0 15px 0" }}>{submitError}</p>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  style={{
+                    background: "var(--clay)",
+                    color: "var(--paper)",
+                    border: "none",
+                    padding: "10px 20px",
+                    borderRadius: "4px",
+                    fontSize: "13px",
+                    fontWeight: "600",
+                    cursor: submitting ? "not-allowed" : "pointer"
+                  }}
+                >
+                  {submitting ? "Submitting..." : "Submit Review"}
+                </button>
+              </form>
+            ) : (
+              <div style={{
+                marginTop: "40px",
+                padding: "30px",
+                textAlign: "center",
+                background: "rgba(255, 255, 255, 0.02)",
+                border: "1px dashed rgba(255, 255, 255, 0.1)",
+                borderRadius: "8px"
+              }}>
+                <p style={{ margin: "0 0 16px 0", fontSize: "14px", opacity: 0.8, color: "var(--paper)" }}>
+                  Only registered customers can write reviews.
+                </p>
+                <Link
+                  href={`/login?email=&register=false`}
+                  style={{
+                    display: "inline-block",
+                    background: "var(--mineral)",
+                    color: "var(--paper)",
+                    border: "1px solid var(--copy)",
+                    padding: "8px 16px",
+                    borderRadius: "4px",
+                    fontSize: "13px",
+                    textDecoration: "none",
+                    fontWeight: "500",
+                    transition: "all 0.2s ease"
+                  }}
+                >
+                  Sign In to Write a Review
+                </Link>
+              </div>
+            )}
           </div>
         </section>
 

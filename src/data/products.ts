@@ -27,6 +27,7 @@ export type Product = {
   reviews?: ProductReview[];
   featured?: boolean;
   images?: string[];
+  created_at?: string;
 };
 
 export const products: Product[] = [
@@ -8516,8 +8517,5456 @@ export const products: Product[] = [
         "is_verified_purchase": true
       }
     ]
+  },
+  {
+    "id": 151,
+    "name": "NŌMA Pro Stainless Steel 3-Piece Pan Set",
+    "category": "Kitchen",
+    "price": 185,
+    "oldPrice": 220,
+    "image": "https://images.unsplash.com/photo-1584269600464-37b1b58a9fe7?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1584269600464-37b1b58a9fe7?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1593113630400-ea4288922497?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "An essential 3-piece stainless steel cookware set featuring high thermal conductivity and balanced ergonomic handles for daily professional cooking.",
+    "colors": [
+      "#d1d5db",
+      "#9ca3af"
+    ],
+    "stock": 25,
+    "sku": "NOM-0151",
+    "featured": true,
+    "badge": "Best Seller",
+    "reviews": [
+      {
+        "id": "n-ma-pro-stainless-steel-3-piece-pan-set-1",
+        "author_name": "Silas Romero",
+        "author_avatar": "https://i.pravatar.cc/150?u=Silas%20Romero",
+        "rating": 5,
+        "title": "Exceptional quality",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-03-10T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "n-ma-pro-stainless-steel-3-piece-pan-set-2",
+        "author_name": "Avery Brooks",
+        "author_avatar": "https://i.pravatar.cc/150?u=Avery%20Brooks",
+        "rating": 5,
+        "title": "Beautiful weight",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-03-11T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "n-ma-pro-stainless-steel-3-piece-pan-set-3",
+        "author_name": "Antonio garcia",
+        "author_avatar": "https://i.pravatar.cc/150?u=Antonio%20garcia",
+        "rating": 5,
+        "title": "Worth every penny",
+        "content": "Solid weight and comfortable grip. The design is completely integrated and feels very balanced.",
+        "created_at": "2026-03-12T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 5,
+    "reviewCount": 3
+  },
+  {
+    "id": 152,
+    "name": "NŌMA Signature 5-Piece Stainless Steel Set",
+    "category": "Kitchen",
+    "price": 295,
+    "oldPrice": 350,
+    "image": "https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1584269600464-37b1b58a9fe7?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1584269600464-37b1b58a9fe7?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1593113630400-ea4288922497?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Our signature 5-piece professional cookware collection. Triple-ply bonded stainless steel construction offers unmatched heat retention and durability.",
+    "colors": [
+      "#d1d5db",
+      "#9ca3af"
+    ],
+    "stock": 18,
+    "sku": "NOM-0152",
+    "featured": true,
+    "badge": "Best Seller",
+    "reviews": [
+      {
+        "id": "n-ma-signature-5-piece-stainless-steel-set-1",
+        "author_name": "Avery Brooks",
+        "author_avatar": "https://i.pravatar.cc/150?u=Avery%20Brooks",
+        "rating": 5,
+        "title": "Exceptional quality",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-03-10T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "n-ma-signature-5-piece-stainless-steel-set-2",
+        "author_name": "Antonio garcia",
+        "author_avatar": "https://i.pravatar.cc/150?u=Antonio%20garcia",
+        "rating": 5,
+        "title": "Exceptional quality",
+        "content": "Solid weight and comfortable grip. The design is completely integrated and feels very balanced.",
+        "created_at": "2026-03-11T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "n-ma-signature-5-piece-stainless-steel-set-3",
+        "author_name": "Maya Chen",
+        "author_avatar": "https://i.pravatar.cc/150?u=Maya%20Chen",
+        "rating": 5,
+        "title": "Exceptional quality",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-03-12T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 5,
+    "reviewCount": 3
+  },
+  {
+    "id": 153,
+    "name": "NŌMA Copper-Core Stainless Steel Fry Pan Pack",
+    "category": "Kitchen",
+    "price": 145,
+    "oldPrice": 175,
+    "image": "https://images.unsplash.com/photo-1593113630400-ea4288922497?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1593113630400-ea4288922497?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "A professional fry pan pack featuring a responsive copper core sandwiched between stainless steel layers for ultimate temperature control.",
+    "colors": [
+      "#d1d5db",
+      "#b87333"
+    ],
+    "stock": 30,
+    "sku": "NOM-0153",
+    "featured": true,
+    "badge": "Best Seller",
+    "reviews": [
+      {
+        "id": "n-ma-copper-core-stainless-steel-fry-pan-pack-1",
+        "author_name": "Antonio garcia",
+        "author_avatar": "https://i.pravatar.cc/150?u=Antonio%20garcia",
+        "rating": 5,
+        "title": "Exceptional quality",
+        "content": "Solid weight and comfortable grip. The design is completely integrated and feels very balanced.",
+        "created_at": "2026-03-10T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "n-ma-copper-core-stainless-steel-fry-pan-pack-2",
+        "author_name": "Maya Chen",
+        "author_avatar": "https://i.pravatar.cc/150?u=Maya%20Chen",
+        "rating": 5,
+        "title": "Beautiful finish",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-03-11T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "n-ma-copper-core-stainless-steel-fry-pan-pack-3",
+        "author_name": "Samira Cole",
+        "author_avatar": "https://i.pravatar.cc/150?u=Samira%20Cole",
+        "rating": 5,
+        "title": "Highly recommend",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-03-12T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 5,
+    "reviewCount": 3
+  },
+  {
+    "id": 154,
+    "name": "Bora Walnut Serving Board",
+    "category": "Kitchen",
+    "price": 132,
+    "image": "https://images.unsplash.com/photo-1594793751846-60c7f763f03b?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1594793751846-60c7f763f03b?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Designed to slow down daily moments, combining high-grade functional components with a serene architectural form.",
+    "colors": [
+      "#ded8cb",
+      "#2f332e"
+    ],
+    "stock": 20,
+    "sku": "NOM-0154",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "bora-walnut-serving-board-1",
+        "author_name": "Maya Chen",
+        "author_avatar": "https://i.pravatar.cc/150?u=Maya%20Chen",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "bora-walnut-serving-board-2",
+        "author_name": "Amelia Stone",
+        "author_avatar": "https://i.pravatar.cc/150?u=Amelia%20Stone",
+        "rating": 5,
+        "title": "Daily essential",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "bora-walnut-serving-board-3",
+        "author_name": "Miles Carter",
+        "author_avatar": "https://i.pravatar.cc/150?u=Miles%20Carter",
+        "rating": 4,
+        "title": "Worth every penny",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.3,
+    "reviewCount": 3
+  },
+  {
+    "id": 155,
+    "name": "Sage Nesting Mixing Bowls",
+    "category": "Kitchen",
+    "price": 138,
+    "oldPrice": 173,
+    "image": "https://images.unsplash.com/photo-1626200419199-391ae4be7a41?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1596790011462-8178f2441961?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1626200419199-391ae4be7a41?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1596790011462-8178f2441961?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "An essential culinary tool designed with a balanced weight and comfortable grip, finished in premium materials for elevated kitchen rituals.",
+    "colors": [
+      "#9d5037",
+      "#f4f1e9"
+    ],
+    "stock": 21,
+    "sku": "NOM-0155",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "sage-nesting-mixing-bowls-1",
+        "author_name": "Samira Cole",
+        "author_avatar": "https://i.pravatar.cc/150?u=Samira%20Cole",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "sage-nesting-mixing-bowls-2",
+        "author_name": "Nora Ellis",
+        "author_avatar": "https://i.pravatar.cc/150?u=Nora%20Ellis",
+        "rating": 5,
+        "title": "Pure tranquility",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "sage-nesting-mixing-bowls-3",
+        "author_name": "Eva Laurent",
+        "author_avatar": "https://i.pravatar.cc/150?u=Eva%20Laurent",
+        "rating": 4,
+        "title": "Exceptional quality",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "sage-nesting-mixing-bowls-4",
+        "author_name": "Antonio garcia",
+        "author_avatar": "https://i.pravatar.cc/150?u=Antonio%20garcia",
+        "rating": 5,
+        "title": "Minimalist & solid",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-07T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 4
+  },
+  {
+    "id": 156,
+    "name": "Pura Ceramic Salad Bowl",
+    "category": "Kitchen",
+    "price": 154,
+    "image": "https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1506368249639-73a05d6f6488?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1506368249639-73a05d6f6488?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Crafted for excellent heat retention and durability, this piece brings a quiet, structural presence to the open shelf and dining table.",
+    "colors": [
+      "#7d8a76",
+      "#ded8cb"
+    ],
+    "stock": 22,
+    "sku": "NOM-0156",
+    "featured": false,
+    "badge": "Limited Edition",
+    "reviews": [
+      {
+        "id": "pura-ceramic-salad-bowl-1",
+        "author_name": "Jonas Vale",
+        "author_avatar": "https://i.pravatar.cc/150?u=Jonas%20Vale",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "The finish is outstanding. It has a beautiful balanced weight that makes preparation a quiet pleasure.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "pura-ceramic-salad-bowl-2",
+        "author_name": "Clara Nguyen",
+        "author_avatar": "https://i.pravatar.cc/150?u=Clara%20Nguyen",
+        "rating": 5,
+        "title": "Worth every penny",
+        "content": "Solid weight and comfortable grip. The design is completely integrated and feels very balanced.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 2
+  },
+  {
+    "id": 157,
+    "name": "Vera Stoneware Dinner Plate",
+    "category": "Kitchen",
+    "price": 160,
+    "image": "https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1590794056226-79ef3a8147e1?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1590794056226-79ef3a8147e1?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Features a minimal profile and tactile material contrast, combining daily longevity with functional elegance for the design-conscious cook.",
+    "colors": [
+      "#d1d5db",
+      "#9ca3af"
+    ],
+    "stock": 23,
+    "sku": "NOM-0157",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "vera-stoneware-dinner-plate-1",
+        "author_name": "Julian Reed",
+        "author_avatar": "https://i.pravatar.cc/150?u=Julian%20Reed",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "vera-stoneware-dinner-plate-2",
+        "author_name": "Noah Bennett",
+        "author_avatar": "https://i.pravatar.cc/150?u=Noah%20Bennett",
+        "rating": 5,
+        "title": "Beautiful weight",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "vera-stoneware-dinner-plate-3",
+        "author_name": "Iris Morgan",
+        "author_avatar": "https://i.pravatar.cc/150?u=Iris%20Morgan",
+        "rating": 4,
+        "title": "Daily essential",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.3,
+    "reviewCount": 3
+  },
+  {
+    "id": 158,
+    "name": "Sola Stoneware Dessert Plate",
+    "category": "Kitchen",
+    "price": 176,
+    "image": "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "A refined centerpiece for the table, offering a calm, organic silhouette and a textured finish that grows richer with use.",
+    "colors": [
+      "#b87333",
+      "#3e2723"
+    ],
+    "stock": 24,
+    "sku": "NOM-0158",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "sola-stoneware-dessert-plate-1",
+        "author_name": "Elliot Hayes",
+        "author_avatar": "https://i.pravatar.cc/150?u=Elliot%20Hayes",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "sola-stoneware-dessert-plate-2",
+        "author_name": "Theo Martin",
+        "author_avatar": "https://i.pravatar.cc/150?u=Theo%20Martin",
+        "rating": 5,
+        "title": "Exceptional quality",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "sola-stoneware-dessert-plate-3",
+        "author_name": "Silas Romero",
+        "author_avatar": "https://i.pravatar.cc/150?u=Silas%20Romero",
+        "rating": 4,
+        "title": "Worth every penny",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "sola-stoneware-dessert-plate-4",
+        "author_name": "Jonas Vale",
+        "author_avatar": "https://i.pravatar.cc/150?u=Jonas%20Vale",
+        "rating": 5,
+        "title": "Daily essential",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-07T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 4
+  },
+  {
+    "id": 159,
+    "name": "Aura Porcelain Tea Mug Set",
+    "category": "Kitchen",
+    "price": 182,
+    "image": "https://images.unsplash.com/photo-1534482421-64566f976cfa?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1517256064527-09c53b2d0bc6?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1534482421-64566f976cfa?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1517256064527-09c53b2d0bc6?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Designed to slow down daily moments, combining high-grade functional components with a serene architectural form.",
+    "colors": [
+      "#8d6e63",
+      "#d7ccc8"
+    ],
+    "stock": 25,
+    "sku": "NOM-0159",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "aura-porcelain-tea-mug-set-1",
+        "author_name": "Amelia Stone",
+        "author_avatar": "https://i.pravatar.cc/150?u=Amelia%20Stone",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "Solid weight and comfortable grip. The design is completely integrated and feels very balanced.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "aura-porcelain-tea-mug-set-2",
+        "author_name": "Miles Carter",
+        "author_avatar": "https://i.pravatar.cc/150?u=Miles%20Carter",
+        "rating": 5,
+        "title": "Beautiful finish",
+        "content": "The finish is outstanding. It has a beautiful balanced weight that makes preparation a quiet pleasure.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 2
+  },
+  {
+    "id": 160,
+    "name": "NŌMA Pro Glass Water Carafe",
+    "category": "Kitchen",
+    "price": 198,
+    "oldPrice": 248,
+    "image": "https://images.unsplash.com/photo-1544982503-9f984c14501a?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1574894709920-11b28e7367e3?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1544982503-9f984c14501a?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1574894709920-11b28e7367e3?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "An essential culinary tool designed with a balanced weight and comfortable grip, finished in premium materials for elevated kitchen rituals.",
+    "colors": [
+      "#f4f1e9",
+      "#2f332e"
+    ],
+    "stock": 26,
+    "sku": "NOM-0160",
+    "featured": false,
+    "badge": "New",
+    "reviews": [
+      {
+        "id": "n-ma-pro-glass-water-carafe-1",
+        "author_name": "Nora Ellis",
+        "author_avatar": "https://i.pravatar.cc/150?u=Nora%20Ellis",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "n-ma-pro-glass-water-carafe-2",
+        "author_name": "Eva Laurent",
+        "author_avatar": "https://i.pravatar.cc/150?u=Eva%20Laurent",
+        "rating": 5,
+        "title": "Highly recommend",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "n-ma-pro-glass-water-carafe-3",
+        "author_name": "Antonio garcia",
+        "author_avatar": "https://i.pravatar.cc/150?u=Antonio%20garcia",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.3,
+    "reviewCount": 3
+  },
+  {
+    "id": 161,
+    "name": "Atelier French Press Coffeemaker",
+    "category": "Kitchen",
+    "price": 204,
+    "image": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1595272170044-db903876b222?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1595272170044-db903876b222?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Crafted for excellent heat retention and durability, this piece brings a quiet, structural presence to the open shelf and dining table.",
+    "colors": [
+      "#ded8cb",
+      "#2f332e"
+    ],
+    "stock": 27,
+    "sku": "NOM-0161",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "atelier-french-press-coffeemaker-1",
+        "author_name": "Clara Nguyen",
+        "author_avatar": "https://i.pravatar.cc/150?u=Clara%20Nguyen",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "atelier-french-press-coffeemaker-2",
+        "author_name": "Lena Ortiz",
+        "author_avatar": "https://i.pravatar.cc/150?u=Lena%20Ortiz",
+        "rating": 5,
+        "title": "Minimalist & solid",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "atelier-french-press-coffeemaker-3",
+        "author_name": "Maya Chen",
+        "author_avatar": "https://i.pravatar.cc/150?u=Maya%20Chen",
+        "rating": 4,
+        "title": "Daily essential",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "atelier-french-press-coffeemaker-4",
+        "author_name": "Amelia Stone",
+        "author_avatar": "https://i.pravatar.cc/150?u=Amelia%20Stone",
+        "rating": 5,
+        "title": "Pure tranquility",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-07T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 4
+  },
+  {
+    "id": 162,
+    "name": "Soren Manual Coffee Grinder",
+    "category": "Kitchen",
+    "price": 220,
+    "image": "https://images.unsplash.com/photo-1596790011462-8178f2441961?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1596790011462-8178f2441961?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Features a minimal profile and tactile material contrast, combining daily longevity with functional elegance for the design-conscious cook.",
+    "colors": [
+      "#9d5037",
+      "#f4f1e9"
+    ],
+    "stock": 28,
+    "sku": "NOM-0162",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "soren-manual-coffee-grinder-1",
+        "author_name": "Noah Bennett",
+        "author_avatar": "https://i.pravatar.cc/150?u=Noah%20Bennett",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "The finish is outstanding. It has a beautiful balanced weight that makes preparation a quiet pleasure.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "soren-manual-coffee-grinder-2",
+        "author_name": "Iris Morgan",
+        "author_avatar": "https://i.pravatar.cc/150?u=Iris%20Morgan",
+        "rating": 5,
+        "title": "Daily essential",
+        "content": "Solid weight and comfortable grip. The design is completely integrated and feels very balanced.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 2
+  },
+  {
+    "id": 163,
+    "name": "Kora Copper Tea Kettle",
+    "category": "Kitchen",
+    "price": 226,
+    "image": "https://images.unsplash.com/photo-1506368249639-73a05d6f6488?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1531234799389-d879353b91d2?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1506368249639-73a05d6f6488?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1531234799389-d879353b91d2?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "A refined centerpiece for the table, offering a calm, organic silhouette and a textured finish that grows richer with use.",
+    "colors": [
+      "#7d8a76",
+      "#ded8cb"
+    ],
+    "stock": 29,
+    "sku": "NOM-0163",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "kora-copper-tea-kettle-1",
+        "author_name": "Theo Martin",
+        "author_avatar": "https://i.pravatar.cc/150?u=Theo%20Martin",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "kora-copper-tea-kettle-2",
+        "author_name": "Silas Romero",
+        "author_avatar": "https://i.pravatar.cc/150?u=Silas%20Romero",
+        "rating": 5,
+        "title": "Pure tranquility",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "kora-copper-tea-kettle-3",
+        "author_name": "Jonas Vale",
+        "author_avatar": "https://i.pravatar.cc/150?u=Jonas%20Vale",
+        "rating": 4,
+        "title": "Exceptional quality",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.3,
+    "reviewCount": 3
+  },
+  {
+    "id": 164,
+    "name": "Kala Handcrafted Ceramic Teapot",
+    "category": "Kitchen",
+    "price": 242,
+    "image": "https://images.unsplash.com/photo-1590794056226-79ef3a8147e1?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1590794056226-79ef3a8147e1?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Designed to slow down daily moments, combining high-grade functional components with a serene architectural form.",
+    "colors": [
+      "#d1d5db",
+      "#9ca3af"
+    ],
+    "stock": 30,
+    "sku": "NOM-0164",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "kala-handcrafted-ceramic-teapot-1",
+        "author_name": "Miles Carter",
+        "author_avatar": "https://i.pravatar.cc/150?u=Miles%20Carter",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "kala-handcrafted-ceramic-teapot-2",
+        "author_name": "Avery Brooks",
+        "author_avatar": "https://i.pravatar.cc/150?u=Avery%20Brooks",
+        "rating": 5,
+        "title": "Worth every penny",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "kala-handcrafted-ceramic-teapot-3",
+        "author_name": "Julian Reed",
+        "author_avatar": "https://i.pravatar.cc/150?u=Julian%20Reed",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "kala-handcrafted-ceramic-teapot-4",
+        "author_name": "Noah Bennett",
+        "author_avatar": "https://i.pravatar.cc/150?u=Noah%20Bennett",
+        "rating": 5,
+        "title": "Worth every penny",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-07T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 4
+  },
+  {
+    "id": 165,
+    "name": "Eon Olive Wood Spoon Set",
+    "category": "Kitchen",
+    "price": 248,
+    "oldPrice": 310,
+    "image": "https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "An essential culinary tool designed with a balanced weight and comfortable grip, finished in premium materials for elevated kitchen rituals.",
+    "colors": [
+      "#b87333",
+      "#3e2723"
+    ],
+    "stock": 31,
+    "sku": "NOM-0165",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "eon-olive-wood-spoon-set-1",
+        "author_name": "Eva Laurent",
+        "author_avatar": "https://i.pravatar.cc/150?u=Eva%20Laurent",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "Solid weight and comfortable grip. The design is completely integrated and feels very balanced.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "eon-olive-wood-spoon-set-2",
+        "author_name": "Antonio garcia",
+        "author_avatar": "https://i.pravatar.cc/150?u=Antonio%20garcia",
+        "rating": 5,
+        "title": "Beautiful weight",
+        "content": "The finish is outstanding. It has a beautiful balanced weight that makes preparation a quiet pleasure.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 2
+  },
+  {
+    "id": 166,
+    "name": "Oria Silicone Baking Spatula",
+    "category": "Kitchen",
+    "price": 264,
+    "image": "https://images.unsplash.com/photo-1517256064527-09c53b2d0bc6?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1543083477-4f785ae8282a?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1517256064527-09c53b2d0bc6?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1543083477-4f785ae8282a?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Crafted for excellent heat retention and durability, this piece brings a quiet, structural presence to the open shelf and dining table.",
+    "colors": [
+      "#8d6e63",
+      "#d7ccc8"
+    ],
+    "stock": 32,
+    "sku": "NOM-0166",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "oria-silicone-baking-spatula-1",
+        "author_name": "Lena Ortiz",
+        "author_avatar": "https://i.pravatar.cc/150?u=Lena%20Ortiz",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "oria-silicone-baking-spatula-2",
+        "author_name": "Maya Chen",
+        "author_avatar": "https://i.pravatar.cc/150?u=Maya%20Chen",
+        "rating": 5,
+        "title": "Exceptional quality",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "oria-silicone-baking-spatula-3",
+        "author_name": "Amelia Stone",
+        "author_avatar": "https://i.pravatar.cc/150?u=Amelia%20Stone",
+        "rating": 4,
+        "title": "Worth every penny",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.3,
+    "reviewCount": 3
+  },
+  {
+    "id": 167,
+    "name": "Mira Stainless Steel Tongs",
+    "category": "Kitchen",
+    "price": 270,
+    "image": "https://images.unsplash.com/photo-1574894709920-11b28e7367e3?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1574894709920-11b28e7367e3?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Features a minimal profile and tactile material contrast, combining daily longevity with functional elegance for the design-conscious cook.",
+    "colors": [
+      "#f4f1e9",
+      "#2f332e"
+    ],
+    "stock": 33,
+    "sku": "NOM-0167",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "mira-stainless-steel-tongs-1",
+        "author_name": "Iris Morgan",
+        "author_avatar": "https://i.pravatar.cc/150?u=Iris%20Morgan",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "mira-stainless-steel-tongs-2",
+        "author_name": "Samira Cole",
+        "author_avatar": "https://i.pravatar.cc/150?u=Samira%20Cole",
+        "rating": 5,
+        "title": "Beautiful finish",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "mira-stainless-steel-tongs-3",
+        "author_name": "Nora Ellis",
+        "author_avatar": "https://i.pravatar.cc/150?u=Nora%20Ellis",
+        "rating": 4,
+        "title": "Exceptional quality",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "mira-stainless-steel-tongs-4",
+        "author_name": "Eva Laurent",
+        "author_avatar": "https://i.pravatar.cc/150?u=Eva%20Laurent",
+        "rating": 5,
+        "title": "Beautiful weight",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-07T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 4
+  },
+  {
+    "id": 168,
+    "name": "Loma Heavy Ladle",
+    "category": "Kitchen",
+    "price": 286,
+    "image": "https://images.unsplash.com/photo-1595272170044-db903876b222?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1588854337236-6889d631faa8?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1595272170044-db903876b222?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1588854337236-6889d631faa8?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "A refined centerpiece for the table, offering a calm, organic silhouette and a textured finish that grows richer with use.",
+    "colors": [
+      "#ded8cb",
+      "#2f332e"
+    ],
+    "stock": 34,
+    "sku": "NOM-0168",
+    "featured": false,
+    "badge": "New",
+    "reviews": [
+      {
+        "id": "loma-heavy-ladle-1",
+        "author_name": "Silas Romero",
+        "author_avatar": "https://i.pravatar.cc/150?u=Silas%20Romero",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "The finish is outstanding. It has a beautiful balanced weight that makes preparation a quiet pleasure.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "loma-heavy-ladle-2",
+        "author_name": "Jonas Vale",
+        "author_avatar": "https://i.pravatar.cc/150?u=Jonas%20Vale",
+        "rating": 5,
+        "title": "Highly recommend",
+        "content": "Solid weight and comfortable grip. The design is completely integrated and feels very balanced.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 2
+  },
+  {
+    "id": 169,
+    "name": "Kove Brass Pepper Grinder",
+    "category": "Kitchen",
+    "price": 292,
+    "image": "https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Designed to slow down daily moments, combining high-grade functional components with a serene architectural form.",
+    "colors": [
+      "#9d5037",
+      "#f4f1e9"
+    ],
+    "stock": 35,
+    "sku": "NOM-0169",
+    "featured": false,
+    "badge": "Limited Edition",
+    "reviews": [
+      {
+        "id": "kove-brass-pepper-grinder-1",
+        "author_name": "Avery Brooks",
+        "author_avatar": "https://i.pravatar.cc/150?u=Avery%20Brooks",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "kove-brass-pepper-grinder-2",
+        "author_name": "Julian Reed",
+        "author_avatar": "https://i.pravatar.cc/150?u=Julian%20Reed",
+        "rating": 5,
+        "title": "Minimalist & solid",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "kove-brass-pepper-grinder-3",
+        "author_name": "Noah Bennett",
+        "author_avatar": "https://i.pravatar.cc/150?u=Noah%20Bennett",
+        "rating": 4,
+        "title": "Daily essential",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.3,
+    "reviewCount": 3
+  },
+  {
+    "id": 170,
+    "name": "Rhea Cast Iron Salt Cellar",
+    "category": "Kitchen",
+    "price": 308,
+    "oldPrice": 385,
+    "image": "https://images.unsplash.com/photo-1531234799389-d879353b91d2?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1608686207856-001b95cf60ca?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1531234799389-d879353b91d2?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1608686207856-001b95cf60ca?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "An essential culinary tool designed with a balanced weight and comfortable grip, finished in premium materials for elevated kitchen rituals.",
+    "colors": [
+      "#7d8a76",
+      "#ded8cb"
+    ],
+    "stock": 36,
+    "sku": "NOM-0170",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "rhea-cast-iron-salt-cellar-1",
+        "author_name": "Antonio garcia",
+        "author_avatar": "https://i.pravatar.cc/150?u=Antonio%20garcia",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "rhea-cast-iron-salt-cellar-2",
+        "author_name": "Elliot Hayes",
+        "author_avatar": "https://i.pravatar.cc/150?u=Elliot%20Hayes",
+        "rating": 5,
+        "title": "Daily essential",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "rhea-cast-iron-salt-cellar-3",
+        "author_name": "Theo Martin",
+        "author_avatar": "https://i.pravatar.cc/150?u=Theo%20Martin",
+        "rating": 4,
+        "title": "Worth every penny",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "rhea-cast-iron-salt-cellar-4",
+        "author_name": "Silas Romero",
+        "author_avatar": "https://i.pravatar.cc/150?u=Silas%20Romero",
+        "rating": 5,
+        "title": "Exceptional quality",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-07T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 4
+  },
+  {
+    "id": 171,
+    "name": "Tate Magnetic Knife Rack",
+    "category": "Kitchen",
+    "price": 314,
+    "image": "https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Crafted for excellent heat retention and durability, this piece brings a quiet, structural presence to the open shelf and dining table.",
+    "colors": [
+      "#d1d5db",
+      "#9ca3af"
+    ],
+    "stock": 37,
+    "sku": "NOM-0171",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "tate-magnetic-knife-rack-1",
+        "author_name": "Maya Chen",
+        "author_avatar": "https://i.pravatar.cc/150?u=Maya%20Chen",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "Solid weight and comfortable grip. The design is completely integrated and feels very balanced.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "tate-magnetic-knife-rack-2",
+        "author_name": "Amelia Stone",
+        "author_avatar": "https://i.pravatar.cc/150?u=Amelia%20Stone",
+        "rating": 5,
+        "title": "Pure tranquility",
+        "content": "The finish is outstanding. It has a beautiful balanced weight that makes preparation a quiet pleasure.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 2
+  },
+  {
+    "id": 172,
+    "name": "Bala Nesting Spice Jar Set",
+    "category": "Kitchen",
+    "price": 330,
+    "image": "https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1512485694743-9c9538b4e6e0?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1512485694743-9c9538b4e6e0?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Features a minimal profile and tactile material contrast, combining daily longevity with functional elegance for the design-conscious cook.",
+    "colors": [
+      "#b87333",
+      "#3e2723"
+    ],
+    "stock": 38,
+    "sku": "NOM-0172",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "bala-nesting-spice-jar-set-1",
+        "author_name": "Samira Cole",
+        "author_avatar": "https://i.pravatar.cc/150?u=Samira%20Cole",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "bala-nesting-spice-jar-set-2",
+        "author_name": "Nora Ellis",
+        "author_avatar": "https://i.pravatar.cc/150?u=Nora%20Ellis",
+        "rating": 5,
+        "title": "Worth every penny",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "bala-nesting-spice-jar-set-3",
+        "author_name": "Eva Laurent",
+        "author_avatar": "https://i.pravatar.cc/150?u=Eva%20Laurent",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.3,
+    "reviewCount": 3
+  },
+  {
+    "id": 173,
+    "name": "Hale Linen Cooking Apron",
+    "category": "Kitchen",
+    "price": 336,
+    "image": "https://images.unsplash.com/photo-1543083477-4f785ae8282a?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1610589827103-b4f0fbf04323?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1543083477-4f785ae8282a?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1610589827103-b4f0fbf04323?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "A refined centerpiece for the table, offering a calm, organic silhouette and a textured finish that grows richer with use.",
+    "colors": [
+      "#8d6e63",
+      "#d7ccc8"
+    ],
+    "stock": 39,
+    "sku": "NOM-0173",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "hale-linen-cooking-apron-1",
+        "author_name": "Jonas Vale",
+        "author_avatar": "https://i.pravatar.cc/150?u=Jonas%20Vale",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "hale-linen-cooking-apron-2",
+        "author_name": "Clara Nguyen",
+        "author_avatar": "https://i.pravatar.cc/150?u=Clara%20Nguyen",
+        "rating": 5,
+        "title": "Beautiful weight",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "hale-linen-cooking-apron-3",
+        "author_name": "Lena Ortiz",
+        "author_avatar": "https://i.pravatar.cc/150?u=Lena%20Ortiz",
+        "rating": 4,
+        "title": "Daily essential",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "hale-linen-cooking-apron-4",
+        "author_name": "Maya Chen",
+        "author_avatar": "https://i.pravatar.cc/150?u=Maya%20Chen",
+        "rating": 5,
+        "title": "Beautiful finish",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-07T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 4
+  },
+  {
+    "id": 174,
+    "name": "Bora Organic Linen Napkins",
+    "category": "Kitchen",
+    "price": 33,
+    "image": "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1591821090035-c2bb40690b1e?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1591821090035-c2bb40690b1e?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Designed to slow down daily moments, combining high-grade functional components with a serene architectural form.",
+    "colors": [
+      "#f4f1e9",
+      "#2f332e"
+    ],
+    "stock": 40,
+    "sku": "NOM-0174",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "bora-organic-linen-napkins-1",
+        "author_name": "Julian Reed",
+        "author_avatar": "https://i.pravatar.cc/150?u=Julian%20Reed",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "The finish is outstanding. It has a beautiful balanced weight that makes preparation a quiet pleasure.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "bora-organic-linen-napkins-2",
+        "author_name": "Noah Bennett",
+        "author_avatar": "https://i.pravatar.cc/150?u=Noah%20Bennett",
+        "rating": 5,
+        "title": "Exceptional quality",
+        "content": "Solid weight and comfortable grip. The design is completely integrated and feels very balanced.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 2
+  },
+  {
+    "id": 175,
+    "name": "Sage Kitchen Cloth Set",
+    "category": "Kitchen",
+    "price": 39,
+    "oldPrice": 49,
+    "image": "https://images.unsplash.com/photo-1588854337236-6889d631faa8?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1598511726623-d336a132fa6b?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1588854337236-6889d631faa8?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1598511726623-d336a132fa6b?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "An essential culinary tool designed with a balanced weight and comfortable grip, finished in premium materials for elevated kitchen rituals.",
+    "colors": [
+      "#ded8cb",
+      "#2f332e"
+    ],
+    "stock": 41,
+    "sku": "NOM-0175",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "sage-kitchen-cloth-set-1",
+        "author_name": "Elliot Hayes",
+        "author_avatar": "https://i.pravatar.cc/150?u=Elliot%20Hayes",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "sage-kitchen-cloth-set-2",
+        "author_name": "Theo Martin",
+        "author_avatar": "https://i.pravatar.cc/150?u=Theo%20Martin",
+        "rating": 5,
+        "title": "Beautiful finish",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "sage-kitchen-cloth-set-3",
+        "author_name": "Silas Romero",
+        "author_avatar": "https://i.pravatar.cc/150?u=Silas%20Romero",
+        "rating": 4,
+        "title": "Exceptional quality",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.3,
+    "reviewCount": 3
+  },
+  {
+    "id": 176,
+    "name": "Pura Stainless Steel Skillet",
+    "category": "Kitchen",
+    "price": 55,
+    "image": "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Crafted for excellent heat retention and durability, this piece brings a quiet, structural presence to the open shelf and dining table.",
+    "colors": [
+      "#9d5037",
+      "#f4f1e9"
+    ],
+    "stock": 42,
+    "sku": "NOM-0176",
+    "featured": false,
+    "badge": "New",
+    "reviews": [
+      {
+        "id": "pura-stainless-steel-skillet-1",
+        "author_name": "Amelia Stone",
+        "author_avatar": "https://i.pravatar.cc/150?u=Amelia%20Stone",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "pura-stainless-steel-skillet-2",
+        "author_name": "Miles Carter",
+        "author_avatar": "https://i.pravatar.cc/150?u=Miles%20Carter",
+        "rating": 5,
+        "title": "Highly recommend",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "pura-stainless-steel-skillet-3",
+        "author_name": "Avery Brooks",
+        "author_avatar": "https://i.pravatar.cc/150?u=Avery%20Brooks",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "pura-stainless-steel-skillet-4",
+        "author_name": "Julian Reed",
+        "author_avatar": "https://i.pravatar.cc/150?u=Julian%20Reed",
+        "rating": 5,
+        "title": "Highly recommend",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-07T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 4
+  },
+  {
+    "id": 177,
+    "name": "Vera Copper-Core Fry Pan",
+    "category": "Kitchen",
+    "price": 61,
+    "image": "https://images.unsplash.com/photo-1608686207856-001b95cf60ca?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1604152135912-04a022e23696?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1608686207856-001b95cf60ca?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1604152135912-04a022e23696?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Features a minimal profile and tactile material contrast, combining daily longevity with functional elegance for the design-conscious cook.",
+    "colors": [
+      "#7d8a76",
+      "#ded8cb"
+    ],
+    "stock": 43,
+    "sku": "NOM-0177",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "vera-copper-core-fry-pan-1",
+        "author_name": "Nora Ellis",
+        "author_avatar": "https://i.pravatar.cc/150?u=Nora%20Ellis",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "Solid weight and comfortable grip. The design is completely integrated and feels very balanced.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "vera-copper-core-fry-pan-2",
+        "author_name": "Eva Laurent",
+        "author_avatar": "https://i.pravatar.cc/150?u=Eva%20Laurent",
+        "rating": 5,
+        "title": "Minimalist & solid",
+        "content": "The finish is outstanding. It has a beautiful balanced weight that makes preparation a quiet pleasure.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 2
+  },
+  {
+    "id": 178,
+    "name": "Sola Cast Iron Dutch Oven",
+    "category": "Kitchen",
+    "price": 77,
+    "image": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "A refined centerpiece for the table, offering a calm, organic silhouette and a textured finish that grows richer with use.",
+    "colors": [
+      "#d1d5db",
+      "#9ca3af"
+    ],
+    "stock": 44,
+    "sku": "NOM-0178",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "sola-cast-iron-dutch-oven-1",
+        "author_name": "Clara Nguyen",
+        "author_avatar": "https://i.pravatar.cc/150?u=Clara%20Nguyen",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "sola-cast-iron-dutch-oven-2",
+        "author_name": "Lena Ortiz",
+        "author_avatar": "https://i.pravatar.cc/150?u=Lena%20Ortiz",
+        "rating": 5,
+        "title": "Daily essential",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "sola-cast-iron-dutch-oven-3",
+        "author_name": "Maya Chen",
+        "author_avatar": "https://i.pravatar.cc/150?u=Maya%20Chen",
+        "rating": 4,
+        "title": "Worth every penny",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.3,
+    "reviewCount": 3
+  },
+  {
+    "id": 179,
+    "name": "Aura Ceramic Saucepan",
+    "category": "Kitchen",
+    "price": 83,
+    "image": "https://images.unsplash.com/photo-1512485694743-9c9538b4e6e0?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1584269600464-37b1b58a9fe7?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1512485694743-9c9538b4e6e0?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1584269600464-37b1b58a9fe7?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Designed to slow down daily moments, combining high-grade functional components with a serene architectural form.",
+    "colors": [
+      "#b87333",
+      "#3e2723"
+    ],
+    "stock": 45,
+    "sku": "NOM-0179",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "aura-ceramic-saucepan-1",
+        "author_name": "Noah Bennett",
+        "author_avatar": "https://i.pravatar.cc/150?u=Noah%20Bennett",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "aura-ceramic-saucepan-2",
+        "author_name": "Iris Morgan",
+        "author_avatar": "https://i.pravatar.cc/150?u=Iris%20Morgan",
+        "rating": 5,
+        "title": "Pure tranquility",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "aura-ceramic-saucepan-3",
+        "author_name": "Samira Cole",
+        "author_avatar": "https://i.pravatar.cc/150?u=Samira%20Cole",
+        "rating": 4,
+        "title": "Exceptional quality",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "aura-ceramic-saucepan-4",
+        "author_name": "Nora Ellis",
+        "author_avatar": "https://i.pravatar.cc/150?u=Nora%20Ellis",
+        "rating": 5,
+        "title": "Minimalist & solid",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-07T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 4
+  },
+  {
+    "id": 180,
+    "name": "NŌMA Pro Carbon Steel Wok",
+    "category": "Kitchen",
+    "price": 99,
+    "oldPrice": 124,
+    "image": "https://images.unsplash.com/photo-1610589827103-b4f0fbf04323?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1610589827103-b4f0fbf04323?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "An essential culinary tool designed with a balanced weight and comfortable grip, finished in premium materials for elevated kitchen rituals.",
+    "colors": [
+      "#8d6e63",
+      "#d7ccc8"
+    ],
+    "stock": 10,
+    "sku": "NOM-0180",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "n-ma-pro-carbon-steel-wok-1",
+        "author_name": "Theo Martin",
+        "author_avatar": "https://i.pravatar.cc/150?u=Theo%20Martin",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "The finish is outstanding. It has a beautiful balanced weight that makes preparation a quiet pleasure.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "n-ma-pro-carbon-steel-wok-2",
+        "author_name": "Silas Romero",
+        "author_avatar": "https://i.pravatar.cc/150?u=Silas%20Romero",
+        "rating": 5,
+        "title": "Worth every penny",
+        "content": "Solid weight and comfortable grip. The design is completely integrated and feels very balanced.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 2
+  },
+  {
+    "id": 181,
+    "name": "Atelier Hard-Anodized Sauté Pan",
+    "category": "Kitchen",
+    "price": 105,
+    "image": "https://images.unsplash.com/photo-1591821090035-c2bb40690b1e?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1593113630400-ea4288922497?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1591821090035-c2bb40690b1e?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1593113630400-ea4288922497?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Crafted for excellent heat retention and durability, this piece brings a quiet, structural presence to the open shelf and dining table.",
+    "colors": [
+      "#f4f1e9",
+      "#2f332e"
+    ],
+    "stock": 11,
+    "sku": "NOM-0181",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "atelier-hard-anodized-saut-pan-1",
+        "author_name": "Miles Carter",
+        "author_avatar": "https://i.pravatar.cc/150?u=Miles%20Carter",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "atelier-hard-anodized-saut-pan-2",
+        "author_name": "Avery Brooks",
+        "author_avatar": "https://i.pravatar.cc/150?u=Avery%20Brooks",
+        "rating": 5,
+        "title": "Beautiful weight",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "atelier-hard-anodized-saut-pan-3",
+        "author_name": "Julian Reed",
+        "author_avatar": "https://i.pravatar.cc/150?u=Julian%20Reed",
+        "rating": 4,
+        "title": "Daily essential",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.3,
+    "reviewCount": 3
+  },
+  {
+    "id": 182,
+    "name": "Soren Stoneware Casserole Dish",
+    "category": "Kitchen",
+    "price": 121,
+    "image": "https://images.unsplash.com/photo-1598511726623-d336a132fa6b?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1593113589042-45e0f545a91a?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1598511726623-d336a132fa6b?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1593113589042-45e0f545a91a?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Features a minimal profile and tactile material contrast, combining daily longevity with functional elegance for the design-conscious cook.",
+    "colors": [
+      "#ded8cb",
+      "#2f332e"
+    ],
+    "stock": 12,
+    "sku": "NOM-0182",
+    "featured": false,
+    "badge": "Limited Edition",
+    "reviews": [
+      {
+        "id": "soren-stoneware-casserole-dish-1",
+        "author_name": "Eva Laurent",
+        "author_avatar": "https://i.pravatar.cc/150?u=Eva%20Laurent",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "soren-stoneware-casserole-dish-2",
+        "author_name": "Antonio garcia",
+        "author_avatar": "https://i.pravatar.cc/150?u=Antonio%20garcia",
+        "rating": 5,
+        "title": "Exceptional quality",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "soren-stoneware-casserole-dish-3",
+        "author_name": "Elliot Hayes",
+        "author_avatar": "https://i.pravatar.cc/150?u=Elliot%20Hayes",
+        "rating": 4,
+        "title": "Worth every penny",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "soren-stoneware-casserole-dish-4",
+        "author_name": "Theo Martin",
+        "author_avatar": "https://i.pravatar.cc/150?u=Theo%20Martin",
+        "rating": 5,
+        "title": "Daily essential",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-07T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 4
+  },
+  {
+    "id": 183,
+    "name": "Kora Nesting Baking Sheets",
+    "category": "Kitchen",
+    "price": 127,
+    "image": "https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1606787366850-de6330128bfc?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1606787366850-de6330128bfc?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "A refined centerpiece for the table, offering a calm, organic silhouette and a textured finish that grows richer with use.",
+    "colors": [
+      "#9d5037",
+      "#f4f1e9"
+    ],
+    "stock": 13,
+    "sku": "NOM-0183",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "kora-nesting-baking-sheets-1",
+        "author_name": "Lena Ortiz",
+        "author_avatar": "https://i.pravatar.cc/150?u=Lena%20Ortiz",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "Solid weight and comfortable grip. The design is completely integrated and feels very balanced.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "kora-nesting-baking-sheets-2",
+        "author_name": "Maya Chen",
+        "author_avatar": "https://i.pravatar.cc/150?u=Maya%20Chen",
+        "rating": 5,
+        "title": "Beautiful finish",
+        "content": "The finish is outstanding. It has a beautiful balanced weight that makes preparation a quiet pleasure.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 2
+  },
+  {
+    "id": 184,
+    "name": "Kala Muffin Baking Pan",
+    "category": "Kitchen",
+    "price": 143,
+    "image": "https://images.unsplash.com/photo-1604152135912-04a022e23696?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1594793751846-60c7f763f03b?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1604152135912-04a022e23696?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1594793751846-60c7f763f03b?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Designed to slow down daily moments, combining high-grade functional components with a serene architectural form.",
+    "colors": [
+      "#7d8a76",
+      "#ded8cb"
+    ],
+    "stock": 14,
+    "sku": "NOM-0184",
+    "featured": false,
+    "badge": "New",
+    "reviews": [
+      {
+        "id": "kala-muffin-baking-pan-1",
+        "author_name": "Iris Morgan",
+        "author_avatar": "https://i.pravatar.cc/150?u=Iris%20Morgan",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "kala-muffin-baking-pan-2",
+        "author_name": "Samira Cole",
+        "author_avatar": "https://i.pravatar.cc/150?u=Samira%20Cole",
+        "rating": 5,
+        "title": "Highly recommend",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "kala-muffin-baking-pan-3",
+        "author_name": "Nora Ellis",
+        "author_avatar": "https://i.pravatar.cc/150?u=Nora%20Ellis",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.3,
+    "reviewCount": 3
+  },
+  {
+    "id": 185,
+    "name": "Eon Loaf Baking Tin",
+    "category": "Kitchen",
+    "price": 149,
+    "oldPrice": 186,
+    "image": "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1626200419199-391ae4be7a41?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1626200419199-391ae4be7a41?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "An essential culinary tool designed with a balanced weight and comfortable grip, finished in premium materials for elevated kitchen rituals.",
+    "colors": [
+      "#d1d5db",
+      "#9ca3af"
+    ],
+    "stock": 15,
+    "sku": "NOM-0185",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "eon-loaf-baking-tin-1",
+        "author_name": "Silas Romero",
+        "author_avatar": "https://i.pravatar.cc/150?u=Silas%20Romero",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "eon-loaf-baking-tin-2",
+        "author_name": "Jonas Vale",
+        "author_avatar": "https://i.pravatar.cc/150?u=Jonas%20Vale",
+        "rating": 5,
+        "title": "Minimalist & solid",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "eon-loaf-baking-tin-3",
+        "author_name": "Clara Nguyen",
+        "author_avatar": "https://i.pravatar.cc/150?u=Clara%20Nguyen",
+        "rating": 4,
+        "title": "Daily essential",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "eon-loaf-baking-tin-4",
+        "author_name": "Lena Ortiz",
+        "author_avatar": "https://i.pravatar.cc/150?u=Lena%20Ortiz",
+        "rating": 5,
+        "title": "Pure tranquility",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-07T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 4
+  },
+  {
+    "id": 186,
+    "name": "Oria Stainless Steel Colander",
+    "category": "Kitchen",
+    "price": 165,
+    "image": "https://images.unsplash.com/photo-1584269600464-37b1b58a9fe7?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1584269600464-37b1b58a9fe7?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Crafted for excellent heat retention and durability, this piece brings a quiet, structural presence to the open shelf and dining table.",
+    "colors": [
+      "#b87333",
+      "#3e2723"
+    ],
+    "stock": 16,
+    "sku": "NOM-0186",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "oria-stainless-steel-colander-1",
+        "author_name": "Avery Brooks",
+        "author_avatar": "https://i.pravatar.cc/150?u=Avery%20Brooks",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "The finish is outstanding. It has a beautiful balanced weight that makes preparation a quiet pleasure.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "oria-stainless-steel-colander-2",
+        "author_name": "Julian Reed",
+        "author_avatar": "https://i.pravatar.cc/150?u=Julian%20Reed",
+        "rating": 5,
+        "title": "Daily essential",
+        "content": "Solid weight and comfortable grip. The design is completely integrated and feels very balanced.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 2
+  },
+  {
+    "id": 187,
+    "name": "Mira Fine Mesh Sieve",
+    "category": "Kitchen",
+    "price": 171,
+    "image": "https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Features a minimal profile and tactile material contrast, combining daily longevity with functional elegance for the design-conscious cook.",
+    "colors": [
+      "#8d6e63",
+      "#d7ccc8"
+    ],
+    "stock": 17,
+    "sku": "NOM-0187",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "mira-fine-mesh-sieve-1",
+        "author_name": "Antonio garcia",
+        "author_avatar": "https://i.pravatar.cc/150?u=Antonio%20garcia",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "mira-fine-mesh-sieve-2",
+        "author_name": "Elliot Hayes",
+        "author_avatar": "https://i.pravatar.cc/150?u=Elliot%20Hayes",
+        "rating": 5,
+        "title": "Pure tranquility",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "mira-fine-mesh-sieve-3",
+        "author_name": "Theo Martin",
+        "author_avatar": "https://i.pravatar.cc/150?u=Theo%20Martin",
+        "rating": 4,
+        "title": "Exceptional quality",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.3,
+    "reviewCount": 3
+  },
+  {
+    "id": 188,
+    "name": "Loma Utensil Holder",
+    "category": "Kitchen",
+    "price": 187,
+    "image": "https://images.unsplash.com/photo-1593113630400-ea4288922497?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1593113630400-ea4288922497?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "A refined centerpiece for the table, offering a calm, organic silhouette and a textured finish that grows richer with use.",
+    "colors": [
+      "#f4f1e9",
+      "#2f332e"
+    ],
+    "stock": 18,
+    "sku": "NOM-0188",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "loma-utensil-holder-1",
+        "author_name": "Maya Chen",
+        "author_avatar": "https://i.pravatar.cc/150?u=Maya%20Chen",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "loma-utensil-holder-2",
+        "author_name": "Amelia Stone",
+        "author_avatar": "https://i.pravatar.cc/150?u=Amelia%20Stone",
+        "rating": 5,
+        "title": "Worth every penny",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "loma-utensil-holder-3",
+        "author_name": "Miles Carter",
+        "author_avatar": "https://i.pravatar.cc/150?u=Miles%20Carter",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "loma-utensil-holder-4",
+        "author_name": "Avery Brooks",
+        "author_avatar": "https://i.pravatar.cc/150?u=Avery%20Brooks",
+        "rating": 5,
+        "title": "Worth every penny",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-07T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 4
+  },
+  {
+    "id": 189,
+    "name": "Kove Bread Proofing Basket",
+    "category": "Kitchen",
+    "price": 193,
+    "image": "https://images.unsplash.com/photo-1593113589042-45e0f545a91a?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1534482421-64566f976cfa?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1593113589042-45e0f545a91a?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1534482421-64566f976cfa?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Designed to slow down daily moments, combining high-grade functional components with a serene architectural form.",
+    "colors": [
+      "#ded8cb",
+      "#2f332e"
+    ],
+    "stock": 19,
+    "sku": "NOM-0189",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "kove-bread-proofing-basket-1",
+        "author_name": "Samira Cole",
+        "author_avatar": "https://i.pravatar.cc/150?u=Samira%20Cole",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "Solid weight and comfortable grip. The design is completely integrated and feels very balanced.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "kove-bread-proofing-basket-2",
+        "author_name": "Nora Ellis",
+        "author_avatar": "https://i.pravatar.cc/150?u=Nora%20Ellis",
+        "rating": 5,
+        "title": "Beautiful weight",
+        "content": "The finish is outstanding. It has a beautiful balanced weight that makes preparation a quiet pleasure.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 2
+  },
+  {
+    "id": 190,
+    "name": "Rhea Organic Dough Lame",
+    "category": "Kitchen",
+    "price": 209,
+    "oldPrice": 261,
+    "image": "https://images.unsplash.com/photo-1606787366850-de6330128bfc?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1544982503-9f984c14501a?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1606787366850-de6330128bfc?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1544982503-9f984c14501a?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "An essential culinary tool designed with a balanced weight and comfortable grip, finished in premium materials for elevated kitchen rituals.",
+    "colors": [
+      "#9d5037",
+      "#f4f1e9"
+    ],
+    "stock": 20,
+    "sku": "NOM-0190",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "rhea-organic-dough-lame-1",
+        "author_name": "Jonas Vale",
+        "author_avatar": "https://i.pravatar.cc/150?u=Jonas%20Vale",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "rhea-organic-dough-lame-2",
+        "author_name": "Clara Nguyen",
+        "author_avatar": "https://i.pravatar.cc/150?u=Clara%20Nguyen",
+        "rating": 5,
+        "title": "Exceptional quality",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "rhea-organic-dough-lame-3",
+        "author_name": "Lena Ortiz",
+        "author_avatar": "https://i.pravatar.cc/150?u=Lena%20Ortiz",
+        "rating": 4,
+        "title": "Worth every penny",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.3,
+    "reviewCount": 3
+  },
+  {
+    "id": 191,
+    "name": "Tate Cast Iron Griddle",
+    "category": "Kitchen",
+    "price": 215,
+    "image": "https://images.unsplash.com/photo-1594793751846-60c7f763f03b?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1594793751846-60c7f763f03b?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Crafted for excellent heat retention and durability, this piece brings a quiet, structural presence to the open shelf and dining table.",
+    "colors": [
+      "#7d8a76",
+      "#ded8cb"
+    ],
+    "stock": 21,
+    "sku": "NOM-0191",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "tate-cast-iron-griddle-1",
+        "author_name": "Julian Reed",
+        "author_avatar": "https://i.pravatar.cc/150?u=Julian%20Reed",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "tate-cast-iron-griddle-2",
+        "author_name": "Noah Bennett",
+        "author_avatar": "https://i.pravatar.cc/150?u=Noah%20Bennett",
+        "rating": 5,
+        "title": "Beautiful finish",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "tate-cast-iron-griddle-3",
+        "author_name": "Iris Morgan",
+        "author_avatar": "https://i.pravatar.cc/150?u=Iris%20Morgan",
+        "rating": 4,
+        "title": "Exceptional quality",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "tate-cast-iron-griddle-4",
+        "author_name": "Samira Cole",
+        "author_avatar": "https://i.pravatar.cc/150?u=Samira%20Cole",
+        "rating": 5,
+        "title": "Beautiful weight",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-07T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 4
+  },
+  {
+    "id": 192,
+    "name": "Bala Ceramic Grate Dish",
+    "category": "Kitchen",
+    "price": 231,
+    "image": "https://images.unsplash.com/photo-1626200419199-391ae4be7a41?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1596790011462-8178f2441961?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1626200419199-391ae4be7a41?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1596790011462-8178f2441961?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Features a minimal profile and tactile material contrast, combining daily longevity with functional elegance for the design-conscious cook.",
+    "colors": [
+      "#d1d5db",
+      "#9ca3af"
+    ],
+    "stock": 22,
+    "sku": "NOM-0192",
+    "featured": false,
+    "badge": "New",
+    "reviews": [
+      {
+        "id": "bala-ceramic-grate-dish-1",
+        "author_name": "Elliot Hayes",
+        "author_avatar": "https://i.pravatar.cc/150?u=Elliot%20Hayes",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "The finish is outstanding. It has a beautiful balanced weight that makes preparation a quiet pleasure.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "bala-ceramic-grate-dish-2",
+        "author_name": "Theo Martin",
+        "author_avatar": "https://i.pravatar.cc/150?u=Theo%20Martin",
+        "rating": 5,
+        "title": "Highly recommend",
+        "content": "Solid weight and comfortable grip. The design is completely integrated and feels very balanced.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 2
+  },
+  {
+    "id": 193,
+    "name": "Hale Mortar and Pestle",
+    "category": "Kitchen",
+    "price": 237,
+    "image": "https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1506368249639-73a05d6f6488?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1506368249639-73a05d6f6488?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "A refined centerpiece for the table, offering a calm, organic silhouette and a textured finish that grows richer with use.",
+    "colors": [
+      "#b87333",
+      "#3e2723"
+    ],
+    "stock": 23,
+    "sku": "NOM-0193",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "hale-mortar-and-pestle-1",
+        "author_name": "Amelia Stone",
+        "author_avatar": "https://i.pravatar.cc/150?u=Amelia%20Stone",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "hale-mortar-and-pestle-2",
+        "author_name": "Miles Carter",
+        "author_avatar": "https://i.pravatar.cc/150?u=Miles%20Carter",
+        "rating": 5,
+        "title": "Minimalist & solid",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "hale-mortar-and-pestle-3",
+        "author_name": "Avery Brooks",
+        "author_avatar": "https://i.pravatar.cc/150?u=Avery%20Brooks",
+        "rating": 4,
+        "title": "Daily essential",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.3,
+    "reviewCount": 3
+  },
+  {
+    "id": 194,
+    "name": "Bora Stainless Steel Box Grater",
+    "category": "Kitchen",
+    "price": 253,
+    "image": "https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1590794056226-79ef3a8147e1?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1590794056226-79ef3a8147e1?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Designed to slow down daily moments, combining high-grade functional components with a serene architectural form.",
+    "colors": [
+      "#8d6e63",
+      "#d7ccc8"
+    ],
+    "stock": 24,
+    "sku": "NOM-0194",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "bora-stainless-steel-box-grater-1",
+        "author_name": "Nora Ellis",
+        "author_avatar": "https://i.pravatar.cc/150?u=Nora%20Ellis",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "bora-stainless-steel-box-grater-2",
+        "author_name": "Eva Laurent",
+        "author_avatar": "https://i.pravatar.cc/150?u=Eva%20Laurent",
+        "rating": 5,
+        "title": "Daily essential",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "bora-stainless-steel-box-grater-3",
+        "author_name": "Antonio garcia",
+        "author_avatar": "https://i.pravatar.cc/150?u=Antonio%20garcia",
+        "rating": 4,
+        "title": "Worth every penny",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "bora-stainless-steel-box-grater-4",
+        "author_name": "Elliot Hayes",
+        "author_avatar": "https://i.pravatar.cc/150?u=Elliot%20Hayes",
+        "rating": 5,
+        "title": "Exceptional quality",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-07T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 4
+  },
+  {
+    "id": 195,
+    "name": "Sage Hand-Held Citrus Press",
+    "category": "Kitchen",
+    "price": 259,
+    "oldPrice": 324,
+    "image": "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "An essential culinary tool designed with a balanced weight and comfortable grip, finished in premium materials for elevated kitchen rituals.",
+    "colors": [
+      "#f4f1e9",
+      "#2f332e"
+    ],
+    "stock": 25,
+    "sku": "NOM-0195",
+    "featured": false,
+    "badge": "Limited Edition",
+    "reviews": [
+      {
+        "id": "sage-hand-held-citrus-press-1",
+        "author_name": "Clara Nguyen",
+        "author_avatar": "https://i.pravatar.cc/150?u=Clara%20Nguyen",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "Solid weight and comfortable grip. The design is completely integrated and feels very balanced.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "sage-hand-held-citrus-press-2",
+        "author_name": "Lena Ortiz",
+        "author_avatar": "https://i.pravatar.cc/150?u=Lena%20Ortiz",
+        "rating": 5,
+        "title": "Pure tranquility",
+        "content": "The finish is outstanding. It has a beautiful balanced weight that makes preparation a quiet pleasure.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 2
+  },
+  {
+    "id": 196,
+    "name": "Pura Chef Knife",
+    "category": "Kitchen",
+    "price": 275,
+    "image": "https://images.unsplash.com/photo-1534482421-64566f976cfa?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1517256064527-09c53b2d0bc6?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1534482421-64566f976cfa?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1517256064527-09c53b2d0bc6?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Crafted for excellent heat retention and durability, this piece brings a quiet, structural presence to the open shelf and dining table.",
+    "colors": [
+      "#ded8cb",
+      "#2f332e"
+    ],
+    "stock": 26,
+    "sku": "NOM-0196",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "pura-chef-knife-1",
+        "author_name": "Noah Bennett",
+        "author_avatar": "https://i.pravatar.cc/150?u=Noah%20Bennett",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "pura-chef-knife-2",
+        "author_name": "Iris Morgan",
+        "author_avatar": "https://i.pravatar.cc/150?u=Iris%20Morgan",
+        "rating": 5,
+        "title": "Worth every penny",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "pura-chef-knife-3",
+        "author_name": "Samira Cole",
+        "author_avatar": "https://i.pravatar.cc/150?u=Samira%20Cole",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.3,
+    "reviewCount": 3
+  },
+  {
+    "id": 197,
+    "name": "Vera Santoku Knife",
+    "category": "Kitchen",
+    "price": 281,
+    "image": "https://images.unsplash.com/photo-1544982503-9f984c14501a?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1574894709920-11b28e7367e3?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1544982503-9f984c14501a?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1574894709920-11b28e7367e3?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Features a minimal profile and tactile material contrast, combining daily longevity with functional elegance for the design-conscious cook.",
+    "colors": [
+      "#9d5037",
+      "#f4f1e9"
+    ],
+    "stock": 27,
+    "sku": "NOM-0197",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "vera-santoku-knife-1",
+        "author_name": "Theo Martin",
+        "author_avatar": "https://i.pravatar.cc/150?u=Theo%20Martin",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "vera-santoku-knife-2",
+        "author_name": "Silas Romero",
+        "author_avatar": "https://i.pravatar.cc/150?u=Silas%20Romero",
+        "rating": 5,
+        "title": "Beautiful weight",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "vera-santoku-knife-3",
+        "author_name": "Jonas Vale",
+        "author_avatar": "https://i.pravatar.cc/150?u=Jonas%20Vale",
+        "rating": 4,
+        "title": "Daily essential",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "vera-santoku-knife-4",
+        "author_name": "Clara Nguyen",
+        "author_avatar": "https://i.pravatar.cc/150?u=Clara%20Nguyen",
+        "rating": 5,
+        "title": "Beautiful finish",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-07T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 4
+  },
+  {
+    "id": 198,
+    "name": "Sola Bread Knife",
+    "category": "Kitchen",
+    "price": 297,
+    "image": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1595272170044-db903876b222?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1595272170044-db903876b222?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "A refined centerpiece for the table, offering a calm, organic silhouette and a textured finish that grows richer with use.",
+    "colors": [
+      "#7d8a76",
+      "#ded8cb"
+    ],
+    "stock": 28,
+    "sku": "NOM-0198",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "sola-bread-knife-1",
+        "author_name": "Miles Carter",
+        "author_avatar": "https://i.pravatar.cc/150?u=Miles%20Carter",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "The finish is outstanding. It has a beautiful balanced weight that makes preparation a quiet pleasure.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "sola-bread-knife-2",
+        "author_name": "Avery Brooks",
+        "author_avatar": "https://i.pravatar.cc/150?u=Avery%20Brooks",
+        "rating": 5,
+        "title": "Exceptional quality",
+        "content": "Solid weight and comfortable grip. The design is completely integrated and feels very balanced.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 2
+  },
+  {
+    "id": 199,
+    "name": "Aura Paring Knife",
+    "category": "Kitchen",
+    "price": 303,
+    "image": "https://images.unsplash.com/photo-1596790011462-8178f2441961?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1596790011462-8178f2441961?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Designed to slow down daily moments, combining high-grade functional components with a serene architectural form.",
+    "colors": [
+      "#d1d5db",
+      "#9ca3af"
+    ],
+    "stock": 29,
+    "sku": "NOM-0199",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "aura-paring-knife-1",
+        "author_name": "Eva Laurent",
+        "author_avatar": "https://i.pravatar.cc/150?u=Eva%20Laurent",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "aura-paring-knife-2",
+        "author_name": "Antonio garcia",
+        "author_avatar": "https://i.pravatar.cc/150?u=Antonio%20garcia",
+        "rating": 5,
+        "title": "Beautiful finish",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "aura-paring-knife-3",
+        "author_name": "Elliot Hayes",
+        "author_avatar": "https://i.pravatar.cc/150?u=Elliot%20Hayes",
+        "rating": 4,
+        "title": "Exceptional quality",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.3,
+    "reviewCount": 3
+  },
+  {
+    "id": 200,
+    "name": "NŌMA Pro Knife Block Set",
+    "category": "Kitchen",
+    "price": 319,
+    "oldPrice": 399,
+    "image": "https://images.unsplash.com/photo-1506368249639-73a05d6f6488?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1531234799389-d879353b91d2?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1506368249639-73a05d6f6488?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1531234799389-d879353b91d2?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "An essential culinary tool designed with a balanced weight and comfortable grip, finished in premium materials for elevated kitchen rituals.",
+    "colors": [
+      "#b87333",
+      "#3e2723"
+    ],
+    "stock": 30,
+    "sku": "NOM-0200",
+    "featured": false,
+    "badge": "New",
+    "reviews": [
+      {
+        "id": "n-ma-pro-knife-block-set-1",
+        "author_name": "Lena Ortiz",
+        "author_avatar": "https://i.pravatar.cc/150?u=Lena%20Ortiz",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "n-ma-pro-knife-block-set-2",
+        "author_name": "Maya Chen",
+        "author_avatar": "https://i.pravatar.cc/150?u=Maya%20Chen",
+        "rating": 5,
+        "title": "Highly recommend",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "n-ma-pro-knife-block-set-3",
+        "author_name": "Amelia Stone",
+        "author_avatar": "https://i.pravatar.cc/150?u=Amelia%20Stone",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "n-ma-pro-knife-block-set-4",
+        "author_name": "Miles Carter",
+        "author_avatar": "https://i.pravatar.cc/150?u=Miles%20Carter",
+        "rating": 5,
+        "title": "Highly recommend",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-07T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 4
+  },
+  {
+    "id": 201,
+    "name": "Atelier Teak Cutting Board",
+    "category": "Kitchen",
+    "price": 325,
+    "image": "https://images.unsplash.com/photo-1590794056226-79ef3a8147e1?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1590794056226-79ef3a8147e1?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Crafted for excellent heat retention and durability, this piece brings a quiet, structural presence to the open shelf and dining table.",
+    "colors": [
+      "#8d6e63",
+      "#d7ccc8"
+    ],
+    "stock": 31,
+    "sku": "NOM-0201",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "atelier-teak-cutting-board-1",
+        "author_name": "Iris Morgan",
+        "author_avatar": "https://i.pravatar.cc/150?u=Iris%20Morgan",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "Solid weight and comfortable grip. The design is completely integrated and feels very balanced.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "atelier-teak-cutting-board-2",
+        "author_name": "Samira Cole",
+        "author_avatar": "https://i.pravatar.cc/150?u=Samira%20Cole",
+        "rating": 5,
+        "title": "Minimalist & solid",
+        "content": "The finish is outstanding. It has a beautiful balanced weight that makes preparation a quiet pleasure.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 2
+  },
+  {
+    "id": 202,
+    "name": "Soren Maple Chopping Block",
+    "category": "Kitchen",
+    "price": 341,
+    "image": "https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Features a minimal profile and tactile material contrast, combining daily longevity with functional elegance for the design-conscious cook.",
+    "colors": [
+      "#f4f1e9",
+      "#2f332e"
+    ],
+    "stock": 32,
+    "sku": "NOM-0202",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "soren-maple-chopping-block-1",
+        "author_name": "Silas Romero",
+        "author_avatar": "https://i.pravatar.cc/150?u=Silas%20Romero",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "soren-maple-chopping-block-2",
+        "author_name": "Jonas Vale",
+        "author_avatar": "https://i.pravatar.cc/150?u=Jonas%20Vale",
+        "rating": 5,
+        "title": "Daily essential",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "soren-maple-chopping-block-3",
+        "author_name": "Clara Nguyen",
+        "author_avatar": "https://i.pravatar.cc/150?u=Clara%20Nguyen",
+        "rating": 4,
+        "title": "Worth every penny",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.3,
+    "reviewCount": 3
+  },
+  {
+    "id": 203,
+    "name": "Kora Walnut Serving Board",
+    "category": "Kitchen",
+    "price": 28,
+    "image": "https://images.unsplash.com/photo-1517256064527-09c53b2d0bc6?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1543083477-4f785ae8282a?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1517256064527-09c53b2d0bc6?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1543083477-4f785ae8282a?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "A refined centerpiece for the table, offering a calm, organic silhouette and a textured finish that grows richer with use.",
+    "colors": [
+      "#ded8cb",
+      "#2f332e"
+    ],
+    "stock": 33,
+    "sku": "NOM-0203",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "kora-walnut-serving-board-1",
+        "author_name": "Avery Brooks",
+        "author_avatar": "https://i.pravatar.cc/150?u=Avery%20Brooks",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "kora-walnut-serving-board-2",
+        "author_name": "Julian Reed",
+        "author_avatar": "https://i.pravatar.cc/150?u=Julian%20Reed",
+        "rating": 5,
+        "title": "Pure tranquility",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "kora-walnut-serving-board-3",
+        "author_name": "Noah Bennett",
+        "author_avatar": "https://i.pravatar.cc/150?u=Noah%20Bennett",
+        "rating": 4,
+        "title": "Exceptional quality",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "kora-walnut-serving-board-4",
+        "author_name": "Iris Morgan",
+        "author_avatar": "https://i.pravatar.cc/150?u=Iris%20Morgan",
+        "rating": 5,
+        "title": "Minimalist & solid",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-07T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 4
+  },
+  {
+    "id": 204,
+    "name": "Kala Nesting Mixing Bowls",
+    "category": "Kitchen",
+    "price": 44,
+    "image": "https://images.unsplash.com/photo-1574894709920-11b28e7367e3?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1574894709920-11b28e7367e3?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Designed to slow down daily moments, combining high-grade functional components with a serene architectural form.",
+    "colors": [
+      "#9d5037",
+      "#f4f1e9"
+    ],
+    "stock": 34,
+    "sku": "NOM-0204",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "kala-nesting-mixing-bowls-1",
+        "author_name": "Antonio garcia",
+        "author_avatar": "https://i.pravatar.cc/150?u=Antonio%20garcia",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "The finish is outstanding. It has a beautiful balanced weight that makes preparation a quiet pleasure.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "kala-nesting-mixing-bowls-2",
+        "author_name": "Elliot Hayes",
+        "author_avatar": "https://i.pravatar.cc/150?u=Elliot%20Hayes",
+        "rating": 5,
+        "title": "Worth every penny",
+        "content": "Solid weight and comfortable grip. The design is completely integrated and feels very balanced.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 2
+  },
+  {
+    "id": 205,
+    "name": "Eon Ceramic Salad Bowl",
+    "category": "Kitchen",
+    "price": 50,
+    "oldPrice": 63,
+    "image": "https://images.unsplash.com/photo-1595272170044-db903876b222?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1588854337236-6889d631faa8?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1595272170044-db903876b222?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1588854337236-6889d631faa8?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "An essential culinary tool designed with a balanced weight and comfortable grip, finished in premium materials for elevated kitchen rituals.",
+    "colors": [
+      "#7d8a76",
+      "#ded8cb"
+    ],
+    "stock": 35,
+    "sku": "NOM-0205",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "eon-ceramic-salad-bowl-1",
+        "author_name": "Maya Chen",
+        "author_avatar": "https://i.pravatar.cc/150?u=Maya%20Chen",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "eon-ceramic-salad-bowl-2",
+        "author_name": "Amelia Stone",
+        "author_avatar": "https://i.pravatar.cc/150?u=Amelia%20Stone",
+        "rating": 5,
+        "title": "Beautiful weight",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "eon-ceramic-salad-bowl-3",
+        "author_name": "Miles Carter",
+        "author_avatar": "https://i.pravatar.cc/150?u=Miles%20Carter",
+        "rating": 4,
+        "title": "Daily essential",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.3,
+    "reviewCount": 3
+  },
+  {
+    "id": 206,
+    "name": "Oria Stoneware Dinner Plate",
+    "category": "Kitchen",
+    "price": 66,
+    "image": "https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Crafted for excellent heat retention and durability, this piece brings a quiet, structural presence to the open shelf and dining table.",
+    "colors": [
+      "#d1d5db",
+      "#9ca3af"
+    ],
+    "stock": 36,
+    "sku": "NOM-0206",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "oria-stoneware-dinner-plate-1",
+        "author_name": "Samira Cole",
+        "author_avatar": "https://i.pravatar.cc/150?u=Samira%20Cole",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "oria-stoneware-dinner-plate-2",
+        "author_name": "Nora Ellis",
+        "author_avatar": "https://i.pravatar.cc/150?u=Nora%20Ellis",
+        "rating": 5,
+        "title": "Exceptional quality",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "oria-stoneware-dinner-plate-3",
+        "author_name": "Eva Laurent",
+        "author_avatar": "https://i.pravatar.cc/150?u=Eva%20Laurent",
+        "rating": 4,
+        "title": "Worth every penny",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "oria-stoneware-dinner-plate-4",
+        "author_name": "Antonio garcia",
+        "author_avatar": "https://i.pravatar.cc/150?u=Antonio%20garcia",
+        "rating": 5,
+        "title": "Daily essential",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-07T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 4
+  },
+  {
+    "id": 207,
+    "name": "Mira Stoneware Dessert Plate",
+    "category": "Kitchen",
+    "price": 72,
+    "image": "https://images.unsplash.com/photo-1531234799389-d879353b91d2?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1608686207856-001b95cf60ca?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1531234799389-d879353b91d2?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1608686207856-001b95cf60ca?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Features a minimal profile and tactile material contrast, combining daily longevity with functional elegance for the design-conscious cook.",
+    "colors": [
+      "#b87333",
+      "#3e2723"
+    ],
+    "stock": 37,
+    "sku": "NOM-0207",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "mira-stoneware-dessert-plate-1",
+        "author_name": "Jonas Vale",
+        "author_avatar": "https://i.pravatar.cc/150?u=Jonas%20Vale",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "Solid weight and comfortable grip. The design is completely integrated and feels very balanced.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "mira-stoneware-dessert-plate-2",
+        "author_name": "Clara Nguyen",
+        "author_avatar": "https://i.pravatar.cc/150?u=Clara%20Nguyen",
+        "rating": 5,
+        "title": "Beautiful finish",
+        "content": "The finish is outstanding. It has a beautiful balanced weight that makes preparation a quiet pleasure.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 2
+  },
+  {
+    "id": 208,
+    "name": "Loma Porcelain Tea Mug Set",
+    "category": "Kitchen",
+    "price": 88,
+    "image": "https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "A refined centerpiece for the table, offering a calm, organic silhouette and a textured finish that grows richer with use.",
+    "colors": [
+      "#8d6e63",
+      "#d7ccc8"
+    ],
+    "stock": 38,
+    "sku": "NOM-0208",
+    "featured": false,
+    "badge": "New",
+    "reviews": [
+      {
+        "id": "loma-porcelain-tea-mug-set-1",
+        "author_name": "Julian Reed",
+        "author_avatar": "https://i.pravatar.cc/150?u=Julian%20Reed",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "loma-porcelain-tea-mug-set-2",
+        "author_name": "Noah Bennett",
+        "author_avatar": "https://i.pravatar.cc/150?u=Noah%20Bennett",
+        "rating": 5,
+        "title": "Highly recommend",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "loma-porcelain-tea-mug-set-3",
+        "author_name": "Iris Morgan",
+        "author_avatar": "https://i.pravatar.cc/150?u=Iris%20Morgan",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.3,
+    "reviewCount": 3
+  },
+  {
+    "id": 209,
+    "name": "Kove Glass Water Carafe",
+    "category": "Kitchen",
+    "price": 94,
+    "image": "https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1512485694743-9c9538b4e6e0?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1512485694743-9c9538b4e6e0?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Designed to slow down daily moments, combining high-grade functional components with a serene architectural form.",
+    "colors": [
+      "#f4f1e9",
+      "#2f332e"
+    ],
+    "stock": 39,
+    "sku": "NOM-0209",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "kove-glass-water-carafe-1",
+        "author_name": "Elliot Hayes",
+        "author_avatar": "https://i.pravatar.cc/150?u=Elliot%20Hayes",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "kove-glass-water-carafe-2",
+        "author_name": "Theo Martin",
+        "author_avatar": "https://i.pravatar.cc/150?u=Theo%20Martin",
+        "rating": 5,
+        "title": "Minimalist & solid",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "kove-glass-water-carafe-3",
+        "author_name": "Silas Romero",
+        "author_avatar": "https://i.pravatar.cc/150?u=Silas%20Romero",
+        "rating": 4,
+        "title": "Daily essential",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "kove-glass-water-carafe-4",
+        "author_name": "Jonas Vale",
+        "author_avatar": "https://i.pravatar.cc/150?u=Jonas%20Vale",
+        "rating": 5,
+        "title": "Pure tranquility",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-07T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 4
+  },
+  {
+    "id": 210,
+    "name": "Rhea French Press Coffeemaker",
+    "category": "Kitchen",
+    "price": 110,
+    "oldPrice": 138,
+    "image": "https://images.unsplash.com/photo-1543083477-4f785ae8282a?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1610589827103-b4f0fbf04323?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1543083477-4f785ae8282a?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1610589827103-b4f0fbf04323?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "An essential culinary tool designed with a balanced weight and comfortable grip, finished in premium materials for elevated kitchen rituals.",
+    "colors": [
+      "#ded8cb",
+      "#2f332e"
+    ],
+    "stock": 40,
+    "sku": "NOM-0210",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "rhea-french-press-coffeemaker-1",
+        "author_name": "Amelia Stone",
+        "author_avatar": "https://i.pravatar.cc/150?u=Amelia%20Stone",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "The finish is outstanding. It has a beautiful balanced weight that makes preparation a quiet pleasure.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "rhea-french-press-coffeemaker-2",
+        "author_name": "Miles Carter",
+        "author_avatar": "https://i.pravatar.cc/150?u=Miles%20Carter",
+        "rating": 5,
+        "title": "Daily essential",
+        "content": "Solid weight and comfortable grip. The design is completely integrated and feels very balanced.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 2
+  },
+  {
+    "id": 211,
+    "name": "Tate Manual Coffee Grinder",
+    "category": "Kitchen",
+    "price": 116,
+    "image": "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1591821090035-c2bb40690b1e?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1591821090035-c2bb40690b1e?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Crafted for excellent heat retention and durability, this piece brings a quiet, structural presence to the open shelf and dining table.",
+    "colors": [
+      "#9d5037",
+      "#f4f1e9"
+    ],
+    "stock": 41,
+    "sku": "NOM-0211",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "tate-manual-coffee-grinder-1",
+        "author_name": "Nora Ellis",
+        "author_avatar": "https://i.pravatar.cc/150?u=Nora%20Ellis",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "tate-manual-coffee-grinder-2",
+        "author_name": "Eva Laurent",
+        "author_avatar": "https://i.pravatar.cc/150?u=Eva%20Laurent",
+        "rating": 5,
+        "title": "Pure tranquility",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "tate-manual-coffee-grinder-3",
+        "author_name": "Antonio garcia",
+        "author_avatar": "https://i.pravatar.cc/150?u=Antonio%20garcia",
+        "rating": 4,
+        "title": "Exceptional quality",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.3,
+    "reviewCount": 3
+  },
+  {
+    "id": 212,
+    "name": "Bala Copper Tea Kettle",
+    "category": "Kitchen",
+    "price": 132,
+    "image": "https://images.unsplash.com/photo-1588854337236-6889d631faa8?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1598511726623-d336a132fa6b?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1588854337236-6889d631faa8?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1598511726623-d336a132fa6b?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Features a minimal profile and tactile material contrast, combining daily longevity with functional elegance for the design-conscious cook.",
+    "colors": [
+      "#7d8a76",
+      "#ded8cb"
+    ],
+    "stock": 42,
+    "sku": "NOM-0212",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "bala-copper-tea-kettle-1",
+        "author_name": "Clara Nguyen",
+        "author_avatar": "https://i.pravatar.cc/150?u=Clara%20Nguyen",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "bala-copper-tea-kettle-2",
+        "author_name": "Lena Ortiz",
+        "author_avatar": "https://i.pravatar.cc/150?u=Lena%20Ortiz",
+        "rating": 5,
+        "title": "Worth every penny",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "bala-copper-tea-kettle-3",
+        "author_name": "Maya Chen",
+        "author_avatar": "https://i.pravatar.cc/150?u=Maya%20Chen",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "bala-copper-tea-kettle-4",
+        "author_name": "Amelia Stone",
+        "author_avatar": "https://i.pravatar.cc/150?u=Amelia%20Stone",
+        "rating": 5,
+        "title": "Worth every penny",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-07T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 4
+  },
+  {
+    "id": 213,
+    "name": "Hale Handcrafted Ceramic Teapot",
+    "category": "Kitchen",
+    "price": 138,
+    "image": "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "A refined centerpiece for the table, offering a calm, organic silhouette and a textured finish that grows richer with use.",
+    "colors": [
+      "#d1d5db",
+      "#9ca3af"
+    ],
+    "stock": 43,
+    "sku": "NOM-0213",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "hale-handcrafted-ceramic-teapot-1",
+        "author_name": "Noah Bennett",
+        "author_avatar": "https://i.pravatar.cc/150?u=Noah%20Bennett",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "Solid weight and comfortable grip. The design is completely integrated and feels very balanced.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "hale-handcrafted-ceramic-teapot-2",
+        "author_name": "Iris Morgan",
+        "author_avatar": "https://i.pravatar.cc/150?u=Iris%20Morgan",
+        "rating": 5,
+        "title": "Beautiful weight",
+        "content": "The finish is outstanding. It has a beautiful balanced weight that makes preparation a quiet pleasure.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 2
+  },
+  {
+    "id": 214,
+    "name": "Bora Olive Wood Spoon Set",
+    "category": "Kitchen",
+    "price": 154,
+    "image": "https://images.unsplash.com/photo-1608686207856-001b95cf60ca?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1604152135912-04a022e23696?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1608686207856-001b95cf60ca?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1604152135912-04a022e23696?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Designed to slow down daily moments, combining high-grade functional components with a serene architectural form.",
+    "colors": [
+      "#b87333",
+      "#3e2723"
+    ],
+    "stock": 44,
+    "sku": "NOM-0214",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "bora-olive-wood-spoon-set-1",
+        "author_name": "Theo Martin",
+        "author_avatar": "https://i.pravatar.cc/150?u=Theo%20Martin",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "bora-olive-wood-spoon-set-2",
+        "author_name": "Silas Romero",
+        "author_avatar": "https://i.pravatar.cc/150?u=Silas%20Romero",
+        "rating": 5,
+        "title": "Exceptional quality",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "bora-olive-wood-spoon-set-3",
+        "author_name": "Jonas Vale",
+        "author_avatar": "https://i.pravatar.cc/150?u=Jonas%20Vale",
+        "rating": 4,
+        "title": "Worth every penny",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.3,
+    "reviewCount": 3
+  },
+  {
+    "id": 215,
+    "name": "Sage Silicone Baking Spatula",
+    "category": "Kitchen",
+    "price": 160,
+    "oldPrice": 200,
+    "image": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "An essential culinary tool designed with a balanced weight and comfortable grip, finished in premium materials for elevated kitchen rituals.",
+    "colors": [
+      "#8d6e63",
+      "#d7ccc8"
+    ],
+    "stock": 45,
+    "sku": "NOM-0215",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "sage-silicone-baking-spatula-1",
+        "author_name": "Miles Carter",
+        "author_avatar": "https://i.pravatar.cc/150?u=Miles%20Carter",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "sage-silicone-baking-spatula-2",
+        "author_name": "Avery Brooks",
+        "author_avatar": "https://i.pravatar.cc/150?u=Avery%20Brooks",
+        "rating": 5,
+        "title": "Beautiful finish",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "sage-silicone-baking-spatula-3",
+        "author_name": "Julian Reed",
+        "author_avatar": "https://i.pravatar.cc/150?u=Julian%20Reed",
+        "rating": 4,
+        "title": "Exceptional quality",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "sage-silicone-baking-spatula-4",
+        "author_name": "Noah Bennett",
+        "author_avatar": "https://i.pravatar.cc/150?u=Noah%20Bennett",
+        "rating": 5,
+        "title": "Beautiful weight",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-07T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 4
+  },
+  {
+    "id": 216,
+    "name": "Pura Stainless Steel Tongs",
+    "category": "Kitchen",
+    "price": 176,
+    "image": "https://images.unsplash.com/photo-1512485694743-9c9538b4e6e0?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1584269600464-37b1b58a9fe7?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1512485694743-9c9538b4e6e0?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1584269600464-37b1b58a9fe7?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Crafted for excellent heat retention and durability, this piece brings a quiet, structural presence to the open shelf and dining table.",
+    "colors": [
+      "#f4f1e9",
+      "#2f332e"
+    ],
+    "stock": 10,
+    "sku": "NOM-0216",
+    "featured": false,
+    "badge": "New",
+    "reviews": [
+      {
+        "id": "pura-stainless-steel-tongs-1",
+        "author_name": "Eva Laurent",
+        "author_avatar": "https://i.pravatar.cc/150?u=Eva%20Laurent",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "The finish is outstanding. It has a beautiful balanced weight that makes preparation a quiet pleasure.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "pura-stainless-steel-tongs-2",
+        "author_name": "Antonio garcia",
+        "author_avatar": "https://i.pravatar.cc/150?u=Antonio%20garcia",
+        "rating": 5,
+        "title": "Highly recommend",
+        "content": "Solid weight and comfortable grip. The design is completely integrated and feels very balanced.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 2
+  },
+  {
+    "id": 217,
+    "name": "Vera Heavy Ladle",
+    "category": "Kitchen",
+    "price": 182,
+    "image": "https://images.unsplash.com/photo-1610589827103-b4f0fbf04323?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1610589827103-b4f0fbf04323?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Features a minimal profile and tactile material contrast, combining daily longevity with functional elegance for the design-conscious cook.",
+    "colors": [
+      "#ded8cb",
+      "#2f332e"
+    ],
+    "stock": 11,
+    "sku": "NOM-0217",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "vera-heavy-ladle-1",
+        "author_name": "Lena Ortiz",
+        "author_avatar": "https://i.pravatar.cc/150?u=Lena%20Ortiz",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "vera-heavy-ladle-2",
+        "author_name": "Maya Chen",
+        "author_avatar": "https://i.pravatar.cc/150?u=Maya%20Chen",
+        "rating": 5,
+        "title": "Minimalist & solid",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "vera-heavy-ladle-3",
+        "author_name": "Amelia Stone",
+        "author_avatar": "https://i.pravatar.cc/150?u=Amelia%20Stone",
+        "rating": 4,
+        "title": "Daily essential",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.3,
+    "reviewCount": 3
+  },
+  {
+    "id": 218,
+    "name": "Sola Brass Pepper Grinder",
+    "category": "Kitchen",
+    "price": 198,
+    "image": "https://images.unsplash.com/photo-1591821090035-c2bb40690b1e?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1593113630400-ea4288922497?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1591821090035-c2bb40690b1e?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1593113630400-ea4288922497?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "A refined centerpiece for the table, offering a calm, organic silhouette and a textured finish that grows richer with use.",
+    "colors": [
+      "#9d5037",
+      "#f4f1e9"
+    ],
+    "stock": 12,
+    "sku": "NOM-0218",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "sola-brass-pepper-grinder-1",
+        "author_name": "Iris Morgan",
+        "author_avatar": "https://i.pravatar.cc/150?u=Iris%20Morgan",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "sola-brass-pepper-grinder-2",
+        "author_name": "Samira Cole",
+        "author_avatar": "https://i.pravatar.cc/150?u=Samira%20Cole",
+        "rating": 5,
+        "title": "Daily essential",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "sola-brass-pepper-grinder-3",
+        "author_name": "Nora Ellis",
+        "author_avatar": "https://i.pravatar.cc/150?u=Nora%20Ellis",
+        "rating": 4,
+        "title": "Worth every penny",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "sola-brass-pepper-grinder-4",
+        "author_name": "Eva Laurent",
+        "author_avatar": "https://i.pravatar.cc/150?u=Eva%20Laurent",
+        "rating": 5,
+        "title": "Exceptional quality",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-07T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 4
+  },
+  {
+    "id": 219,
+    "name": "Aura Cast Iron Salt Cellar",
+    "category": "Kitchen",
+    "price": 204,
+    "image": "https://images.unsplash.com/photo-1598511726623-d336a132fa6b?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1593113589042-45e0f545a91a?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1598511726623-d336a132fa6b?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1593113589042-45e0f545a91a?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Designed to slow down daily moments, combining high-grade functional components with a serene architectural form.",
+    "colors": [
+      "#7d8a76",
+      "#ded8cb"
+    ],
+    "stock": 13,
+    "sku": "NOM-0219",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "aura-cast-iron-salt-cellar-1",
+        "author_name": "Silas Romero",
+        "author_avatar": "https://i.pravatar.cc/150?u=Silas%20Romero",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "Solid weight and comfortable grip. The design is completely integrated and feels very balanced.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "aura-cast-iron-salt-cellar-2",
+        "author_name": "Jonas Vale",
+        "author_avatar": "https://i.pravatar.cc/150?u=Jonas%20Vale",
+        "rating": 5,
+        "title": "Pure tranquility",
+        "content": "The finish is outstanding. It has a beautiful balanced weight that makes preparation a quiet pleasure.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 2
+  },
+  {
+    "id": 220,
+    "name": "NŌMA Pro Magnetic Knife Rack",
+    "category": "Kitchen",
+    "price": 220,
+    "oldPrice": 275,
+    "image": "https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1606787366850-de6330128bfc?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1606787366850-de6330128bfc?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "An essential culinary tool designed with a balanced weight and comfortable grip, finished in premium materials for elevated kitchen rituals.",
+    "colors": [
+      "#d1d5db",
+      "#9ca3af"
+    ],
+    "stock": 14,
+    "sku": "NOM-0220",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "n-ma-pro-magnetic-knife-rack-1",
+        "author_name": "Avery Brooks",
+        "author_avatar": "https://i.pravatar.cc/150?u=Avery%20Brooks",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "n-ma-pro-magnetic-knife-rack-2",
+        "author_name": "Julian Reed",
+        "author_avatar": "https://i.pravatar.cc/150?u=Julian%20Reed",
+        "rating": 5,
+        "title": "Worth every penny",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "n-ma-pro-magnetic-knife-rack-3",
+        "author_name": "Noah Bennett",
+        "author_avatar": "https://i.pravatar.cc/150?u=Noah%20Bennett",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.3,
+    "reviewCount": 3
+  },
+  {
+    "id": 221,
+    "name": "Atelier Nesting Spice Jar Set",
+    "category": "Kitchen",
+    "price": 226,
+    "image": "https://images.unsplash.com/photo-1604152135912-04a022e23696?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1594793751846-60c7f763f03b?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1604152135912-04a022e23696?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1594793751846-60c7f763f03b?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Crafted for excellent heat retention and durability, this piece brings a quiet, structural presence to the open shelf and dining table.",
+    "colors": [
+      "#b87333",
+      "#3e2723"
+    ],
+    "stock": 15,
+    "sku": "NOM-0221",
+    "featured": false,
+    "badge": "Limited Edition",
+    "reviews": [
+      {
+        "id": "atelier-nesting-spice-jar-set-1",
+        "author_name": "Antonio garcia",
+        "author_avatar": "https://i.pravatar.cc/150?u=Antonio%20garcia",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "atelier-nesting-spice-jar-set-2",
+        "author_name": "Elliot Hayes",
+        "author_avatar": "https://i.pravatar.cc/150?u=Elliot%20Hayes",
+        "rating": 5,
+        "title": "Beautiful weight",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "atelier-nesting-spice-jar-set-3",
+        "author_name": "Theo Martin",
+        "author_avatar": "https://i.pravatar.cc/150?u=Theo%20Martin",
+        "rating": 4,
+        "title": "Daily essential",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "atelier-nesting-spice-jar-set-4",
+        "author_name": "Silas Romero",
+        "author_avatar": "https://i.pravatar.cc/150?u=Silas%20Romero",
+        "rating": 5,
+        "title": "Beautiful finish",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-07T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 4
+  },
+  {
+    "id": 222,
+    "name": "Soren Linen Cooking Apron",
+    "category": "Kitchen",
+    "price": 242,
+    "image": "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1626200419199-391ae4be7a41?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1626200419199-391ae4be7a41?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Features a minimal profile and tactile material contrast, combining daily longevity with functional elegance for the design-conscious cook.",
+    "colors": [
+      "#8d6e63",
+      "#d7ccc8"
+    ],
+    "stock": 16,
+    "sku": "NOM-0222",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "soren-linen-cooking-apron-1",
+        "author_name": "Maya Chen",
+        "author_avatar": "https://i.pravatar.cc/150?u=Maya%20Chen",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "The finish is outstanding. It has a beautiful balanced weight that makes preparation a quiet pleasure.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "soren-linen-cooking-apron-2",
+        "author_name": "Amelia Stone",
+        "author_avatar": "https://i.pravatar.cc/150?u=Amelia%20Stone",
+        "rating": 5,
+        "title": "Exceptional quality",
+        "content": "Solid weight and comfortable grip. The design is completely integrated and feels very balanced.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 2
+  },
+  {
+    "id": 223,
+    "name": "Kora Organic Linen Napkins",
+    "category": "Kitchen",
+    "price": 248,
+    "image": "https://images.unsplash.com/photo-1584269600464-37b1b58a9fe7?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1584269600464-37b1b58a9fe7?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "A refined centerpiece for the table, offering a calm, organic silhouette and a textured finish that grows richer with use.",
+    "colors": [
+      "#f4f1e9",
+      "#2f332e"
+    ],
+    "stock": 17,
+    "sku": "NOM-0223",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "kora-organic-linen-napkins-1",
+        "author_name": "Samira Cole",
+        "author_avatar": "https://i.pravatar.cc/150?u=Samira%20Cole",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "kora-organic-linen-napkins-2",
+        "author_name": "Nora Ellis",
+        "author_avatar": "https://i.pravatar.cc/150?u=Nora%20Ellis",
+        "rating": 5,
+        "title": "Beautiful finish",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "kora-organic-linen-napkins-3",
+        "author_name": "Eva Laurent",
+        "author_avatar": "https://i.pravatar.cc/150?u=Eva%20Laurent",
+        "rating": 4,
+        "title": "Exceptional quality",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.3,
+    "reviewCount": 3
+  },
+  {
+    "id": 224,
+    "name": "Kala Kitchen Cloth Set",
+    "category": "Kitchen",
+    "price": 264,
+    "image": "https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Designed to slow down daily moments, combining high-grade functional components with a serene architectural form.",
+    "colors": [
+      "#ded8cb",
+      "#2f332e"
+    ],
+    "stock": 18,
+    "sku": "NOM-0224",
+    "featured": false,
+    "badge": "New",
+    "reviews": [
+      {
+        "id": "kala-kitchen-cloth-set-1",
+        "author_name": "Jonas Vale",
+        "author_avatar": "https://i.pravatar.cc/150?u=Jonas%20Vale",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "kala-kitchen-cloth-set-2",
+        "author_name": "Clara Nguyen",
+        "author_avatar": "https://i.pravatar.cc/150?u=Clara%20Nguyen",
+        "rating": 5,
+        "title": "Highly recommend",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "kala-kitchen-cloth-set-3",
+        "author_name": "Lena Ortiz",
+        "author_avatar": "https://i.pravatar.cc/150?u=Lena%20Ortiz",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "kala-kitchen-cloth-set-4",
+        "author_name": "Maya Chen",
+        "author_avatar": "https://i.pravatar.cc/150?u=Maya%20Chen",
+        "rating": 5,
+        "title": "Highly recommend",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-07T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 4
+  },
+  {
+    "id": 225,
+    "name": "Eon Stainless Steel Skillet",
+    "category": "Kitchen",
+    "price": 270,
+    "oldPrice": 338,
+    "image": "https://images.unsplash.com/photo-1593113630400-ea4288922497?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1593113630400-ea4288922497?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "An essential culinary tool designed with a balanced weight and comfortable grip, finished in premium materials for elevated kitchen rituals.",
+    "colors": [
+      "#9d5037",
+      "#f4f1e9"
+    ],
+    "stock": 19,
+    "sku": "NOM-0225",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "eon-stainless-steel-skillet-1",
+        "author_name": "Julian Reed",
+        "author_avatar": "https://i.pravatar.cc/150?u=Julian%20Reed",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "Solid weight and comfortable grip. The design is completely integrated and feels very balanced.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "eon-stainless-steel-skillet-2",
+        "author_name": "Noah Bennett",
+        "author_avatar": "https://i.pravatar.cc/150?u=Noah%20Bennett",
+        "rating": 5,
+        "title": "Minimalist & solid",
+        "content": "The finish is outstanding. It has a beautiful balanced weight that makes preparation a quiet pleasure.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 2
+  },
+  {
+    "id": 226,
+    "name": "Oria Copper-Core Fry Pan",
+    "category": "Kitchen",
+    "price": 286,
+    "image": "https://images.unsplash.com/photo-1593113589042-45e0f545a91a?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1534482421-64566f976cfa?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1593113589042-45e0f545a91a?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1534482421-64566f976cfa?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Crafted for excellent heat retention and durability, this piece brings a quiet, structural presence to the open shelf and dining table.",
+    "colors": [
+      "#7d8a76",
+      "#ded8cb"
+    ],
+    "stock": 20,
+    "sku": "NOM-0226",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "oria-copper-core-fry-pan-1",
+        "author_name": "Elliot Hayes",
+        "author_avatar": "https://i.pravatar.cc/150?u=Elliot%20Hayes",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "oria-copper-core-fry-pan-2",
+        "author_name": "Theo Martin",
+        "author_avatar": "https://i.pravatar.cc/150?u=Theo%20Martin",
+        "rating": 5,
+        "title": "Daily essential",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "oria-copper-core-fry-pan-3",
+        "author_name": "Silas Romero",
+        "author_avatar": "https://i.pravatar.cc/150?u=Silas%20Romero",
+        "rating": 4,
+        "title": "Worth every penny",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.3,
+    "reviewCount": 3
+  },
+  {
+    "id": 227,
+    "name": "Mira Cast Iron Dutch Oven",
+    "category": "Kitchen",
+    "price": 292,
+    "image": "https://images.unsplash.com/photo-1606787366850-de6330128bfc?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1544982503-9f984c14501a?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1606787366850-de6330128bfc?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1544982503-9f984c14501a?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Features a minimal profile and tactile material contrast, combining daily longevity with functional elegance for the design-conscious cook.",
+    "colors": [
+      "#d1d5db",
+      "#9ca3af"
+    ],
+    "stock": 21,
+    "sku": "NOM-0227",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "mira-cast-iron-dutch-oven-1",
+        "author_name": "Amelia Stone",
+        "author_avatar": "https://i.pravatar.cc/150?u=Amelia%20Stone",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "mira-cast-iron-dutch-oven-2",
+        "author_name": "Miles Carter",
+        "author_avatar": "https://i.pravatar.cc/150?u=Miles%20Carter",
+        "rating": 5,
+        "title": "Pure tranquility",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "mira-cast-iron-dutch-oven-3",
+        "author_name": "Avery Brooks",
+        "author_avatar": "https://i.pravatar.cc/150?u=Avery%20Brooks",
+        "rating": 4,
+        "title": "Exceptional quality",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "mira-cast-iron-dutch-oven-4",
+        "author_name": "Julian Reed",
+        "author_avatar": "https://i.pravatar.cc/150?u=Julian%20Reed",
+        "rating": 5,
+        "title": "Minimalist & solid",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-07T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 4
+  },
+  {
+    "id": 228,
+    "name": "Loma Ceramic Saucepan",
+    "category": "Kitchen",
+    "price": 308,
+    "image": "https://images.unsplash.com/photo-1594793751846-60c7f763f03b?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1594793751846-60c7f763f03b?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "A refined centerpiece for the table, offering a calm, organic silhouette and a textured finish that grows richer with use.",
+    "colors": [
+      "#b87333",
+      "#3e2723"
+    ],
+    "stock": 22,
+    "sku": "NOM-0228",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "loma-ceramic-saucepan-1",
+        "author_name": "Nora Ellis",
+        "author_avatar": "https://i.pravatar.cc/150?u=Nora%20Ellis",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "The finish is outstanding. It has a beautiful balanced weight that makes preparation a quiet pleasure.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "loma-ceramic-saucepan-2",
+        "author_name": "Eva Laurent",
+        "author_avatar": "https://i.pravatar.cc/150?u=Eva%20Laurent",
+        "rating": 5,
+        "title": "Worth every penny",
+        "content": "Solid weight and comfortable grip. The design is completely integrated and feels very balanced.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 2
+  },
+  {
+    "id": 229,
+    "name": "Kove Carbon Steel Wok",
+    "category": "Kitchen",
+    "price": 314,
+    "image": "https://images.unsplash.com/photo-1626200419199-391ae4be7a41?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1596790011462-8178f2441961?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1626200419199-391ae4be7a41?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1596790011462-8178f2441961?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Designed to slow down daily moments, combining high-grade functional components with a serene architectural form.",
+    "colors": [
+      "#8d6e63",
+      "#d7ccc8"
+    ],
+    "stock": 23,
+    "sku": "NOM-0229",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "kove-carbon-steel-wok-1",
+        "author_name": "Clara Nguyen",
+        "author_avatar": "https://i.pravatar.cc/150?u=Clara%20Nguyen",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "kove-carbon-steel-wok-2",
+        "author_name": "Lena Ortiz",
+        "author_avatar": "https://i.pravatar.cc/150?u=Lena%20Ortiz",
+        "rating": 5,
+        "title": "Beautiful weight",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "kove-carbon-steel-wok-3",
+        "author_name": "Maya Chen",
+        "author_avatar": "https://i.pravatar.cc/150?u=Maya%20Chen",
+        "rating": 4,
+        "title": "Daily essential",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.3,
+    "reviewCount": 3
+  },
+  {
+    "id": 230,
+    "name": "Rhea Hard-Anodized Sauté Pan",
+    "category": "Kitchen",
+    "price": 330,
+    "oldPrice": 413,
+    "image": "https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1506368249639-73a05d6f6488?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1506368249639-73a05d6f6488?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "An essential culinary tool designed with a balanced weight and comfortable grip, finished in premium materials for elevated kitchen rituals.",
+    "colors": [
+      "#f4f1e9",
+      "#2f332e"
+    ],
+    "stock": 24,
+    "sku": "NOM-0230",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "rhea-hard-anodized-saut-pan-1",
+        "author_name": "Noah Bennett",
+        "author_avatar": "https://i.pravatar.cc/150?u=Noah%20Bennett",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "rhea-hard-anodized-saut-pan-2",
+        "author_name": "Iris Morgan",
+        "author_avatar": "https://i.pravatar.cc/150?u=Iris%20Morgan",
+        "rating": 5,
+        "title": "Exceptional quality",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "rhea-hard-anodized-saut-pan-3",
+        "author_name": "Samira Cole",
+        "author_avatar": "https://i.pravatar.cc/150?u=Samira%20Cole",
+        "rating": 4,
+        "title": "Worth every penny",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "rhea-hard-anodized-saut-pan-4",
+        "author_name": "Nora Ellis",
+        "author_avatar": "https://i.pravatar.cc/150?u=Nora%20Ellis",
+        "rating": 5,
+        "title": "Daily essential",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-07T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 4
+  },
+  {
+    "id": 231,
+    "name": "Tate Stoneware Casserole Dish",
+    "category": "Kitchen",
+    "price": 336,
+    "image": "https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1590794056226-79ef3a8147e1?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1590794056226-79ef3a8147e1?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Crafted for excellent heat retention and durability, this piece brings a quiet, structural presence to the open shelf and dining table.",
+    "colors": [
+      "#ded8cb",
+      "#2f332e"
+    ],
+    "stock": 25,
+    "sku": "NOM-0231",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "tate-stoneware-casserole-dish-1",
+        "author_name": "Theo Martin",
+        "author_avatar": "https://i.pravatar.cc/150?u=Theo%20Martin",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "Solid weight and comfortable grip. The design is completely integrated and feels very balanced.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "tate-stoneware-casserole-dish-2",
+        "author_name": "Silas Romero",
+        "author_avatar": "https://i.pravatar.cc/150?u=Silas%20Romero",
+        "rating": 5,
+        "title": "Beautiful finish",
+        "content": "The finish is outstanding. It has a beautiful balanced weight that makes preparation a quiet pleasure.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 2
+  },
+  {
+    "id": 232,
+    "name": "Bala Nesting Baking Sheets",
+    "category": "Kitchen",
+    "price": 33,
+    "image": "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Features a minimal profile and tactile material contrast, combining daily longevity with functional elegance for the design-conscious cook.",
+    "colors": [
+      "#9d5037",
+      "#f4f1e9"
+    ],
+    "stock": 26,
+    "sku": "NOM-0232",
+    "featured": false,
+    "badge": "New",
+    "reviews": [
+      {
+        "id": "bala-nesting-baking-sheets-1",
+        "author_name": "Miles Carter",
+        "author_avatar": "https://i.pravatar.cc/150?u=Miles%20Carter",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "bala-nesting-baking-sheets-2",
+        "author_name": "Avery Brooks",
+        "author_avatar": "https://i.pravatar.cc/150?u=Avery%20Brooks",
+        "rating": 5,
+        "title": "Highly recommend",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "bala-nesting-baking-sheets-3",
+        "author_name": "Julian Reed",
+        "author_avatar": "https://i.pravatar.cc/150?u=Julian%20Reed",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.3,
+    "reviewCount": 3
+  },
+  {
+    "id": 233,
+    "name": "Hale Muffin Baking Pan",
+    "category": "Kitchen",
+    "price": 39,
+    "image": "https://images.unsplash.com/photo-1534482421-64566f976cfa?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1517256064527-09c53b2d0bc6?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1534482421-64566f976cfa?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1517256064527-09c53b2d0bc6?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "A refined centerpiece for the table, offering a calm, organic silhouette and a textured finish that grows richer with use.",
+    "colors": [
+      "#7d8a76",
+      "#ded8cb"
+    ],
+    "stock": 27,
+    "sku": "NOM-0233",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "hale-muffin-baking-pan-1",
+        "author_name": "Eva Laurent",
+        "author_avatar": "https://i.pravatar.cc/150?u=Eva%20Laurent",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "hale-muffin-baking-pan-2",
+        "author_name": "Antonio garcia",
+        "author_avatar": "https://i.pravatar.cc/150?u=Antonio%20garcia",
+        "rating": 5,
+        "title": "Minimalist & solid",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "hale-muffin-baking-pan-3",
+        "author_name": "Elliot Hayes",
+        "author_avatar": "https://i.pravatar.cc/150?u=Elliot%20Hayes",
+        "rating": 4,
+        "title": "Daily essential",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "hale-muffin-baking-pan-4",
+        "author_name": "Theo Martin",
+        "author_avatar": "https://i.pravatar.cc/150?u=Theo%20Martin",
+        "rating": 5,
+        "title": "Pure tranquility",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-07T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 4
+  },
+  {
+    "id": 234,
+    "name": "Bora Loaf Baking Tin",
+    "category": "Kitchen",
+    "price": 55,
+    "image": "https://images.unsplash.com/photo-1544982503-9f984c14501a?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1574894709920-11b28e7367e3?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1544982503-9f984c14501a?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1574894709920-11b28e7367e3?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Designed to slow down daily moments, combining high-grade functional components with a serene architectural form.",
+    "colors": [
+      "#d1d5db",
+      "#9ca3af"
+    ],
+    "stock": 28,
+    "sku": "NOM-0234",
+    "featured": false,
+    "badge": "Limited Edition",
+    "reviews": [
+      {
+        "id": "bora-loaf-baking-tin-1",
+        "author_name": "Lena Ortiz",
+        "author_avatar": "https://i.pravatar.cc/150?u=Lena%20Ortiz",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "The finish is outstanding. It has a beautiful balanced weight that makes preparation a quiet pleasure.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "bora-loaf-baking-tin-2",
+        "author_name": "Maya Chen",
+        "author_avatar": "https://i.pravatar.cc/150?u=Maya%20Chen",
+        "rating": 5,
+        "title": "Daily essential",
+        "content": "Solid weight and comfortable grip. The design is completely integrated and feels very balanced.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 2
+  },
+  {
+    "id": 235,
+    "name": "Sage Stainless Steel Colander",
+    "category": "Kitchen",
+    "price": 61,
+    "oldPrice": 76,
+    "image": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1595272170044-db903876b222?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1595272170044-db903876b222?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "An essential culinary tool designed with a balanced weight and comfortable grip, finished in premium materials for elevated kitchen rituals.",
+    "colors": [
+      "#b87333",
+      "#3e2723"
+    ],
+    "stock": 29,
+    "sku": "NOM-0235",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "sage-stainless-steel-colander-1",
+        "author_name": "Iris Morgan",
+        "author_avatar": "https://i.pravatar.cc/150?u=Iris%20Morgan",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "sage-stainless-steel-colander-2",
+        "author_name": "Samira Cole",
+        "author_avatar": "https://i.pravatar.cc/150?u=Samira%20Cole",
+        "rating": 5,
+        "title": "Pure tranquility",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "sage-stainless-steel-colander-3",
+        "author_name": "Nora Ellis",
+        "author_avatar": "https://i.pravatar.cc/150?u=Nora%20Ellis",
+        "rating": 4,
+        "title": "Exceptional quality",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.3,
+    "reviewCount": 3
+  },
+  {
+    "id": 236,
+    "name": "Pura Fine Mesh Sieve",
+    "category": "Kitchen",
+    "price": 77,
+    "image": "https://images.unsplash.com/photo-1596790011462-8178f2441961?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1596790011462-8178f2441961?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Crafted for excellent heat retention and durability, this piece brings a quiet, structural presence to the open shelf and dining table.",
+    "colors": [
+      "#8d6e63",
+      "#d7ccc8"
+    ],
+    "stock": 30,
+    "sku": "NOM-0236",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "pura-fine-mesh-sieve-1",
+        "author_name": "Silas Romero",
+        "author_avatar": "https://i.pravatar.cc/150?u=Silas%20Romero",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "pura-fine-mesh-sieve-2",
+        "author_name": "Jonas Vale",
+        "author_avatar": "https://i.pravatar.cc/150?u=Jonas%20Vale",
+        "rating": 5,
+        "title": "Worth every penny",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "pura-fine-mesh-sieve-3",
+        "author_name": "Clara Nguyen",
+        "author_avatar": "https://i.pravatar.cc/150?u=Clara%20Nguyen",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "pura-fine-mesh-sieve-4",
+        "author_name": "Lena Ortiz",
+        "author_avatar": "https://i.pravatar.cc/150?u=Lena%20Ortiz",
+        "rating": 5,
+        "title": "Worth every penny",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-07T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 4
+  },
+  {
+    "id": 237,
+    "name": "Vera Utensil Holder",
+    "category": "Kitchen",
+    "price": 83,
+    "image": "https://images.unsplash.com/photo-1506368249639-73a05d6f6488?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1531234799389-d879353b91d2?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1506368249639-73a05d6f6488?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1531234799389-d879353b91d2?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Features a minimal profile and tactile material contrast, combining daily longevity with functional elegance for the design-conscious cook.",
+    "colors": [
+      "#f4f1e9",
+      "#2f332e"
+    ],
+    "stock": 31,
+    "sku": "NOM-0237",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "vera-utensil-holder-1",
+        "author_name": "Avery Brooks",
+        "author_avatar": "https://i.pravatar.cc/150?u=Avery%20Brooks",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "Solid weight and comfortable grip. The design is completely integrated and feels very balanced.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "vera-utensil-holder-2",
+        "author_name": "Julian Reed",
+        "author_avatar": "https://i.pravatar.cc/150?u=Julian%20Reed",
+        "rating": 5,
+        "title": "Beautiful weight",
+        "content": "The finish is outstanding. It has a beautiful balanced weight that makes preparation a quiet pleasure.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 2
+  },
+  {
+    "id": 238,
+    "name": "Sola Bread Proofing Basket",
+    "category": "Kitchen",
+    "price": 99,
+    "image": "https://images.unsplash.com/photo-1590794056226-79ef3a8147e1?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1590794056226-79ef3a8147e1?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "A refined centerpiece for the table, offering a calm, organic silhouette and a textured finish that grows richer with use.",
+    "colors": [
+      "#ded8cb",
+      "#2f332e"
+    ],
+    "stock": 32,
+    "sku": "NOM-0238",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "sola-bread-proofing-basket-1",
+        "author_name": "Antonio garcia",
+        "author_avatar": "https://i.pravatar.cc/150?u=Antonio%20garcia",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "sola-bread-proofing-basket-2",
+        "author_name": "Elliot Hayes",
+        "author_avatar": "https://i.pravatar.cc/150?u=Elliot%20Hayes",
+        "rating": 5,
+        "title": "Exceptional quality",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "sola-bread-proofing-basket-3",
+        "author_name": "Theo Martin",
+        "author_avatar": "https://i.pravatar.cc/150?u=Theo%20Martin",
+        "rating": 4,
+        "title": "Worth every penny",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.3,
+    "reviewCount": 3
+  },
+  {
+    "id": 239,
+    "name": "Aura Organic Dough Lame",
+    "category": "Kitchen",
+    "price": 105,
+    "image": "https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Designed to slow down daily moments, combining high-grade functional components with a serene architectural form.",
+    "colors": [
+      "#9d5037",
+      "#f4f1e9"
+    ],
+    "stock": 33,
+    "sku": "NOM-0239",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "aura-organic-dough-lame-1",
+        "author_name": "Maya Chen",
+        "author_avatar": "https://i.pravatar.cc/150?u=Maya%20Chen",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "aura-organic-dough-lame-2",
+        "author_name": "Amelia Stone",
+        "author_avatar": "https://i.pravatar.cc/150?u=Amelia%20Stone",
+        "rating": 5,
+        "title": "Beautiful finish",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "aura-organic-dough-lame-3",
+        "author_name": "Miles Carter",
+        "author_avatar": "https://i.pravatar.cc/150?u=Miles%20Carter",
+        "rating": 4,
+        "title": "Exceptional quality",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "aura-organic-dough-lame-4",
+        "author_name": "Avery Brooks",
+        "author_avatar": "https://i.pravatar.cc/150?u=Avery%20Brooks",
+        "rating": 5,
+        "title": "Beautiful weight",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-07T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 4
+  },
+  {
+    "id": 240,
+    "name": "NŌMA Pro Cast Iron Griddle",
+    "category": "Kitchen",
+    "price": 121,
+    "oldPrice": 151,
+    "image": "https://images.unsplash.com/photo-1517256064527-09c53b2d0bc6?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1543083477-4f785ae8282a?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1517256064527-09c53b2d0bc6?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1543083477-4f785ae8282a?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "An essential culinary tool designed with a balanced weight and comfortable grip, finished in premium materials for elevated kitchen rituals.",
+    "colors": [
+      "#7d8a76",
+      "#ded8cb"
+    ],
+    "stock": 34,
+    "sku": "NOM-0240",
+    "featured": false,
+    "badge": "New",
+    "reviews": [
+      {
+        "id": "n-ma-pro-cast-iron-griddle-1",
+        "author_name": "Samira Cole",
+        "author_avatar": "https://i.pravatar.cc/150?u=Samira%20Cole",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "The finish is outstanding. It has a beautiful balanced weight that makes preparation a quiet pleasure.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "n-ma-pro-cast-iron-griddle-2",
+        "author_name": "Nora Ellis",
+        "author_avatar": "https://i.pravatar.cc/150?u=Nora%20Ellis",
+        "rating": 5,
+        "title": "Highly recommend",
+        "content": "Solid weight and comfortable grip. The design is completely integrated and feels very balanced.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 2
+  },
+  {
+    "id": 241,
+    "name": "Atelier Ceramic Grate Dish",
+    "category": "Kitchen",
+    "price": 127,
+    "image": "https://images.unsplash.com/photo-1574894709920-11b28e7367e3?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1574894709920-11b28e7367e3?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Crafted for excellent heat retention and durability, this piece brings a quiet, structural presence to the open shelf and dining table.",
+    "colors": [
+      "#d1d5db",
+      "#9ca3af"
+    ],
+    "stock": 35,
+    "sku": "NOM-0241",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "atelier-ceramic-grate-dish-1",
+        "author_name": "Jonas Vale",
+        "author_avatar": "https://i.pravatar.cc/150?u=Jonas%20Vale",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "atelier-ceramic-grate-dish-2",
+        "author_name": "Clara Nguyen",
+        "author_avatar": "https://i.pravatar.cc/150?u=Clara%20Nguyen",
+        "rating": 5,
+        "title": "Minimalist & solid",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "atelier-ceramic-grate-dish-3",
+        "author_name": "Lena Ortiz",
+        "author_avatar": "https://i.pravatar.cc/150?u=Lena%20Ortiz",
+        "rating": 4,
+        "title": "Daily essential",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.3,
+    "reviewCount": 3
+  },
+  {
+    "id": 242,
+    "name": "Soren Mortar and Pestle",
+    "category": "Kitchen",
+    "price": 143,
+    "image": "https://images.unsplash.com/photo-1595272170044-db903876b222?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1588854337236-6889d631faa8?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1595272170044-db903876b222?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1588854337236-6889d631faa8?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Features a minimal profile and tactile material contrast, combining daily longevity with functional elegance for the design-conscious cook.",
+    "colors": [
+      "#b87333",
+      "#3e2723"
+    ],
+    "stock": 36,
+    "sku": "NOM-0242",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "soren-mortar-and-pestle-1",
+        "author_name": "Julian Reed",
+        "author_avatar": "https://i.pravatar.cc/150?u=Julian%20Reed",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "soren-mortar-and-pestle-2",
+        "author_name": "Noah Bennett",
+        "author_avatar": "https://i.pravatar.cc/150?u=Noah%20Bennett",
+        "rating": 5,
+        "title": "Daily essential",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "soren-mortar-and-pestle-3",
+        "author_name": "Iris Morgan",
+        "author_avatar": "https://i.pravatar.cc/150?u=Iris%20Morgan",
+        "rating": 4,
+        "title": "Worth every penny",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "soren-mortar-and-pestle-4",
+        "author_name": "Samira Cole",
+        "author_avatar": "https://i.pravatar.cc/150?u=Samira%20Cole",
+        "rating": 5,
+        "title": "Exceptional quality",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-07T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 4
+  },
+  {
+    "id": 243,
+    "name": "Kora Stainless Steel Box Grater",
+    "category": "Kitchen",
+    "price": 149,
+    "image": "https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "A refined centerpiece for the table, offering a calm, organic silhouette and a textured finish that grows richer with use.",
+    "colors": [
+      "#8d6e63",
+      "#d7ccc8"
+    ],
+    "stock": 37,
+    "sku": "NOM-0243",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "kora-stainless-steel-box-grater-1",
+        "author_name": "Elliot Hayes",
+        "author_avatar": "https://i.pravatar.cc/150?u=Elliot%20Hayes",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "Solid weight and comfortable grip. The design is completely integrated and feels very balanced.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "kora-stainless-steel-box-grater-2",
+        "author_name": "Theo Martin",
+        "author_avatar": "https://i.pravatar.cc/150?u=Theo%20Martin",
+        "rating": 5,
+        "title": "Pure tranquility",
+        "content": "The finish is outstanding. It has a beautiful balanced weight that makes preparation a quiet pleasure.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 2
+  },
+  {
+    "id": 244,
+    "name": "Kala Hand-Held Citrus Press",
+    "category": "Kitchen",
+    "price": 165,
+    "image": "https://images.unsplash.com/photo-1531234799389-d879353b91d2?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1608686207856-001b95cf60ca?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1531234799389-d879353b91d2?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1608686207856-001b95cf60ca?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Designed to slow down daily moments, combining high-grade functional components with a serene architectural form.",
+    "colors": [
+      "#f4f1e9",
+      "#2f332e"
+    ],
+    "stock": 38,
+    "sku": "NOM-0244",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "kala-hand-held-citrus-press-1",
+        "author_name": "Amelia Stone",
+        "author_avatar": "https://i.pravatar.cc/150?u=Amelia%20Stone",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "kala-hand-held-citrus-press-2",
+        "author_name": "Miles Carter",
+        "author_avatar": "https://i.pravatar.cc/150?u=Miles%20Carter",
+        "rating": 5,
+        "title": "Worth every penny",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "kala-hand-held-citrus-press-3",
+        "author_name": "Avery Brooks",
+        "author_avatar": "https://i.pravatar.cc/150?u=Avery%20Brooks",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.3,
+    "reviewCount": 3
+  },
+  {
+    "id": 245,
+    "name": "Eon Chef Knife",
+    "category": "Kitchen",
+    "price": 171,
+    "oldPrice": 214,
+    "image": "https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "An essential culinary tool designed with a balanced weight and comfortable grip, finished in premium materials for elevated kitchen rituals.",
+    "colors": [
+      "#ded8cb",
+      "#2f332e"
+    ],
+    "stock": 39,
+    "sku": "NOM-0245",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "eon-chef-knife-1",
+        "author_name": "Nora Ellis",
+        "author_avatar": "https://i.pravatar.cc/150?u=Nora%20Ellis",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "eon-chef-knife-2",
+        "author_name": "Eva Laurent",
+        "author_avatar": "https://i.pravatar.cc/150?u=Eva%20Laurent",
+        "rating": 5,
+        "title": "Beautiful weight",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "eon-chef-knife-3",
+        "author_name": "Antonio garcia",
+        "author_avatar": "https://i.pravatar.cc/150?u=Antonio%20garcia",
+        "rating": 4,
+        "title": "Daily essential",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "eon-chef-knife-4",
+        "author_name": "Elliot Hayes",
+        "author_avatar": "https://i.pravatar.cc/150?u=Elliot%20Hayes",
+        "rating": 5,
+        "title": "Beautiful finish",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-07T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 4
+  },
+  {
+    "id": 246,
+    "name": "Oria Santoku Knife",
+    "category": "Kitchen",
+    "price": 187,
+    "image": "https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1512485694743-9c9538b4e6e0?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1512485694743-9c9538b4e6e0?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Crafted for excellent heat retention and durability, this piece brings a quiet, structural presence to the open shelf and dining table.",
+    "colors": [
+      "#9d5037",
+      "#f4f1e9"
+    ],
+    "stock": 40,
+    "sku": "NOM-0246",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "oria-santoku-knife-1",
+        "author_name": "Clara Nguyen",
+        "author_avatar": "https://i.pravatar.cc/150?u=Clara%20Nguyen",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "The finish is outstanding. It has a beautiful balanced weight that makes preparation a quiet pleasure.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "oria-santoku-knife-2",
+        "author_name": "Lena Ortiz",
+        "author_avatar": "https://i.pravatar.cc/150?u=Lena%20Ortiz",
+        "rating": 5,
+        "title": "Exceptional quality",
+        "content": "Solid weight and comfortable grip. The design is completely integrated and feels very balanced.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 2
+  },
+  {
+    "id": 247,
+    "name": "Mira Bread Knife",
+    "category": "Kitchen",
+    "price": 193,
+    "image": "https://images.unsplash.com/photo-1543083477-4f785ae8282a?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1610589827103-b4f0fbf04323?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1543083477-4f785ae8282a?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1610589827103-b4f0fbf04323?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Features a minimal profile and tactile material contrast, combining daily longevity with functional elegance for the design-conscious cook.",
+    "colors": [
+      "#7d8a76",
+      "#ded8cb"
+    ],
+    "stock": 41,
+    "sku": "NOM-0247",
+    "featured": false,
+    "badge": "Limited Edition",
+    "reviews": [
+      {
+        "id": "mira-bread-knife-1",
+        "author_name": "Noah Bennett",
+        "author_avatar": "https://i.pravatar.cc/150?u=Noah%20Bennett",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "mira-bread-knife-2",
+        "author_name": "Iris Morgan",
+        "author_avatar": "https://i.pravatar.cc/150?u=Iris%20Morgan",
+        "rating": 5,
+        "title": "Beautiful finish",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "mira-bread-knife-3",
+        "author_name": "Samira Cole",
+        "author_avatar": "https://i.pravatar.cc/150?u=Samira%20Cole",
+        "rating": 4,
+        "title": "Exceptional quality",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.3,
+    "reviewCount": 3
+  },
+  {
+    "id": 248,
+    "name": "Loma Paring Knife",
+    "category": "Kitchen",
+    "price": 209,
+    "image": "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1591821090035-c2bb40690b1e?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1591821090035-c2bb40690b1e?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "A refined centerpiece for the table, offering a calm, organic silhouette and a textured finish that grows richer with use.",
+    "colors": [
+      "#d1d5db",
+      "#9ca3af"
+    ],
+    "stock": 42,
+    "sku": "NOM-0248",
+    "featured": false,
+    "badge": "New",
+    "reviews": [
+      {
+        "id": "loma-paring-knife-1",
+        "author_name": "Theo Martin",
+        "author_avatar": "https://i.pravatar.cc/150?u=Theo%20Martin",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "loma-paring-knife-2",
+        "author_name": "Silas Romero",
+        "author_avatar": "https://i.pravatar.cc/150?u=Silas%20Romero",
+        "rating": 5,
+        "title": "Highly recommend",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "loma-paring-knife-3",
+        "author_name": "Jonas Vale",
+        "author_avatar": "https://i.pravatar.cc/150?u=Jonas%20Vale",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A beautiful addition to my daily kitchen rituals. Easy to clean and holds its premium feel perfectly.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "loma-paring-knife-4",
+        "author_name": "Clara Nguyen",
+        "author_avatar": "https://i.pravatar.cc/150?u=Clara%20Nguyen",
+        "rating": 5,
+        "title": "Highly recommend",
+        "content": "The materials feel premium and durable. Exceeds commercial kitchenware in visual poise and function.",
+        "created_at": "2026-04-07T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 4
+  },
+  {
+    "id": 249,
+    "name": "Kove Knife Block Set",
+    "category": "Kitchen",
+    "price": 215,
+    "image": "https://images.unsplash.com/photo-1588854337236-6889d631faa8?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1598511726623-d336a132fa6b?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1588854337236-6889d631faa8?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1598511726623-d336a132fa6b?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "Designed to slow down daily moments, combining high-grade functional components with a serene architectural form.",
+    "colors": [
+      "#b87333",
+      "#3e2723"
+    ],
+    "stock": 43,
+    "sku": "NOM-0249",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "kove-knife-block-set-1",
+        "author_name": "Miles Carter",
+        "author_avatar": "https://i.pravatar.cc/150?u=Miles%20Carter",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "Solid weight and comfortable grip. The design is completely integrated and feels very balanced.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "kove-knife-block-set-2",
+        "author_name": "Avery Brooks",
+        "author_avatar": "https://i.pravatar.cc/150?u=Avery%20Brooks",
+        "rating": 5,
+        "title": "Minimalist & solid",
+        "content": "The finish is outstanding. It has a beautiful balanced weight that makes preparation a quiet pleasure.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.5,
+    "reviewCount": 2
+  },
+  {
+    "id": 250,
+    "name": "Rhea Teak Cutting Board",
+    "category": "Kitchen",
+    "price": 231,
+    "oldPrice": 289,
+    "image": "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=75",
+    "imageHover": "https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?auto=format&fit=crop&w=600&q=75",
+    "images": [
+      "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=75",
+      "https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?auto=format&fit=crop&w=600&q=75"
+    ],
+    "description": "An essential culinary tool designed with a balanced weight and comfortable grip, finished in premium materials for elevated kitchen rituals.",
+    "colors": [
+      "#8d6e63",
+      "#d7ccc8"
+    ],
+    "stock": 44,
+    "sku": "NOM-0250",
+    "featured": false,
+    "reviews": [
+      {
+        "id": "rhea-teak-cutting-board-1",
+        "author_name": "Eva Laurent",
+        "author_avatar": "https://i.pravatar.cc/150?u=Eva%20Laurent",
+        "rating": 4,
+        "title": "Highly recommend",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-01T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "rhea-teak-cutting-board-2",
+        "author_name": "Antonio garcia",
+        "author_avatar": "https://i.pravatar.cc/150?u=Antonio%20garcia",
+        "rating": 5,
+        "title": "Daily essential",
+        "content": "Heats evenly and looks incredibly sculptural on the open shelves. Fits the NOMA aesthetic completely.",
+        "created_at": "2026-04-03T06:00:00.000Z",
+        "is_verified_purchase": true
+      },
+      {
+        "id": "rhea-teak-cutting-board-3",
+        "author_name": "Elliot Hayes",
+        "author_avatar": "https://i.pravatar.cc/150?u=Elliot%20Hayes",
+        "rating": 4,
+        "title": "Worth every penny",
+        "content": "A simple object made exceptionally well. The details are quiet but very precise and satisfying.",
+        "created_at": "2026-04-05T06:00:00.000Z",
+        "is_verified_purchase": true
+      }
+    ],
+    "rating": 4.3,
+    "reviewCount": 3
   }
 ];
+
 
 export const money = (value: number) =>
   new Intl.NumberFormat("en-US", {

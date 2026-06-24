@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -26,7 +26,7 @@ export default function Header({
   onWishlist?: () => void;
   onSearch?: (value: string) => void;
 }) {
-  const { cart, profile, cartPulse, wishlist, signOut } = useStore();
+  const { cart, profile, cartPulse, wishlist, signOut, setOrdersOpen } = useStore();
   const [menu, setMenu] = useState(false);
   const [search, setSearch] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
@@ -111,33 +111,33 @@ export default function Header({
           >
             <Search />
           </button>
-          <div className="account-menu">
+          <div className="account-menu" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
             {profile ? (
               <>
-                <button
-                  className="icon user-link account-trigger"
-                  type="button"
+                <Link
+                  className="icon user-link"
+                  href="/cuenta"
                   aria-label={`${profile.name}'s account`}
-                  aria-expanded={accountOpen}
-                  onClick={() => setAccountOpen((value) => !value)}
+                  style={{ display: "flex", alignItems: "center", gap: "6px" }}
                 >
                   <UserRound />
                   <span>{profile.name.split(" ")[0]}</span>
-                  <ChevronDown />
+                </Link>
+                {profile.role === "admin" && (
+                  <Link href="/admin" className="icon" title="Admin Panel" style={{ display: "flex", alignItems: "center" }}>
+                    <span style={{ fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.05em", opacity: 0.8 }}>Admin</span>
+                  </Link>
+                )}
+                <button
+                  type="button"
+                  className="icon logout-btn"
+                  onClick={signOut}
+                  aria-label="Sign out"
+                  title="Sign out"
+                  style={{ background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center" }}
+                >
+                  <LogOut size={18} />
                 </button>
-                <div className={`account-popover ${accountOpen ? "open" : ""}`}>
-                  <small>Signed in</small>
-                  <strong>{profile.name}</strong>
-                  <span>{profile.email}</span>
-                  {profile.role === "admin" && (
-                    <Link href="/admin" onClick={() => setAccountOpen(false)}>
-                      Admin room
-                    </Link>
-                  )}
-                  <button type="button" onClick={signOut}>
-                    <LogOut /> Sign out
-                  </button>
-                </div>
               </>
             ) : (
               <Link className="icon user-link" href="/login" aria-label="Log in">
@@ -223,28 +223,51 @@ export default function Header({
             </Link>
           ))}
         </nav>
-        <div className="mobile-menu-foot">
+        <div className="mobile-menu-foot" style={{ display: "flex", flexDirection: "column", gap: "12px", width: "100%", padding: "20px" }}>
           {profile ? (
-            <button
-              onClick={() => {
-                setMenu(false);
-                signOut();
-              }}
-            >
-              Sign out
-            </button>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%", borderBottom: "1px solid rgba(255,255,255,0.05)", paddingBottom: "16px", marginBottom: "8px" }}>
+              <Link
+                href="/cuenta"
+                onClick={() => setMenu(false)}
+                style={{ display: "flex", alignItems: "center", gap: "8px", textDecoration: "none", color: "inherit", fontWeight: "600" }}
+              >
+                <UserRound size={18} />
+                <span>{profile.name}</span>
+              </Link>
+              <button
+                type="button"
+                onClick={() => {
+                  setMenu(false);
+                  signOut();
+                }}
+                style={{ background: "none", border: "none", color: "var(--clay)", display: "flex", alignItems: "center", gap: "6px", cursor: "pointer", fontSize: "14px", fontWeight: "500", padding: 0 }}
+              >
+                <LogOut size={16} />
+                <span>Sign out</span>
+              </button>
+            </div>
           ) : (
-            <Link href="/login" onClick={() => setMenu(false)}>
-              My account
+            <Link href="/login" onClick={() => setMenu(false)} style={{ display: "flex", alignItems: "center", gap: "8px", textDecoration: "none", color: "inherit", borderBottom: "1px solid rgba(255,255,255,0.05)", paddingBottom: "16px", marginBottom: "8px", width: "100%" }}>
+              <UserRound size={18} />
+              <span>Log in / Register</span>
             </Link>
           )}
+          
+          {profile && profile.role === "admin" && (
+            <Link href="/admin" onClick={() => setMenu(false)} style={{ display: "block", marginBottom: "8px", textDecoration: "none", color: "inherit", fontSize: "14px", opacity: 0.8 }}>
+              Admin Panel
+            </Link>
+          )}
+
           <button
             onClick={() => {
               setMenu(false);
               setSearch(true);
             }}
+            style={{ display: "flex", alignItems: "center", gap: "8px", background: "none", border: "none", color: "inherit", cursor: "pointer", padding: 0, width: "fit-content" }}
           >
-            Search
+            <Search size={16} />
+            <span>Search</span>
           </button>
         </div>
       </div>
