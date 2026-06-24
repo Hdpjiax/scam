@@ -5,6 +5,14 @@ import { X } from "lucide-react";
 
 export default function AdModal() {
   const [show, setShow] = useState(false);
+  const [email, setEmail] = useState("");
+
+  const handleAdSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+    closeModal();
+    window.location.href = `/login?email=${encodeURIComponent(email)}&register=true`;
+  };
 
   useEffect(() => {
     const hasSeenAd = sessionStorage.getItem("hasSeenAd");
@@ -40,11 +48,19 @@ export default function AdModal() {
           <span className="ad-badge">Exclusive Offer</span>
           <h2>30% DISCOUNT</h2>
           <p>On your first purchase. Bring your spaces to life with our collection of objects designed to inspire tranquility.</p>
-          <div className="ad-actions">
-            <button className="ad-primary-btn" onClick={closeModal}>
-              Claim Discount
+          <form className="ad-form" onSubmit={handleAdSubmit}>
+            <input
+              type="email"
+              required
+              placeholder="Enter your email address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="ad-input"
+            />
+            <button type="submit" className="ad-primary-btn">
+              Claim 30% Off
             </button>
-          </div>
+          </form>
         </div>
       </div>
       <style jsx>{`
@@ -151,6 +167,32 @@ export default function AdModal() {
           font-weight: 300;
         }
 
+        .ad-form {
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+        }
+
+        .ad-input {
+          width: 100%;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 100px;
+          padding: 16px 24px;
+          font-size: 15px;
+          color: white;
+          transition: all 0.3s ease;
+          outline: none;
+          box-sizing: border-box;
+        }
+
+        .ad-input:focus {
+          border-color: #d1b894;
+          background: rgba(255, 255, 255, 0.08);
+          box-shadow: 0 0 0 3px rgba(209, 184, 148, 0.25);
+        }
+
         .ad-primary-btn {
           background: #fff;
           color: #000;
@@ -162,6 +204,7 @@ export default function AdModal() {
           cursor: pointer;
           transition: all 0.3s ease;
           width: 100%;
+          box-sizing: border-box;
         }
 
         .ad-primary-btn:hover {

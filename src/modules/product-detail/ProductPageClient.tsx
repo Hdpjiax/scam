@@ -16,7 +16,6 @@ import {
 import { Product } from "../../data/products";
 import { useStore } from "../../providers/StoreProvider";
 import { money } from "../../lib/utils";
-import { Cart } from "../../components/Drawers";
 import { categorySlug } from "../../lib/catalog";
 import { colorName } from "../catalog/color-names";
 import { FALLBACK_REVIEWS_POOL } from "./product-detail.data";
@@ -28,9 +27,8 @@ export default function ProductPageClient({
   initialProduct: Product | null;
   initialReviews?: any[];
 }) {
-  const { cart, addToCart, toggleWishlist, isInWishlist } = useStore();
+  const { cart, addToCart, toggleWishlist, isInWishlist, setCartOpen } = useStore();
   const [qty, setQty] = useState(1);
-  const [drawer, setDrawer] = useState(false);
   const [added, setAdded] = useState(false);
 
   const cartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
@@ -82,7 +80,6 @@ export default function ProductPageClient({
     if (isOut) return;
     addToCart(p, qty, colorName(selectedColor));
     setAdded(true);
-    setDrawer(true);
     window.setTimeout(() => setAdded(false), 1600);
   };
 
@@ -96,8 +93,8 @@ export default function ProductPageClient({
           <Link className="brand" href="/" aria-label="NŌMA, Home">
             NŌMA<span>living spaces</span>
           </Link>
-          <button className="pdp-cart-link" onClick={() => setDrawer(true)}>
-            Bag ({cartCount})
+          <button className="pdp-cart-link" onClick={() => setCartOpen(true)}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-shopping-bag" aria-hidden="true"><path d="M16 10a4 4 0 0 1-8 0"></path><path d="M3.103 6.034h17.794"></path><path d="M3.4 5.467a2 2 0 0 0-.4 1.2V20a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6.667a2 2 0 0 0-.4-1.2l-2-2.667A2 2 0 0 0 17 2H7a2 2 0 0 0-1.6.8z"></path></svg> ({cartCount})
           </button>
         </header>
         <main>
@@ -406,7 +403,6 @@ export default function ProductPageClient({
         </section>
 
       </div>
-      <Cart open={drawer} onClose={() => setDrawer(false)} />
     </>
   );
 }

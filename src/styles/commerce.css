@@ -404,14 +404,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-inline: var(--page);
 }
 
 .checkout-page>header>* {
-  width: 33%;
+  width: 100%;
   display: flex;
   justify-content: center;
-  font-size: 10px;
+  font-size: 20px;
 }
 
 .checkout-page>main {

@@ -36,6 +36,27 @@ export default function ShopClient({
   const [limit, setLimit] = useState(8);
   const [light, setLight] = useState({ x: 50, y: 40 });
   const [toast, setToast] = useState("");
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          video.currentTime = 0;
+          video.play().catch((err) => console.log("Auto-play prevented", err));
+        } else {
+          video.pause();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, []);
 
   const categoryStoriesRef = useRef<HTMLElement>(null);
   useRevealGroup(categoryStoriesRef, ".category-story", 90);
@@ -54,7 +75,6 @@ export default function ShopClient({
   }, [initialProducts, q]);
 
   const add = (product: Product) => {
-    addToCart(product, 1);
     setToast(`${product.name} added to cart.`);
     window.setTimeout(() => setToast(""), 2200);
   };
@@ -81,6 +101,7 @@ export default function ShopClient({
           }}
         >
           <video
+            ref={videoRef}
             className="hero-video"
             autoPlay
             muted
@@ -90,10 +111,11 @@ export default function ShopClient({
             aria-hidden="true"
           >
             <source
-              src="https://videos.pexels.com/video-files/7578552/7578552-hd_1920_1080_25fps.mp4"
+              src="/assets/Tarea-112543727-2-1.mp4"
               type="video/mp4"
             />
           </video>
+          <div className="hero-video-overlay" />
           <div className="hero-light" />
           <div className="hero-copy">
             <p className="collection-code">NŌMA / COLLECTION 02</p>

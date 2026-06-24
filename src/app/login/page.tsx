@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -35,10 +35,25 @@ export default function LoginPage() {
   const supabase = createClient();
   const { profile, signOut } = useStore();
   const [register, setRegister] = useState(false);
+  const [emailPrefill, setEmailPrefill] = useState("");
   const [show, setShow] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const emailParam = params.get("email");
+      const registerParam = params.get("register");
+      if (emailParam) {
+        setEmailPrefill(emailParam);
+      }
+      if (registerParam === "true") {
+        setRegister(true);
+      }
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -53,10 +68,33 @@ export default function LoginPage() {
     const phone = String(form.get("phone") || "").trim();
     const confirmPassword = String(form.get("confirmPassword") || "");
 
+    // Email format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError("Please enter a valid email address.");
+      setLoading(false);
+      return;
+    }
+
     try {
       if (register) {
+        if (!name || name.split(/\s+/).length < 2) {
+          setError("Please enter your full first and last name (first and last name).");
+          setLoading(false);
+          return;
+        }
+        if (!phone || phone.replace(/\D/g, "").length < 10) {
+          setError("Please enter a valid phone number (at least 10 digits).");
+          setLoading(false);
+          return;
+        }
         if (password.length < 8) {
-          setError("Use at least 8 characters for a production-ready password.");
+          setError("Use at least 8 characters for a password.");
+          setLoading(false);
+          return;
+        }
+        if (!/[A-Za-z]/.test(password) || !/\d/.test(password)) {
+          setError("Password must contain at least one letter and one number.");
           setLoading(false);
           return;
         }
@@ -200,6 +238,8 @@ export default function LoginPage() {
                   required
                   autoComplete="email"
                   placeholder="you@example.com"
+                  defaultValue={emailPrefill}
+                  key={emailPrefill}
                   disabled={loading}
                 />
               </label>

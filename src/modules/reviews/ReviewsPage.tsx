@@ -5,9 +5,9 @@ import Link from "next/link";
 import { ArrowRight, Sparkles, Star } from "lucide-react";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
-import { Cart } from "../../components/Drawers";
 import { products } from "../../data/products";
 import { createClient } from "../../lib/supabase/client";
+import { useStore } from "../../providers/StoreProvider";
 
 type ReviewRow = {
   id: string;
@@ -52,7 +52,7 @@ const reviewProductImage = (review: ReviewRow) =>
 
 export default function ReviewsPage() {
   const [reviews, setReviews] = useState<ReviewRow[]>(fallbackReviews);
-  const [drawer, setDrawer] = useState(false);
+  const { setCartOpen, setWishlistOpen } = useStore();
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -80,7 +80,7 @@ export default function ReviewsPage() {
 
   return (
     <>
-      <Header onCart={() => setDrawer(true)} />
+      <Header onCart={() => setCartOpen(true)} onWishlist={() => setWishlistOpen(true)} />
       <main className="reviews-page" style={{ background: "var(--ink)", minHeight: "100vh", color: "var(--paper)" }}>
         <section className="reviews-hero" style={{ padding: "80px 4% 40px", borderBottom: "1px solid rgba(255, 255, 255, 0.06)", background: "rgba(255,255,255,0.01)" }}>
           <div style={{ maxWidth: "900px", margin: "0 auto", display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", gap: "32px" }}>
@@ -189,7 +189,6 @@ export default function ReviewsPage() {
         </section>
       </main>
       <Footer />
-      <Cart open={drawer} onClose={() => setDrawer(false)} />
     </>
   );
 }

@@ -34,7 +34,6 @@ export default function CategoryPageClient({
   }, [products, sort]);
 
   const add = (product: Product) => {
-    addToCart(product, 1);
     setToast(`${product.name} added to cart.`);
     window.setTimeout(() => setToast(""), 2200);
   };

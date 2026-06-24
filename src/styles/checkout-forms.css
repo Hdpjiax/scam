@@ -34,17 +34,36 @@
 
 /* Phone input layout */
 .phone-input-wrap {
-  display: grid;
-  grid-template-columns: 140px 1fr;
-  gap: 12px;
+  position: relative;
+  display: flex;
+  flex-direction: row;
   align-items: center;
+  gap: 20px;
+}
+
+.phone-input-wrap .custom-select {
+  width: 130px;
+  flex-shrink: 0;
+}
+
+.phone-input-wrap input {
+  flex: 1;
+}
+.noma-cart{
+  font-size: 20px;
+}
+.checkout-block label > input:not([type="checkbox"]),
+.checkout-block label > .custom-select,
+.checkout-block label > .phone-input-wrap,
+.checkout-block label > .zip-input-wrap {
+  margin-top: 8px !important;
 }
 
 /* Fields grid for city/state and zip/colonia */
 .checkout-fields-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  gap: 50px;
 }
 
 /* Custom Select styling */
@@ -53,6 +72,26 @@
   width: 100%;
   cursor: pointer;
   user-select: none;
+}
+
+.custom-select.open {
+  z-index: 50;
+}
+
+/* Stacking context elevations when a dropdown is open */
+.checkout-block:has(.custom-select.open) {
+  position: relative;
+  z-index: 100 !important;
+}
+
+.checkout-fields-grid:has(.custom-select.open) {
+  position: relative;
+  z-index: 100 !important;
+}
+
+.phone-input-wrap:has(.custom-select.open) {
+  position: relative;
+  z-index: 100 !important;
 }
 
 .custom-select-trigger {
@@ -78,7 +117,7 @@
 }
 
 .custom-select-dropdown {
-  position: initial !important;
+  position: absolute !important;
   top: calc(100% + 4px);
   left: 0;
   right: 0;
@@ -98,6 +137,25 @@
   opacity: 1 !important;
   transform: translateY(0) !important;
   pointer-events: auto !important;
+}
+
+/* Premium scrollbar for the custom select dropdown */
+.custom-select-dropdown::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-select-dropdown::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+}
+
+.custom-select-dropdown::-webkit-scrollbar-thumb {
+  background: rgba(244, 241, 233, 0.2);
+  border-radius: 8px;
+}
+
+.custom-select-dropdown::-webkit-scrollbar-thumb:hover {
+  background: var(--clay);
 }
 
 .custom-select-option {

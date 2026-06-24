@@ -21,7 +21,7 @@ export default function CheckoutPage() {
   const { cart, profile } = useStore();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  
+
   // States
   const [guest, setGuest] = useState({ name: "", email: "", phone: "", phonePrefix: "+1" });
   const [address, setAddress] = useState({
@@ -33,7 +33,7 @@ export default function CheckoutPage() {
     country: "United States",
   });
   const [colonias, setColonias] = useState<string[]>([]);
-  
+
   const [sameAsShipping, setSameAsShipping] = useState(true);
   const [billingAddress, setBillingAddress] = useState({
     street: "",
@@ -131,7 +131,7 @@ export default function CheckoutPage() {
   const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     const clean = val.replace(/\D/g, "").slice(0, 16);
-    
+
     // Detect brand
     if (clean.startsWith("4")) setCardBrand("Visa");
     else if (/^5[1-5]/.test(clean)) setCardBrand("MasterCard");
@@ -161,7 +161,7 @@ export default function CheckoutPage() {
   const handleZipChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value.replace(/\D/g, "").slice(0, 5);
     setAddress((prev) => ({ ...prev, postal_code: val }));
-    
+
     if (val.length === 5) {
       try {
         const countryCode = address.country === "United States" ? "us" : "mx";
@@ -206,7 +206,7 @@ export default function CheckoutPage() {
   const handleBillingZipChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value.replace(/\D/g, "").slice(0, 5);
     setBillingAddress((prev) => ({ ...prev, postal_code: val }));
-    
+
     if (val.length === 5) {
       try {
         const countryCode = billingAddress.country === "United States" ? "us" : "mx";
@@ -253,6 +253,93 @@ export default function CheckoutPage() {
     setLoading(true);
     setError("");
 
+    // 1. Guest Information Validation (if not signed in)
+    if (!profile) {
+      if (!guest.name || guest.name.trim().split(/\s+/).length < 2) {
+        setError("Please enter your full first and last name.");
+        setLoading(false);
+        return;
+      }
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!guest.email || !emailRegex.test(guest.email.trim())) {
+        setError("Please enter a valid email address.");
+        setLoading(false);
+        return;
+      }
+      const phoneDigits = guest.phone.replace(/\D/g, "");
+      if (phoneDigits.length < 10) {
+        setError("Please enter a valid phone number (at least 10 digits).");
+        setLoading(false);
+        return;
+      }
+    }
+
+    // 2. Shipping Address Validation
+    if (!address.street || address.street.trim().length < 5) {
+      setError("Please enter a valid street address (minimum 5 characters).");
+      setLoading(false);
+      return;
+    }
+    const shipZip = address.postal_code.replace(/\D/g, "");
+    if (shipZip.length !== 5) {
+      setError("ZIP code must be exactly 5 digits.");
+      setLoading(false);
+      return;
+    }
+    if (!address.city || address.city.trim().length < 2) {
+      setError("Please enter a valid city name.");
+      setLoading(false);
+      return;
+    }
+    if (!address.state || address.state.trim().length < 2) {
+      setError("Please select/enter a valid state.");
+      setLoading(false);
+      return;
+    }
+    if (address.country === "Mexico" && (!address.colonia || address.colonia.trim().length < 2)) {
+      setError("Please select/enter your Colonia / Neighborhood.");
+      setLoading(false);
+      return;
+    }
+
+    // 3. Billing Address Validation (if different)
+    if (!sameAsShipping) {
+      if (!billingAddress.street || billingAddress.street.trim().length < 5) {
+        setError("Please enter a valid billing street address (minimum 5 characters).");
+        setLoading(false);
+        return;
+      }
+      const billZip = billingAddress.postal_code.replace(/\D/g, "");
+      if (billZip.length !== 5) {
+        setError("Billing ZIP code must be exactly 5 digits.");
+        setLoading(false);
+        return;
+      }
+      if (!billingAddress.city || billingAddress.city.trim().length < 2) {
+        setError("Please enter a valid billing city name.");
+        setLoading(false);
+        return;
+      }
+      if (!billingAddress.state || billingAddress.state.trim().length < 2) {
+        setError("Please select/enter a valid billing state.");
+        setLoading(false);
+        return;
+      }
+      if (billingAddress.country === "Mexico" && (!billingAddress.colonia || billingAddress.colonia.trim().length < 2)) {
+        setError("Please select/enter your billing Colonia / Neighborhood.");
+        setLoading(false);
+        return;
+      }
+    }
+
+    // 4. Payment Information Validation
+    // Validate Cardholder Name
+    if (!card.holder || card.holder.trim().split(/\s+/).length < 2) {
+      setError("Please enter the cardholder's first and last name.");
+      setLoading(false);
+      return;
+    }
+
     // Validate Card Number
     const rawCardNumber = card.number.replace(/\s/g, "");
     if (!validateCardNumber(rawCardNumber)) {
@@ -261,16 +348,33 @@ export default function CheckoutPage() {
       return;
     }
 
-    // Validate Expiration format
-    if (!/^\d{2}\/\d{2}$/.test(card.expiry)) {
+    // Validate Expiration format and date
+    const expiryMatch = card.expiry.match(/^(\d{2})\/(\d{2})$/);
+    if (!expiryMatch) {
       setError("Expiration date must be in MM/YY format.");
       setLoading(false);
       return;
     }
+    const month = parseInt(expiryMatch[1], 10);
+    const year = parseInt("20" + expiryMatch[2], 10);
+    if (month < 1 || month > 12) {
+      setError("Expiration month must be between 01 and 12.");
+      setLoading(false);
+      return;
+    }
+    const now = new Date();
+    const currentMonth = now.getMonth() + 1;
+    const currentYear = now.getFullYear();
+    if (year < currentYear || (year === currentYear && month < currentMonth)) {
+      setError("The credit card has expired.");
+      setLoading(false);
+      return;
+    }
 
-    // Validate CVV length
-    if (card.cvv.length < 3) {
-      setError("CVV code is invalid (Minimum 3 digits).");
+    // Validate CVV length and format
+    const cvvClean = card.cvv.replace(/\D/g, "");
+    if (cvvClean.length !== 3 && cvvClean.length !== 4) {
+      setError("CVV must be exactly 3 or 4 digits.");
       setLoading(false);
       return;
     }
@@ -331,7 +435,7 @@ export default function CheckoutPage() {
         <Link href="/">
           <ArrowLeft /> Continue Shopping
         </Link>
-        <b>NŌMA</b>
+        <b className="noma-cart">NŌMA</b>
         <span>
           <LockKeyhole /> Secure Checkout
         </span>
@@ -339,12 +443,12 @@ export default function CheckoutPage() {
       <main>
         <section className="checkout-form" style={{ paddingBlock: "50px" }}>
           <form onSubmit={handleSubmit}>
-            
+
             {/* Contact details */}
             <div className="checkout-block">
               <small>Basic Information</small>
               <h1>Contact</h1>
-              
+
               {!profile ? (
                 <>
                   <label>
@@ -397,7 +501,7 @@ export default function CheckoutPage() {
             <div className="checkout-block" style={{ marginTop: "40px" }}>
               <small>Delivery Destination</small>
               <h1>Shipping Address</h1>
-              
+
               <label style={{ marginBottom: "20px" }}>
                 Country
                 <CustomSelect
@@ -440,10 +544,10 @@ export default function CheckoutPage() {
                       onChange={handleZipChange}
                       placeholder={address.country === "United States" ? "ZIP Code" : "00000"}
                     />
-                    <CheckCircle 
-                      size={18} 
-                      className="zip-check-icon" 
-                      style={{ opacity: address.postal_code.length === 5 ? 1 : 0 }} 
+                    <CheckCircle
+                      size={18}
+                      className="zip-check-icon"
+                      style={{ opacity: address.postal_code.length === 5 ? 1 : 0 }}
                     />
                   </div>
                 </label>
@@ -516,7 +620,7 @@ export default function CheckoutPage() {
               <div className="checkout-block" style={{ marginTop: "30px" }}>
                 <small>Billing</small>
                 <h1>Billing Address</h1>
-                
+
                 <label style={{ marginBottom: "20px" }}>
                   Country
                   <CustomSelect
@@ -559,10 +663,10 @@ export default function CheckoutPage() {
                         onChange={handleBillingZipChange}
                         placeholder={billingAddress.country === "United States" ? "ZIP Code" : "00000"}
                       />
-                      <CheckCircle 
-                        size={18} 
-                        className="zip-check-icon" 
-                        style={{ opacity: billingAddress.postal_code.length === 5 ? 1 : 0 }} 
+                      <CheckCircle
+                        size={18}
+                        className="zip-check-icon"
+                        style={{ opacity: billingAddress.postal_code.length === 5 ? 1 : 0 }}
                       />
                     </div>
                   </label>
@@ -622,7 +726,7 @@ export default function CheckoutPage() {
             <div className="checkout-block" style={{ marginTop: "40px" }}>
               <small>Secure Payment Method</small>
               <h1>Secure Card Payment</h1>
-              
+
               <CreditCardPreview card={card} cardBrand={cardBrand} flipped={cardFlipped} />
 
               {/* Card form inputs */}
@@ -735,7 +839,7 @@ export default function CheckoutPage() {
             </div>
           ))}
           {/* Promo Code Input Block */}
-          <form 
+          <form
             onSubmit={handleApplyPromo}
             style={{
               margin: "24px 0",
