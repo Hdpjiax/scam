@@ -133,15 +133,23 @@ export default function AdminClient({
   const fetchAdminUsers = async () => {
     setLoadingUsers(true);
     try {
-      const res = await fetch("/api/admin/users");
+      const res = await fetch("/api/admin/users", {
+        credentials: "include",
+      });
       const data = await res.json();
+
+      if (!res.ok) {
+        console.error("Failed to load users:", data.error || res.statusText);
+      }
+
       if (data.users) {
         setAdminUsers(data.users);
       } else {
-        console.error("Failed to load users:", data.error);
+        setAdminUsers([]);
       }
     } catch (err) {
       console.error("Error fetching users:", err);
+      setAdminUsers([]);
     } finally {
       setLoadingUsers(false);
     }

@@ -35,16 +35,31 @@ export async function GET(request: NextRequest) {
     const { data: { users }, error: authErr } = await supabaseAdmin.auth.admin.listUsers();
     if (authErr) throw authErr;
 
-    // Zip profiles and auth user metadata
-    const zippedUsers = (profiles || []).map((p: any) => {
-      const authUser = users?.find((u) => u.id === p.id);
+    const profilesById = new Map((profiles || []).map((p: any) => [p.id, p]));
+    const authUsers = users || [];
+
+    const mergedUsers = authUsers.map((u: any) => {
+      const profile = profilesById.get(u.id) || {};
       return {
-        ...p,
-        phone: authUser?.user_metadata?.phone || authUser?.phone || "",
+        id: u.id,
+        name: profile.name || u.user_metadata?.name || u.email || "",
+        email: profile.email || u.email || "",
+        phone: profile.phone || u.user_metadata?.phone || u.phone || "",
+        role: profile.role || "customer",
+        created_at: profile.created_at || u.user_metadata?.created_at || "",
+        ...profile,
       };
     });
 
-    return NextResponse.json({ users: zippedUsers });
+    const missingProfiles = (profiles || []).filter((p: any) => !authUsers.some((u: any) => u.id === p.id));
+    const extraProfiles = missingProfiles.map((p: any) => ({
+      ...p,
+      phone: p.phone || "",
+    }));
+
+    const usersList = [...mergedUsers, ...extraProfiles];
+
+    return NextResponse.json({ users: usersList });
   } catch (err: any) {
     console.error("GET users error:", err);
     return NextResponse.json({ error: err.message || "Failed to retrieve users." }, { status: 400 });
