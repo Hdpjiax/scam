@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { useStore } from "../../providers/StoreProvider";
 import { createClient } from "../../lib/supabase/client";
+import { money } from "../../lib/utils";
 import { CustomSelect } from "../../modules/checkout/components/CustomSelect";
 import { PHONE_PREFIXES } from "../../modules/checkout/checkout.constants";
 
