@@ -41,10 +41,11 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (profile) {
-      router.push("/cuenta");
+      router.push("/");
     }
   }, [profile, router]);
   const [register, setRegister] = useState(false);
+  const [forgot, setForgot] = useState(false);
   const [emailPrefill, setEmailPrefill] = useState("");
   const [show, setShow] = useState(false);
   const [error, setError] = useState("");
@@ -193,6 +194,41 @@ export default function LoginPage() {
     }
   }, []);
 
+  const handleForgotPasswordSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+    setLoading(true);
+
+    const form = new FormData(e.currentTarget);
+    const email = String(form.get("email") || "").trim().toLowerCase();
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError("Please enter a valid email address.");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const redirectTo = `${window.location.origin}/reset-password`;
+      const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo,
+      });
+
+      if (resetError) {
+        setError(normalizeAuthError(resetError.message));
+        return;
+      }
+
+      setSuccess("A recovery link has been sent to your email. Confirm to reset your password.");
+    } catch (err: any) {
+      setError(normalizeAuthError(err.message));
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formElement = e.currentTarget;
@@ -306,6 +342,24 @@ export default function LoginPage() {
     }
   };
 
+  if (profile) {
+    return (
+      <div className="account-page">
+        <Link className="account-brand" href="/">
+          NŌMA<span>living spaces</span>
+        </Link>
+        <section>
+          <div className="account-panel">
+            <div className="session-card" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "12px", padding: "40px", textAlign: "center" }}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ animation: "spin 1s linear infinite" }}><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+              <span>Redirecting to your account dashboard...</span>
+            </div>
+          </div>
+        </section>
+      </div>
+    );
+  }
+
   return (
     <div className="account-page">
       <Link className="account-brand" href="/">
@@ -328,11 +382,63 @@ export default function LoginPage() {
         </div>
 
         <div className="account-panel">
-          {profile ? (
-            <div className="session-card" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "12px", padding: "40px", textAlign: "center" }}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ animation: "spin 1s linear infinite" }}><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
-              <span>Redirecting to your account dashboard...</span>
-            </div>
+          {forgot ? (
+            <form onSubmit={handleForgotPasswordSubmit}>
+              <LockKeyhole />
+              <small>Password recovery</small>
+              <h2>Reset password</h2>
+              <p style={{ fontSize: "12px", color: "rgba(255,255,255,0.6)", marginBottom: "20px", lineHeight: "1.5" }}>
+                Enter your email address and we will send you a link to reset your password.
+              </p>
+
+              <label>
+                Email
+                <input
+                  name="email"
+                  type="email"
+                  required
+                  autoComplete="email"
+                  placeholder="you@example.com"
+                  defaultValue={emailPrefill}
+                  key={emailPrefill}
+                  disabled={loading}
+                />
+              </label>
+
+              {error && <p className="form-error" role="alert">{error}</p>}
+              {success && (
+                <p className="form-success" role="status">
+                  <CheckCircle2 /> {success}
+                </p>
+              )}
+
+              <button className="account-submit" type="submit" disabled={loading}>
+                {loading ? "Sending..." : "Send link"}
+                <ArrowRight />
+              </button>
+
+              <div style={{ textAlign: "center", marginTop: "24px" }}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setForgot(false);
+                    setError("");
+                    setSuccess("");
+                  }}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    color: "rgba(255,255,255,0.6)",
+                    cursor: "pointer",
+                    fontSize: "12px",
+                    textDecoration: "underline",
+                    padding: "8px"
+                  }}
+                >
+                  Back to Sign in
+                </button>
+              </div>
+            </form>
           ) : (
             <form onSubmit={handleSubmit}>
               <LockKeyhole />
@@ -427,6 +533,29 @@ export default function LoginPage() {
                   </button>
                 </div>
               </label>
+
+              {!register && (
+                <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "12px", marginBottom: "20px" }}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setForgot(true);
+                      setError("");
+                      setSuccess("");
+                    }}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      color: "#d1b894",
+                      cursor: "pointer",
+                      fontSize: "12px",
+                      padding: 0,
+                    }}
+                  >
+                    Forgot password?
+                  </button>
+                </div>
+              )}
 
               {register && (
                 <>

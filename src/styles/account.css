@@ -587,3 +587,9 @@
   }
 }
 
+/* Fix phone input width when inside a flex wrapper */
+.account-page .phone-input-wrap input {
+  width: auto !important;
+  flex: 1 !important;
+}
+

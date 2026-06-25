@@ -26,7 +26,8 @@ import {
 } from "lucide-react";
 import { useStore } from "../../providers/StoreProvider";
 import { createClient } from "../../lib/supabase/client";
-import { money } from "../../lib/utils";
+import { CustomSelect } from "../../modules/checkout/components/CustomSelect";
+import { PHONE_PREFIXES } from "../../modules/checkout/checkout.constants";
 
 const STEPS = [
   {
@@ -73,6 +74,7 @@ export default function AccountPage() {
 
   // Settings states
   const [settingsForm, setSettingsForm] = useState({ name: "", phone: "", email: "", password: "", confirmPassword: "" });
+  const [phonePrefix, setPhonePrefix] = useState("+1");
   const [settingsLoading, setSettingsLoading] = useState(false);
   const [settingsError, setSettingsError] = useState("");
   const [settingsSuccess, setSettingsSuccess] = useState("");
@@ -94,11 +96,43 @@ export default function AccountPage() {
 
   // Load user data
   useEffect(() => {
+    console.log("AccountPage useEffect: loading user details", { profile, user, metadata: user?.user_metadata });
     if (profile) {
+      const phoneStr = (user?.user_metadata?.phone || user?.phone || "").trim();
+      let parsedPrefix = "+1";
+      let parsedPhone = phoneStr;
+
+      const cleanPhone = phoneStr.replace(/[^\d+]/g, "");
+      for (const p of PHONE_PREFIXES) {
+        const codeWithPlus = p.code;
+        const codeWithoutPlus = p.code.replace("+", "");
+
+        if (cleanPhone.startsWith(codeWithPlus)) {
+          parsedPrefix = codeWithPlus;
+          parsedPhone = cleanPhone.substring(codeWithPlus.length);
+          break;
+        } else if (cleanPhone.startsWith(codeWithoutPlus)) {
+          parsedPrefix = codeWithPlus;
+          parsedPhone = cleanPhone.substring(codeWithoutPlus.length);
+          break;
+        }
+      }
+
+      // Auto-correction: if the remaining number still starts with a known prefix (e.g. 52...), strip it
+      for (const p of PHONE_PREFIXES) {
+        const codeWithoutPlus = p.code.replace("+", "");
+        if (parsedPhone.startsWith(codeWithoutPlus)) {
+          parsedPrefix = p.code;
+          parsedPhone = parsedPhone.substring(codeWithoutPlus.length);
+          break;
+        }
+      }
+
+      setPhonePrefix(parsedPrefix);
       setSettingsForm({
         name: profile.name || "",
         email: profile.email || "",
-        phone: user?.user_metadata?.phone || user?.phone || "",
+        phone: parsedPhone,
         password: "",
         confirmPassword: "",
       });
@@ -152,7 +186,7 @@ export default function AccountPage() {
         color: "var(--paper)"
       }}>
         <div className="loader-spinner" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "10px" }}>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ animation: "spin 1s linear infinite" }}><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ animation: "spin 1s linear infinite" }}><path d="M21 12a9 9 0 1 1-6.219-8.56" /></svg>
           <span>Loading space...</span>
         </div>
       </div>
@@ -177,7 +211,7 @@ export default function AccountPage() {
       return;
     }
     const clean = val.replace(/\D/g, "");
-    
+
     if (val.length < cardForm.expiry.length && cardForm.expiry.endsWith("/") && clean.length === 2) {
       setCardForm((prev) => ({ ...prev, expiry: clean.slice(0, 1) }));
       return;
@@ -293,7 +327,7 @@ export default function AccountPage() {
       // 2. Update Auth (Email, Password, Phone Metadata)
       const authUpdates: any = {
         email: settingsForm.email,
-        user_metadata: { name: settingsForm.name, phone: settingsForm.phone },
+        user_metadata: { name: settingsForm.name, phone: `${phonePrefix} ${settingsForm.phone}` },
       };
 
       if (settingsForm.password) {
@@ -314,8 +348,9 @@ export default function AccountPage() {
   };
 
   return (
-    <div className="account-page" style={{ minHeight: "100vh", display: "flex", flexDirection: "column", background: "radial-gradient(circle at 18% 18%, rgba(157, 80, 55, 0.12), transparent 38%), #171815", color: "#ffffff" }}>
-      <style dangerouslySetInnerHTML={{ __html: `
+    <div className="account-dashboard-page" style={{ minHeight: "100vh", display: "flex", flexDirection: "column", background: "radial-gradient(circle at 18% 18%, rgba(157, 80, 55, 0.12), transparent 38%), #171815", color: "#ffffff" }}>
+      <style dangerouslySetInnerHTML={{
+        __html: `
         .dashboard-container {
           display: flex;
           flex: 1;
@@ -398,6 +433,17 @@ export default function AccountPage() {
           border-color: #d1b894;
           background: rgba(255, 255, 255, 0.05);
           outline: none;
+        }
+        .settings-prefix-select .custom-select-trigger {
+          padding: 12px 14px !important;
+          font-size: 13px !important;
+          border-radius: 6px !important;
+          background: rgba(255, 255, 255, 0.03) !important;
+          border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+        .settings-prefix-select .custom-select-trigger svg {
+          width: 14px !important;
+          height: 14px !important;
         }
         .settings-submit-btn {
           background: #d1b894;
@@ -692,7 +738,7 @@ export default function AccountPage() {
 
               {loadingOrders ? (
                 <div style={{ padding: "40px 0", textAlign: "center", color: "rgba(255,255,255,0.4)" }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ animation: "spin 1s linear infinite", marginRight: "10px" }}><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ animation: "spin 1s linear infinite", marginRight: "10px" }}><path d="M21 12a9 9 0 1 1-6.219-8.56" /></svg>
                   Syncing orders timeline...
                 </div>
               ) : orders.length === 0 ? (
@@ -1069,13 +1115,24 @@ export default function AccountPage() {
 
                   <label className="settings-label">
                     Phone Number
-                    <input
-                      type="text"
-                      className="settings-input"
-                      required
-                      value={settingsForm.phone}
-                      onChange={(e) => setSettingsForm((prev) => ({ ...prev, phone: e.target.value }))}
-                    />
+                    <div className="phone-input-wrap" style={{ display: "flex", gap: "45px", marginTop: "4px", width: "100%" }}>
+                      <div style={{ width: "95px", flexShrink: 0 }} className="settings-prefix-select">
+                        <CustomSelect
+                          value={phonePrefix}
+                          onChange={setPhonePrefix}
+                          options={PHONE_PREFIXES.map(p => ({ value: p.code, label: p.label }))}
+                        />
+                      </div>
+                      <input
+                        type="tel"
+                        className="settings-input"
+                        required
+                        value={settingsForm.phone}
+                        onChange={(e) => setSettingsForm((prev) => ({ ...prev, phone: e.target.value.replace(/\D/g, "") }))}
+                        placeholder="555 000 0000"
+                        style={{ flex: 1, minWidth: 0 }}
+                      />
+                    </div>
                   </label>
                 </div>
 
